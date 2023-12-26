@@ -36,12 +36,26 @@ export default function Home() {
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message");
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const userId = user?.id;
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("username")
+      .eq("auth_id", userId);
+    console.log("users data:", data);
+
+    const username = data![0].username;
+
     if (!message) return;
 
     try {
       const { data, error } = await supabase
         .from("messages")
-        .insert([{ sender_username: "", content: message }])
+        .insert([{ sender_username: username, content: message }])
         .select();
     } catch (error) {
       console.log(error);

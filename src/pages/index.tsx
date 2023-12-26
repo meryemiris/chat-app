@@ -35,6 +35,7 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message");
+    const time = new Date().toLocaleTimeString();
 
     const {
       data: { user },
@@ -55,7 +56,9 @@ export default function Home() {
     try {
       const { data, error } = await supabase
         .from("messages")
-        .insert([{ sender_username: username, content: message }])
+        .insert([
+          { sender_username: username, content: message, created_at: time },
+        ])
         .select();
     } catch (error) {
       console.log(error);

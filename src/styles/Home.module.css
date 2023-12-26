@@ -59,17 +59,18 @@
   border-top-right-radius: 0%;
   border-bottom-right-radius: 0%;
   border: none;
-  background: #3c096c;
+  background: #2f4858;
 }
 
 .sendBox button {
+
   display: flex;
   border-radius: var(--border-radius);
   border-top-left-radius: 0%;
   border-bottom-left-radius: 0%;
   border: none;
-  padding: 1.1rem;
-  background-color: #ff9e00;
-
+  padding: 1.067rem;
+  background-color: #2f4858;
+  color: #ff9e00;
   cursor: pointer;
 }

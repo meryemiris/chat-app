@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
@@ -14,7 +14,7 @@ export default function Login() {
         data: { user },
         error,
       } = await supabase.auth.signInWithPassword({
-        email: username,
+        email,
         password,
       });
 
@@ -38,17 +38,17 @@ export default function Login() {
         handleLogin();
       }}
     >
-      <label className={styles.label} htmlFor="username">
-        username
+      <label className={styles.label} htmlFor="email">
+        email
       </label>
       <input
         className={styles.input}
-        name="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="username"
+        name="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email"
         type="text"
-        id="username"
+        id="email"
       />
       <label className={styles.label} htmlFor="password">
         password

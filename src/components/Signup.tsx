@@ -19,14 +19,25 @@ export default function Signup() {
         data: { user },
         error,
       } = await supabase.auth.signUp({
-        email: username,
+        email,
         password,
       });
 
       if (!error) {
         console.log("User registered successfully:", user);
-        router.push("/login");
+
+        if (user) {
+          const { data, error: insertError } = await supabase
+            .from("users")
+            .insert([{ username: username, id: user.id }])
+            .select();
+
+          if (insertError) {
+            console.log("Error inserting user:", insertError);
+          } else console.log("User inserted successfully:", data);
+        }
       }
+      router.push("/login");
     } catch (error) {
       console.error("Error registering user:", error);
     }

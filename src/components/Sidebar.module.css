@@ -17,6 +17,15 @@
 
 }
 
+.createChannelButton {
+    display: flex;
+    font-size: 1rem;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    background-color: inherit;
+}
+
 .channelButton {
     display: flex;
     border-radius: var(--border-radius);
@@ -25,7 +34,6 @@
     margin: .5rem;
     background-color: #70587c;
     width: 100%;
-
     cursor: pointer;
 }
 
@@ -40,13 +48,9 @@
 .logoutButton {
     display: flex;
     align-items: center;
-
-
-
     font-size: 1rem;
     border: none;
     padding: 1rem;
-
     cursor: pointer;
     background-color: inherit;
 }

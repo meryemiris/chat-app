@@ -8,6 +8,7 @@
 }
 
 .chatBox {
+  background-color: #ff9e00;
   width: 80%;
   display: flex;
   flex-direction: column;

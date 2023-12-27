@@ -54,6 +54,8 @@ export default function Login() {
         password
       </label>
       <input
+        name="password"
+        placeholder="password"
         className={styles.input}
         value={password}
         onChange={(e) => setPassword(e.target.value)}

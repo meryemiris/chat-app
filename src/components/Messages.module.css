@@ -1,0 +1,29 @@
+.messageBox {
+    position: relative;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: rgba(var(--callout-rgb), 0.5);
+    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+    border-radius: var(--border-radius);
+}
+
+.myMessageBox {
+    align-self: flex-start;
+    position: relative;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: rgba(var(--callout-rgb), 0.5);
+    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+    border-radius: var(--border-radius);
+}
+
+.username {
+    color: #ff9e00;
+    font-weight: 300;
+    padding-bottom: 0.5rem;
+
+}
+
+.content {
+    font-weight: 800;
+}

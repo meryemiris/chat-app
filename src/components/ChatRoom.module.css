@@ -11,7 +11,6 @@
 
 
 .chatBox {
-
     padding-bottom: 2rem;
     display: flex;
     flex-direction: column;
@@ -21,6 +20,16 @@
 }
 
 .messageBox {
+    position: relative;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: rgba(var(--callout-rgb), 0.5);
+    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+    border-radius: var(--border-radius);
+}
+
+.myMessageBox {
+    align-self: flex-start;
     position: relative;
     margin: 0.5rem;
     padding: 1rem;
@@ -41,7 +50,6 @@
 }
 
 .sendBox {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,17 +67,14 @@
 .sendBox input {
     width: 100%;
     padding: 1rem;
-
     border: none;
     background: #3b374a;
 }
 
 .sendBox button {
-
     display: flex;
     border: none;
     padding: 1.067rem;
     background-color: #3b374a;
-
     cursor: pointer;
 }

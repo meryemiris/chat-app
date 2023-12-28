@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import styles from "./ChatRoom.module.css";
 import { IoSend } from "react-icons/io5";
+import Messages from "./Messages";
 
 export type Message = {
   sender_username: string;
@@ -12,7 +13,6 @@ export type Message = {
 };
 
 export default function ChatRoom() {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -35,23 +35,6 @@ export default function ChatRoom() {
     getUsername();
   }, []);
 
-  useEffect(() => {
-    const channel = supabase
-      .channel("messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload: { new: Message }) => {
-          setMessages((prev) => [...prev, payload.new]);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -70,20 +53,16 @@ export default function ChatRoom() {
     } catch (error) {
       console.log(error);
     }
-
+    if (e.target instanceof HTMLFormElement) {
+      e.target.reset();
+    }
     console.log("subscribe");
   };
 
   return (
     <main className={styles.main}>
       <div className={styles.chatBox}>
-        {messages.map(({ sender_username, content, id, created_at }) => (
-          <div key={id} className={styles.messageBox}>
-            <p className={styles.username}>{sender_username}</p>
-            <p className={styles.content}>{content}</p>
-            <p className="text-xs text-gray-400">{created_at}</p>
-          </div>
-        ))}
+        <Messages setUsername={setUsername} username={username} />
       </div>
       <form onSubmit={handleSendMessage} className={styles.sendBox}>
         <input type="text" placeholder="Type something..." name="message" />

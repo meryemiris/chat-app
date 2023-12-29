@@ -50,22 +50,25 @@ const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
   }, [setUsername]);
 
   return (
-    <div className={styles.chatBox}>
+    <>
       {messages.map(({ sender_username, content, id, created_at }) => (
-        <div
-          key={id}
-          className={
-            username === sender_username
-              ? styles.messageBox
-              : styles.myMessageBox
-          }
-        >
-          <p className={styles.username}>{sender_username}</p>
-          <p className={styles.content}>{content}</p>
-          <p className="text-xs text-gray-400">{created_at}</p>
+        <div key={id} className={styles.messageContainer}>
+          <div
+            className={
+              username === sender_username
+                ? styles.myMessage
+                : styles.othersMessage
+            }
+          >
+            {username !== sender_username && (
+              <p className={styles.username}>{sender_username}</p>
+            )}
+            <p className={styles.content}>{content}</p>
+            <p className={styles.createdAt}>{created_at}</p>
+          </div>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

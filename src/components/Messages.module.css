@@ -1,29 +1,56 @@
-.messageBox {
-    position: relative;
-    margin: 0.5rem;
-    padding: 1rem;
-    background-color: rgba(var(--callout-rgb), 0.5);
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
+.messageContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
 }
 
-.myMessageBox {
+
+
+.othersMessage {
     align-self: flex-start;
-    position: relative;
-    margin: 0.5rem;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.5rem 0.3rem;
     background-color: rgba(var(--callout-rgb), 0.5);
     border: 1px solid rgba(var(--callout-border-rgb), 0.3);
     border-radius: var(--border-radius);
+    border-bottom-left-radius: 0%;
 }
+
+.myMessage {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem 0.3rem;
+    background-color: #253237;
+    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+    border-radius: var(--border-radius);
+    border-bottom-right-radius: 0%;
+}
+
+
 
 .username {
     color: #ff9e00;
     font-weight: 300;
-    padding-bottom: 0.5rem;
-
+    font-size: .6rem;
+    font-family: monospace;
 }
 
 .content {
-    font-weight: 800;
+    max-width: 300px;
+    word-wrap: break-word;
+    font-size: 0.75rem;
+    padding: 0.3rem 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.createdAt {
+    font-size: 0.5rem;
+    color: #999999;
+    font-family: monospace;
+    align-self: flex-end;
 }

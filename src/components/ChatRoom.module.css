@@ -1,80 +1,80 @@
 .main {
-
     display: flex;
     flex-direction: column;
-    width: 80%;
-    justify-content: flex-end;
-
+    width: 100%;
+    justify-content: space-between;
+    padding: 1rem 3rem;
 }
-
-
-
 
 .chatBox {
-    padding-bottom: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    font-size: 0.85rem;
-    font-family: var(--font-mono);
+    justify-content: flex-end;
+    padding: 2rem;
 }
 
-.messageBox {
-    position: relative;
-    margin: 0.5rem;
-    padding: 1rem;
-    background-color: rgba(var(--callout-rgb), 0.5);
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
+.headerBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #9db4c0;
 }
 
-.myMessageBox {
-    align-self: flex-start;
-    position: relative;
-    margin: 0.5rem;
-    padding: 1rem;
-    background-color: rgba(var(--callout-rgb), 0.5);
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
+.scrollable {
+    height: 350px;
+    overflow-y: auto;
 }
 
-.username {
-    color: #ff9e00;
-    font-weight: 300;
-    padding-bottom: 0.5rem;
+
+.scrollable::-webkit-scrollbar {
+    width: 0.2rem;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: #9db4c0;
 
 }
 
-.content {
-    font-weight: 800;
+.scrollable::-webkit-scrollbar-track {
+    background-color: inherit;
 }
+
 
 .sendBox {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-
-
 }
 
 .sendBox input,
 .sendBox button {
     font-size: 1rem;
-    font-family: var(--font-mono);
 }
 
 .sendBox input {
-    width: 100%;
-    padding: 1rem;
+    width: 75%;
+    padding: 0.5rem;
     border: none;
-    background: #3b374a;
+    background: #253237;
+    border-radius: var(--border-radius);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
+
+.sendBox input::placeholder {
+    color: #9db4c0;
+    font-size: .75rem;
+}
+
 
 .sendBox button {
     display: flex;
     border: none;
-    padding: 1.067rem;
-    background-color: #3b374a;
+    padding: 0.57rem;
+    background-color: #253237;
+    color: #9db4c0;
     cursor: pointer;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }

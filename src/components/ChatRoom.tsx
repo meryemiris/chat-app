@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
 import styles from "./ChatRoom.module.css";
-import { IoSend } from "react-icons/io5";
+import { IoSearch, IoSend } from "react-icons/io5";
 import Messages from "./Messages";
 
 export type Message = {
@@ -39,7 +39,10 @@ export default function ChatRoom() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message");
-    const time = new Date().toLocaleTimeString();
+    const time = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     if (!message) return;
 
@@ -61,11 +64,18 @@ export default function ChatRoom() {
 
   return (
     <main className={styles.main}>
-      <div className={styles.chatBox}>
-        <Messages setUsername={setUsername} username={username} />
+      <div className={styles.headerBox}>
+        <p className={styles.title}>Chat Room</p> <IoSearch />
       </div>
+
+      <div className={styles.scrollable}>
+        {/* <div className={styles.chatBox}> */}
+        <Messages setUsername={setUsername} username={username} />
+        {/* </div> */}
+      </div>
+
       <form onSubmit={handleSendMessage} className={styles.sendBox}>
-        <input type="text" placeholder="Type something..." name="message" />
+        <input type="text" placeholder={"Type something..."} name="message" />
         <button type="submit">
           <IoSend />
         </button>

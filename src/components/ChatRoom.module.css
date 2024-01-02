@@ -6,12 +6,6 @@
     padding: 1rem 3rem;
 }
 
-.chatBox {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem;
-}
 
 .headerBox {
     display: flex;
@@ -19,11 +13,15 @@
     justify-content: space-between;
     align-items: center;
     color: #9db4c0;
+    border-bottom: #253237 solid 1px;
+
 }
 
 .scrollable {
     height: 350px;
     overflow-y: auto;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 

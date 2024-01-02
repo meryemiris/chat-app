@@ -2,7 +2,9 @@ import styles from "./Messages.module.css";
 
 import { Message } from "./ChatRoom";
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useConst } from "@chakra-ui/react";
+import ChannelsContext from "@/lib/ChannelsContext";
 
 type MessagesProps = {
   setUsername: (username: string) => void;
@@ -11,13 +13,33 @@ type MessagesProps = {
 
 const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const { activeChannelId } = useContext(ChannelsContext);
+
+  useEffect(() => {
+    async function getMessages() {
+      let { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("channel_id", activeChannelId);
+
+      if (data) {
+        setMessages(data);
+      }
+    }
+    getMessages();
+  }, [activeChannelId]);
 
   useEffect(() => {
     const channel = supabase
       .channel("messages")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `channel_id=eq.${activeChannelId}`,
+        },
         (payload: { new: Message }) => {
           setMessages((prev) => [...prev, payload.new]);
         }
@@ -27,7 +49,7 @@ const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [activeChannelId]);
 
   useEffect(() => {
     const getUsername = async () => {

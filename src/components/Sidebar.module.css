@@ -8,8 +8,6 @@
 }
 
 
-
-
 .controlButtons {
     display: flex;
     align-items: center;
@@ -17,7 +15,6 @@
     border: none;
     padding: 1rem;
     cursor: pointer;
-    background-color: inherit;
     color: #9db4c0;
 
 }
@@ -82,9 +79,6 @@
     flex-direction: column;
     justify-content: center;
     border-right: #253237 solid 1px;
-
-
-
 }
 
 .closeButton {

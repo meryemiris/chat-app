@@ -1,19 +1,23 @@
 import { supabase } from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import styles from "./ChatRoom.module.css";
 import { IoSearch, IoSend } from "react-icons/io5";
 import Messages from "./Messages";
+import ChannelsContext from "@/lib/ChannelsContext";
 
 export type Message = {
   sender_username: string;
   content: string;
   id: number;
   created_at: string;
+  channel_id: number;
 };
 
 export default function ChatRoom() {
   const [username, setUsername] = useState("");
+
+  const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
 
   useEffect(() => {
     const getUsername = async () => {
@@ -50,7 +54,12 @@ export default function ChatRoom() {
       const { data, error } = await supabase
         .from("messages")
         .insert([
-          { sender_username: username, content: message, created_at: time },
+          {
+            sender_username: username,
+            content: message,
+            created_at: time,
+            channel_id: activeChannelId,
+          },
         ])
         .select();
     } catch (error) {
@@ -65,13 +74,11 @@ export default function ChatRoom() {
   return (
     <main className={styles.main}>
       <div className={styles.headerBox}>
-        <p className={styles.title}>Chat Room</p> <IoSearch />
+        <p className={styles.title}>{activeChannelName}</p> <IoSearch />
       </div>
 
       <div className={styles.scrollable}>
-        {/* <div className={styles.chatBox}> */}
         <Messages setUsername={setUsername} username={username} />
-        {/* </div> */}
       </div>
 
       <form onSubmit={handleSendMessage} className={styles.sendBox}>

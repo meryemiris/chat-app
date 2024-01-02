@@ -1,6 +1,13 @@
 .chatLayout {
     display: flex;
-    min-height: 100vh;
     flex-direction: row;
     justify-content: space-between;
+    min-height: 100vh;
+
+}
+
+.header {
+    padding-bottom: 1rem;
+    border-bottom: #253237 solid 1px;
+
 }

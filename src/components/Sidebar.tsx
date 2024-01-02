@@ -9,12 +9,13 @@ import {
 } from "react-icons/io5";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import ChannelsContext from "@/lib/ChannelsContext";
 
 export type Channel = {
   id: number;
   name: string;
-  user_id: string;
+  member_id: string[];
 };
 
 export default function Sidebar() {
@@ -22,6 +23,8 @@ export default function Sidebar() {
 
   const [channels, setChannels] = useState<Channel[]>([]);
   const [showPanel, setShowPanel] = useState(true);
+  const { setActiveChannelId, setActiveChannelName } =
+    useContext(ChannelsContext);
 
   const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,6 +47,19 @@ export default function Sidebar() {
   };
 
   useEffect(() => {
+    async function getChannels() {
+      let { data, error } = await supabase.from("channels").select("id, name");
+      if (data) {
+        console.log(data);
+
+        setChannels(data as Channel[]);
+      }
+    }
+
+    getChannels();
+  }, []);
+
+  useEffect(() => {
     const channels = supabase
       .channel("channels")
       .on(
@@ -60,7 +76,10 @@ export default function Sidebar() {
     };
   }, []);
 
-  const handleChannelChange = (e: React.MouseEvent<HTMLButtonElement>) => {};
+  const handleChannelChange = (id: number, name: string) => {
+    setActiveChannelId(id);
+    setActiveChannelName(name);
+  };
 
   return (
     <>
@@ -103,7 +122,7 @@ export default function Sidebar() {
 
             {channels.map(({ id, name }) => (
               <button
-                onClick={handleChannelChange}
+                onClick={() => handleChannelChange(id, name)}
                 key={id}
                 className={styles.channelButton}
                 autoFocus={channels.length === 0 ? false : true}

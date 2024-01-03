@@ -44,7 +44,6 @@ export default function Signup() {
   };
   return (
     <div className={styles.container}>
-      {" "}
       <form onSubmit={handleRegister} className={styles.login}>
         <label className={styles.label} htmlFor="email">
           email

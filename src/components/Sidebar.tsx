@@ -23,6 +23,7 @@ export default function Sidebar() {
 
   const [channels, setChannels] = useState<Channel[]>([]);
   const [showPanel, setShowPanel] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const { setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
 
@@ -79,6 +80,14 @@ export default function Sidebar() {
     setActiveChannelName(name);
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredChannels = channels.filter((channel) =>
+    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className={styles.controlPanel}>
@@ -114,11 +123,13 @@ export default function Sidebar() {
                 className={styles.channelInput}
                 name="channelName"
                 placeholder="Search or create a new channel"
+                value={searchTerm}
+                onChange={handleSearch}
                 autoFocus={channels.length === 0 ? true : false}
               />
             </form>
 
-            {channels.map(({ id, name }) => (
+            {filteredChannels.map(({ id, name }) => (
               <button
                 onClick={() => handleChannelChange(id, name)}
                 key={id}

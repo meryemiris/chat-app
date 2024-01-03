@@ -20,6 +20,8 @@ export type Message = {
 export default function ChatRoom() {
   const [username, setUsername] = useState("");
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
+  const [isSearch, setIsSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const getUsername = async () => {
@@ -73,22 +75,46 @@ export default function ChatRoom() {
     console.log("subscribe");
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.headerBox}>
-        <p className={styles.title}>{activeChannelName}</p> <IoSearch />
-      </div>
+    <div className={styles.container}>
+      {activeChannelName && (
+        <header className={styles.header}>
+          <p className={styles.title}>{activeChannelName}</p>
+          <div className={styles.search}>
+            {isSearch && (
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={handleSearch}
+              ></input>
+            )}
+            <button onClick={() => setIsSearch(!isSearch)}>
+              <IoSearch />
+            </button>
+          </div>
+        </header>
+      )}
 
-      <div className={styles.scrollable}>
-        <Messages setUsername={setUsername} username={username} />
-      </div>
-
-      <form onSubmit={handleSendMessage} className={styles.sendBox}>
-        <input type="text" placeholder={"Type something..."} name="message" />
-        <button type="submit">
-          <IoSend />
-        </button>
-      </form>
-    </main>
+      <main className={styles.scrollable}>
+        <Messages
+          searchTerm={searchTerm}
+          setUsername={setUsername}
+          username={username}
+        />
+      </main>
+      <footer>
+        <form onSubmit={handleSendMessage} className={styles.sendBox}>
+          <input type="text" placeholder={"Type something..."} name="message" />
+          <button type="submit">
+            <IoSend />
+          </button>
+        </form>
+      </footer>
+    </div>
   );
 }

@@ -10,9 +10,14 @@ import ChannelsContext from "@/lib/ChannelsContext";
 type MessagesProps = {
   setUsername: (username: string) => void;
   username: string;
+  searchTerm: string;
 };
 
-const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
+const Messages: React.FC<MessagesProps> = ({
+  setUsername,
+  username,
+  searchTerm,
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const { activeChannelId } = useContext(ChannelsContext);
 
@@ -72,9 +77,13 @@ const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
     getUsername();
   }, [setUsername]);
 
+  const filteredMessages = messages.filter((message) =>
+    message.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <>
-      {messages.map(({ sender_username, content, id, created_at }) => (
+    <div className={styles.scrollable}>
+      {filteredMessages.map(({ sender_username, content, id, created_at }) => (
         <div key={id} className={styles.messageContainer}>
           <div
             className={
@@ -91,7 +100,7 @@ const Messages: React.FC<MessagesProps> = ({ setUsername, username }) => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

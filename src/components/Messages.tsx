@@ -1,9 +1,10 @@
+import { useContext, useEffect, useState } from "react";
+
 import styles from "./Messages.module.css";
 
 import { Message } from "./ChatRoom";
 import { supabase } from "@/lib/supabase";
-import { useContext, useEffect, useState } from "react";
-import { useConst } from "@chakra-ui/react";
+
 import ChannelsContext from "@/lib/ChannelsContext";
 
 type MessagesProps = {

@@ -1,10 +1,13 @@
-import { supabase } from "@/lib/supabase";
 import { useContext, useEffect, useState } from "react";
 
-import styles from "./ChatRoom.module.css";
-import { IoSearch, IoSend } from "react-icons/io5";
-import Messages from "./Messages";
+import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";
+
+import Messages from "./Messages";
+
+import styles from "./ChatRoom.module.css";
+
+import { IoSearch, IoSend } from "react-icons/io5";
 
 export type Message = {
   sender_username: string;
@@ -16,7 +19,6 @@ export type Message = {
 
 export default function ChatRoom() {
   const [username, setUsername] = useState("");
-
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
 
   useEffect(() => {

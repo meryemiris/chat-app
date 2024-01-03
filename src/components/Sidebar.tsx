@@ -50,8 +50,6 @@ export default function Sidebar() {
     async function getChannels() {
       let { data, error } = await supabase.from("channels").select("id, name");
       if (data) {
-        console.log(data);
-
         setChannels(data as Channel[]);
       }
     }

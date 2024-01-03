@@ -31,47 +31,49 @@ export default function Login() {
   };
 
   return (
-    <form
-      className={styles.login}
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleLogin();
-      }}
-    >
-      <label className={styles.label} htmlFor="email">
-        email
-      </label>
-      <input
-        className={styles.input}
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="email"
-        type="text"
-        id="email"
-      />
-      <label className={styles.label} htmlFor="password">
-        password
-      </label>
-      <input
-        name="password"
-        placeholder="password"
-        className={styles.input}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        id="password"
-      />
-      <button className={styles.button} type="submit">
-        Login
-      </button>
+    <div className={styles.container}>
+      <form
+        className={styles.login}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+      >
+        <label className={styles.label} htmlFor="email">
+          email
+        </label>
+        <input
+          className={styles.input}
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+          type="text"
+          id="email"
+        />
+        <label className={styles.label} htmlFor="password">
+          password
+        </label>
+        <input
+          name="password"
+          placeholder="password"
+          className={styles.input}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          id="password"
+        />
+        <button className={styles.button} type="submit">
+          Login
+        </button>
 
-      <p className={styles.text}>
-        Do not have an account?{" "}
-        <a className={styles.link} href="signup">
-          Signup
-        </a>
-      </p>
-    </form>
+        <p className={styles.text}>
+          Do not have an account?{" "}
+          <a className={styles.link} href="signup">
+            Signup
+          </a>
+        </p>
+      </form>
+    </div>
   );
 }

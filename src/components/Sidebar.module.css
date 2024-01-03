@@ -16,8 +16,9 @@
     padding: 1rem;
     cursor: pointer;
     color: #9db4c0;
-
+    background-color: inherit;
 }
+
 
 
 .channelPanel {
@@ -63,10 +64,10 @@
 
 .channelButton {
     display: flex;
-    border-radius: var(--border-radius);
     border: none;
     padding: 0.5rem;
-    background-color: rgba(var(--callout-rgb), 0.3);
+    background-color: inherit;
+    color: #ff9e00;
     width: 80%;
     font-size: 0.75rem;
     cursor: pointer;

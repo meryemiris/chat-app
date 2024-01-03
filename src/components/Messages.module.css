@@ -55,3 +55,25 @@
     font-family: monospace;
     align-self: flex-end;
 }
+
+
+.scrollable {
+    height: 350px;
+    overflow-y: auto;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+
+.scrollable::-webkit-scrollbar {
+    width: 0.2rem;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: #9db4c0;
+
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background-color: inherit;
+}

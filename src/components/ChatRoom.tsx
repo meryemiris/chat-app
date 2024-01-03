@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 
 import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";
@@ -100,13 +100,12 @@ export default function ChatRoom() {
         </header>
       )}
 
-      <main className={styles.scrollable}>
-        <Messages
-          searchTerm={searchTerm}
-          setUsername={setUsername}
-          username={username}
-        />
-      </main>
+      <Messages
+        searchTerm={searchTerm}
+        setUsername={setUsername}
+        username={username}
+      />
+
       <footer>
         <form onSubmit={handleSendMessage} className={styles.sendBox}>
           <input type="text" placeholder={"Type something..."} name="message" />

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import styles from "./Messages.module.css";
 
@@ -20,6 +20,7 @@ const Messages: React.FC<MessagesProps> = ({
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const { activeChannelId } = useContext(ChannelsContext);
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function getMessages() {
@@ -81,8 +82,18 @@ const Messages: React.FC<MessagesProps> = ({
     message.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const scrollToBottom = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollTop = messageEndRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className={styles.scrollable}>
+    <main ref={messageEndRef} className={styles.scrollable}>
       {filteredMessages.map(({ sender_username, content, id, created_at }) => (
         <div key={id} className={styles.messageContainer}>
           <div
@@ -100,7 +111,7 @@ const Messages: React.FC<MessagesProps> = ({
           </div>
         </div>
       ))}
-    </div>
+    </main>
   );
 };
 

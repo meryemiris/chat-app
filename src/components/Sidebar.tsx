@@ -42,9 +42,11 @@ export default function Sidebar() {
       .from("channels")
       .insert([{ name: channelName, member_id: [userId] }])
       .select();
+
     if (e.target instanceof HTMLFormElement) {
       e.target.reset();
     }
+    setSearchTerm("");
   };
 
   useEffect(() => {
@@ -134,7 +136,6 @@ export default function Sidebar() {
                 onClick={() => handleChannelChange(id, name)}
                 key={id}
                 className={styles.channelButton}
-                autoFocus={channels.length === 0 ? false : true}
               >
                 {name}
               </button>

@@ -3,26 +3,30 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: flex-end;
+    font-family: monospace;
+
 }
-
-
 
 
 .login {
-    padding: 1rem;
+
+    padding: 2rem;
     border-left: #253237 1px solid;
-    width: 40%;
+    min-width: 300px;
+    width: 30vw;
     height: 100vh;
-    font-family: monospace;
 }
+
+
+
 
 .input {
     border: 1px solid rgba(var(--callout-border-rgb), 0.3);
     border-radius: var(--border-radius);
     width: 100%;
-    padding: 0.4rem;
+    padding: 0.5rem;
     margin-bottom: 0.5rem;
-    font-size: 1rem;
+    font-size: 0.75rem;
     background: #253237;
     color: white;
 }
@@ -52,4 +56,19 @@
     text-decoration: underline;
     margin-top: .5rem;
     color: #ff9e00;
+}
+
+
+@media (max-width: 768px) {
+    .login {
+        width: 60vw;
+
+    }
+}
+
+@media (max-width: 576px) {
+    .login {
+        width: 100vw;
+
+    }
 }

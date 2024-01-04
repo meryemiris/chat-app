@@ -1,27 +1,43 @@
-.messageContainer {
-    flex: 1;
-    display: flex;
+.scrollable {
+    height: 350px;
+    overflow-y: auto;
     flex-direction: column;
+    justify-content: flex-end;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 0.2rem;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: #9db4c0;
+
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background-color: inherit;
+}
+
+
+
+.messageContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.myMessageContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
     margin-bottom: 0.5rem;
     margin-right: 0.5rem;
 }
 
 
-
-.othersMessage {
-    align-self: flex-start;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0.5rem 0.3rem;
-    background-color: rgba(var(--callout-rgb), 0.5);
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
-    border-bottom-left-radius: 0%;
-}
-
-.myMessage {
-    align-self: flex-end;
+.message {
     display: flex;
     flex-direction: column;
     padding: 0.3rem 0.3rem;
@@ -29,10 +45,7 @@
     border: 1px solid rgba(var(--callout-border-rgb), 0.3);
     border-radius: var(--border-radius);
     border-bottom-right-radius: 0%;
-
 }
-
-
 
 .username {
     color: #ff9e00;
@@ -56,24 +69,10 @@
     align-self: flex-end;
 }
 
-
-.scrollable {
-    height: 350px;
-    overflow-y: auto;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-
-.scrollable::-webkit-scrollbar {
-    width: 0.2rem;
-}
-
-.scrollable::-webkit-scrollbar-thumb {
-    background-color: #9db4c0;
-
-}
-
-.scrollable::-webkit-scrollbar-track {
-    background-color: inherit;
+.avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    margin: 0.2rem;
 }

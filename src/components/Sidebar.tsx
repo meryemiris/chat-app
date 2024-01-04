@@ -11,6 +11,9 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 import { useContext, useEffect, useState } from "react";
 import ChannelsContext from "@/lib/ChannelsContext";
+import Image from "next/image";
+import Profile from "./Profile";
+import ChannelList from "./ChannelList";
 
 export type Channel = {
   id: number;
@@ -23,6 +26,8 @@ export default function Sidebar() {
 
   const [channels, setChannels] = useState<Channel[]>([]);
   const [showPanel, setShowPanel] = useState(true);
+  const [showProfile, setShowProfile] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const { setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
@@ -90,18 +95,31 @@ export default function Sidebar() {
     channel.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleShowProfile = () => {
+    if (showPanel) {
+      setShowProfile(true);
+    } else {
+      setShowPanel(true);
+    }
+  };
+
+  const handleShowChannels = () => {
+    if (showPanel) {
+      setShowProfile(false);
+    } else {
+      setShowPanel(true);
+    }
+  };
+
   return (
-    <>
-      <div className={styles.controlPanel}>
-        <button
-          onClick={() => setShowPanel((prev) => !prev)}
-          className={styles.controlButtons}
-        >
+    <div className={styles.sidebar}>
+      <div className={styles.controls}>
+        <button onClick={handleShowChannels} className={styles.controlButtons}>
           <IoChatbubbleEllipsesSharp />
         </button>
 
         <div>
-          <button className={styles.controlButtons}>
+          <button onClick={handleShowProfile} className={styles.controlButtons}>
             <IoSettings />
           </button>
           <button
@@ -117,30 +135,18 @@ export default function Sidebar() {
       </div>
 
       {showPanel && (
-        <div className={styles.channelPanel}>
-          <div className={styles.channelContainer}>
-            <h2 className={styles.channelTitle}>Channels</h2>
-            <form onSubmit={handleCreateChannel}>
-              <input
-                className={styles.channelInput}
-                name="channelName"
-                placeholder="Search or create a new channel"
-                value={searchTerm}
-                onChange={handleSearch}
-                autoFocus={channels.length === 0 ? true : false}
-              />
-            </form>
-
-            {filteredChannels.map(({ id, name }) => (
-              <button
-                onClick={() => handleChannelChange(id, name)}
-                key={id}
-                className={styles.channelButton}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
+        <div className={styles.panel}>
+          {showProfile ? (
+            <Profile />
+          ) : (
+            <ChannelList
+              handleChannelChange={handleChannelChange}
+              channels={filteredChannels}
+              handleSearch={handleSearch}
+              searchTerm={searchTerm}
+              handleCreateChannel={handleCreateChannel}
+            />
+          )}
         </div>
       )}
 
@@ -154,6 +160,6 @@ export default function Sidebar() {
           {showPanel ? <IoIosArrowBack /> : <IoIosArrowForward />}
         </button>
       </div>
-    </>
+    </div>
   );
 }

@@ -16,11 +16,14 @@ export type Message = {
   id: number;
   created_at: string;
   channel_id: number;
+  sender_pp: string;
 };
 
 export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
-  const { username } = useContext(AuthContext);
+  const { username, userId } = useContext(AuthContext);
+
+  const [profileImg, setProfileImg] = useState("");
 
   const [isSearch, setIsSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,6 +48,7 @@ export default function ChatRoom() {
             content: message,
             created_at: time,
             channel_id: activeChannelId,
+            sender_pp: profileImg,
           },
         ])
         .select();
@@ -60,6 +64,21 @@ export default function ChatRoom() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
+  useEffect(() => {
+    async function getProfilePic() {
+      let { data, error } = await supabase
+        .from("users")
+        .select("profile_img")
+        .eq("auth_id", userId);
+
+      const profilePic = data?.[0]?.profile_img;
+      if (profilePic) {
+        setProfileImg(profilePic);
+      }
+    }
+    getProfilePic();
+  }, [userId]);
 
   return (
     <div className={styles.container}>

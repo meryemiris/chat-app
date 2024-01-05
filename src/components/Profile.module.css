@@ -34,15 +34,20 @@
 
 .profileInput {
     border: none;
-    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    background-color: inherit;
     padding: 0.5rem;
     margin: 0.5rem;
-    background: #253237;
+    color: #ff9e00;
+    font-family: monospace;
+
 }
 
 .profileInput::placeholder {
-    color: #9db4c0;
+
     font-size: .7rem;
+
 
 
 }

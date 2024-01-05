@@ -32,7 +32,7 @@ export default function Signup() {
         if (user) {
           const { data, error: insertError } = await supabase
             .from("users")
-            .insert([{ username: username, id: user.id }])
+            .insert([{ username: username, auth_id: user.id, profile_img: "" }])
             .select();
 
           if (insertError) {

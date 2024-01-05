@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 import { useEffect, useState } from "react";
 
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import AuthContext from "@/lib/AuthContext";
 
 export default function Home() {
@@ -16,6 +16,7 @@ export default function Home() {
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isUser, setIsUser] = useState(false);
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     async function checkUser() {
@@ -26,8 +27,7 @@ export default function Home() {
       } else {
         setIsUser(true);
         setUsername(data.user.user_metadata.username);
-        console.log("username:", data.user.user_metadata.username);
-        console.log("user:", data.user);
+        setUserId(data.user.id);
       }
     }
 
@@ -36,7 +36,12 @@ export default function Home() {
 
   return (
     <AuthContext.Provider
-      value={{ username, setUsername, profilePic: "", setProfilePic: () => {} }}
+      value={{
+        username,
+        setUsername,
+        userId,
+        setUserId,
+      }}
     >
       <ChannelsContext.Provider
         value={{

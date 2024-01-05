@@ -11,7 +11,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 import { useContext, useEffect, useState } from "react";
 import ChannelsContext from "@/lib/ChannelsContext";
-import Image from "next/image";
+
 import Profile from "./Profile";
 import ChannelList from "./ChannelList";
 
@@ -24,35 +24,12 @@ export type Channel = {
 export default function Sidebar() {
   const router = useRouter();
 
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [showPanel, setShowPanel] = useState(true);
-  const [showProfile, setShowProfile] = useState(false);
-
-  const [searchTerm, setSearchTerm] = useState("");
   const { setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
 
-  const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const ChannelData = new FormData(e.currentTarget);
-    const channelName = ChannelData.get("channelName");
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const userId = user?.id;
-
-    const { data, error } = await supabase
-      .from("channels")
-      .insert([{ name: channelName, member_id: [userId] }])
-      .select();
-
-    if (e.target instanceof HTMLFormElement) {
-      e.target.reset();
-    }
-    setSearchTerm("");
-  };
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [showPanel, setShowPanel] = useState(true);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     async function getChannels() {
@@ -66,7 +43,7 @@ export default function Sidebar() {
   }, []);
 
   useEffect(() => {
-    const channels = supabase
+    const channelsSubscribe = supabase
       .channel("channels")
       .on(
         "postgres_changes",
@@ -78,7 +55,7 @@ export default function Sidebar() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channels);
+      supabase.removeChannel(channelsSubscribe);
     };
   }, []);
 
@@ -86,14 +63,6 @@ export default function Sidebar() {
     setActiveChannelId(id);
     setActiveChannelName(name);
   };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const filteredChannels = channels.filter((channel) =>
-    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleShowProfile = () => {
     if (showPanel) {
@@ -141,10 +110,7 @@ export default function Sidebar() {
           ) : (
             <ChannelList
               handleChannelChange={handleChannelChange}
-              channels={filteredChannels}
-              handleSearch={handleSearch}
-              searchTerm={searchTerm}
-              handleCreateChannel={handleCreateChannel}
+              channels={channels}
             />
           )}
         </div>

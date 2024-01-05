@@ -114,7 +114,11 @@ const Messages: React.FC<MessagesProps> = ({
               height={40}
             />
           </div>
-          <div className={styles.message}>
+          <div
+            className={
+              username === sender_username ? styles.myMessage : styles.message
+            }
+          >
             {username !== sender_username && (
               <p className={styles.username}>{sender_username}</p>
             )}

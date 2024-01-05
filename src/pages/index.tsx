@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
 import { Router, useRouter } from "next/router";
+import AuthContext from "@/lib/AuthContext";
 
 export default function Home() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function Home() {
   const [activeChannelId, setActiveChannelId] = useState(1);
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isUser, setIsUser] = useState(false);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     async function checkUser() {
@@ -23,6 +25,9 @@ export default function Home() {
         router.push("/login");
       } else {
         setIsUser(true);
+        setUsername(data.user.user_metadata.username);
+        console.log("username:", data.user.user_metadata.username);
+        console.log("user:", data.user);
       }
     }
 
@@ -30,19 +35,23 @@ export default function Home() {
   }, [router]);
 
   return (
-    <ChannelsContext.Provider
-      value={{
-        activeChannelName,
-        setActiveChannelName,
-        activeChannelId,
-        setActiveChannelId,
-      }}
+    <AuthContext.Provider
+      value={{ username, setUsername, profilePic: "", setProfilePic: () => {} }}
     >
-      {isUser && (
-        <ChatLayout>
-          <ChatRoom />
-        </ChatLayout>
-      )}
-    </ChannelsContext.Provider>
+      <ChannelsContext.Provider
+        value={{
+          activeChannelName,
+          setActiveChannelName,
+          activeChannelId,
+          setActiveChannelId,
+        }}
+      >
+        {isUser && (
+          <ChatLayout>
+            <ChatRoom />
+          </ChatLayout>
+        )}
+      </ChannelsContext.Provider>
+    </AuthContext.Provider>
   );
 }

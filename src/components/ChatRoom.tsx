@@ -8,6 +8,7 @@ import Messages from "./Messages";
 import styles from "./ChatRoom.module.css";
 
 import { IoSearch, IoSend } from "react-icons/io5";
+import AuthContext from "@/lib/AuthContext";
 
 export type Message = {
   sender_username: string;
@@ -18,30 +19,11 @@ export type Message = {
 };
 
 export default function ChatRoom() {
-  const [username, setUsername] = useState("");
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
+  const { username } = useContext(AuthContext);
+
   const [isSearch, setIsSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    const getUsername = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const userId = user?.id;
-
-      const { data } = await supabase
-        .from("users")
-        .select("username")
-        .eq("auth_id", userId);
-
-      if (data) {
-        const sender_username = data[0].username;
-        return setUsername(sender_username);
-      } else return setUsername("");
-    };
-    getUsername();
-  }, []);
 
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,11 +82,7 @@ export default function ChatRoom() {
         </header>
       )}
 
-      <Messages
-        searchTerm={searchTerm}
-        setUsername={setUsername}
-        username={username}
-      />
+      <Messages searchTerm={searchTerm} />
 
       <footer>
         <form onSubmit={handleSendMessage} className={styles.sendBox}>

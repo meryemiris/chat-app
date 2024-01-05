@@ -1,8 +1,12 @@
 import Image from "next/image";
 import styles from "./Profile.module.css";
 import { TbUserEdit } from "react-icons/tb";
+import { useContext } from "react";
+import AuthContext from "@/lib/AuthContext";
 
 export default function Profile() {
+  const { username } = useContext(AuthContext);
+  console.log(username);
   return (
     <div className={styles.profile}>
       <div className={styles.profileHeader}>
@@ -23,7 +27,7 @@ export default function Profile() {
         <input
           className={styles.profileInput}
           name="username"
-          placeholder="Username"
+          value={username}
         />
       </form>
     </div>

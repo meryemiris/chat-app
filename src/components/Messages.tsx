@@ -8,20 +8,17 @@ import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";
 
 import Image from "next/image";
+import AuthContext from "@/lib/AuthContext";
 
 type MessagesProps = {
-  setUsername: (username: string) => void;
-  username: string;
   searchTerm: string;
 };
 
-const Messages: React.FC<MessagesProps> = ({
-  setUsername,
-  username,
-  searchTerm,
-}) => {
+const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const { activeChannelId } = useContext(ChannelsContext);
+  const { username } = useContext(AuthContext);
+
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -59,26 +56,6 @@ const Messages: React.FC<MessagesProps> = ({
       supabase.removeChannel(channel);
     };
   }, [activeChannelId]);
-
-  useEffect(() => {
-    const getUsername = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const userId = user?.id;
-
-      const { data } = await supabase
-        .from("users")
-        .select("username")
-        .eq("auth_id", userId);
-
-      if (data) {
-        const sender_username = data[0].username;
-        return setUsername(sender_username);
-      } else return setUsername("");
-    };
-    getUsername();
-  }, [setUsername]);
 
   const filteredMessages = messages.filter((message) =>
     message.content.toLowerCase().includes(searchTerm.toLowerCase())

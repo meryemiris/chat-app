@@ -21,21 +21,20 @@ export type Message = {
 
 export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
-  const { username, userId } = useContext(AuthContext);
-
-  const [profileImg, setProfileImg] = useState("");
+  const { username, profileImg } = useContext(AuthContext);
 
   const [isSearch, setIsSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const time = new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const message = formData.get("message");
-    const time = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
 
     if (!message) return;
 
@@ -64,21 +63,6 @@ export default function ChatRoom() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-
-  useEffect(() => {
-    async function getProfilePic() {
-      let { data, error } = await supabase
-        .from("users")
-        .select("profile_img")
-        .eq("auth_id", userId);
-
-      const profilePic = data?.[0]?.profile_img;
-      if (profilePic) {
-        setProfileImg(profilePic);
-      }
-    }
-    getProfilePic();
-  }, [userId]);
 
   return (
     <div className={styles.container}>

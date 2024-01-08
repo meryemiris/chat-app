@@ -14,7 +14,9 @@ export default function Home() {
 
   const [activeChannelId, setActiveChannelId] = useState(1);
   const [activeChannelName, setActiveChannelName] = useState("");
-  const [isUser, setIsUser] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImg, setProfileImg] = useState("");
+
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
 
@@ -25,7 +27,7 @@ export default function Home() {
       if (data.user === null) {
         router.push("/login");
       } else {
-        setIsUser(true);
+        setIsLoggedIn(true);
         setUsername(data.user.user_metadata.username);
         setUserId(data.user.id);
       }
@@ -34,6 +36,21 @@ export default function Home() {
     checkUser();
   }, [router]);
 
+  useEffect(() => {
+    async function getProfilePic() {
+      let { data, error } = await supabase
+        .from("users")
+        .select("profile_img")
+        .eq("auth_id", userId);
+
+      const profilePic = data?.[0]?.profile_img;
+      if (profilePic) {
+        setProfileImg(profilePic);
+      }
+    }
+    getProfilePic();
+  }, [userId]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -41,6 +58,10 @@ export default function Home() {
         setUsername,
         userId,
         setUserId,
+        isLoggedIn,
+        setIsLoggedIn,
+        profileImg,
+        setProfileImg,
       }}
     >
       <ChannelsContext.Provider
@@ -51,7 +72,7 @@ export default function Home() {
           setActiveChannelId,
         }}
       >
-        {isUser && (
+        {isLoggedIn && (
           <ChatLayout>
             <ChatRoom />
           </ChatLayout>

@@ -6,29 +6,10 @@ import AuthContext from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 export default function Profile() {
-  const { username, setUsername, userId } = useContext(AuthContext);
-  console.log(username);
+  const { username, setUsername, userId, profileImg, setProfileImg } =
+    useContext(AuthContext);
 
   const [isEdit, setIsEdit] = useState(false);
-
-  const [profileImg, setProfileImg] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data, error } = await supabase
-        .from("users")
-        .select("profile_img")
-        .eq("auth_id", userId)
-        .single();
-
-      if (data) {
-        setProfileImg(data?.profile_img);
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [userId]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -41,7 +22,7 @@ export default function Profile() {
     }
   };
 
-  const updateProfilePic = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const updateProfileImg = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const { data, error } = await supabase
@@ -85,7 +66,7 @@ export default function Profile() {
             name="profilePic"
             onChange={handleImageChange}
           />
-          <button className={styles.profileBtn} onClick={updateProfilePic}>
+          <button className={styles.profileBtn} onClick={updateProfileImg}>
             Update
           </button>
         </form>

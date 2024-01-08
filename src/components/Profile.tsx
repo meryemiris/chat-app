@@ -6,8 +6,9 @@ import AuthContext from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 export default function Profile() {
-  const { username, setUsername, userId, profileImg, setProfileImg } =
-    useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
+  const [profileImg, setProfileImg] = useState("");
+  const [username, setUsername] = useState("");
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -28,11 +29,21 @@ export default function Profile() {
     const { data, error } = await supabase
       .from("users")
       .update({ profile_img: profileImg })
-      .eq("auth_id", userId)
+      .eq("id", userId)
       .select();
 
     console.log("Request Payload:", { profile_img: profileImg, userId });
     console.log("Response from Supabase:", data, error);
+
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("profile_img, username")
+      .eq("id", userId);
+
+    if (user) {
+      setProfileImg(user[0]?.profile_img);
+      setUsername(user[0]?.username);
+    }
 
     setIsEdit(false);
   };
@@ -51,10 +62,11 @@ export default function Profile() {
 
       <Image
         className={styles.profileImg}
-        src={profileImg}
+        src={profileImg || ""}
         alt="profile image"
         width={100}
         height={100}
+        layout="fixed"
         loading="lazy"
       />
 
@@ -73,14 +85,7 @@ export default function Profile() {
       )}
 
       <form>
-        <input
-          className={styles.profileInput}
-          name="username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-        />
+        <input className={styles.profileInput} name="username" />
       </form>
     </div>
   );

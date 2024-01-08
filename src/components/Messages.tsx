@@ -2,13 +2,21 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import styles from "./Messages.module.css";
 
-import { Message } from "./ChatRoom";
 import { supabase } from "@/lib/supabase";
 
 import ChannelsContext from "@/lib/ChannelsContext";
+import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
 
 import Image from "next/image";
 import AuthContext from "@/lib/AuthContext";
+
+export type Message = {
+  id: number;
+  content: string;
+  created_at: string;
+  channel_id: number;
+  user_id: string;
+};
 
 type MessagesProps = {
   searchTerm: string;
@@ -16,21 +24,27 @@ type MessagesProps = {
 
 const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const { activeChannelId } = useContext(ChannelsContext);
 
-  const { username } = useContext(AuthContext);
+  const { activeChannelId } = useContext(ChannelsContext);
+  const { userId } = useContext(AuthContext);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function getMessages() {
-      let { data, error } = await supabase
+      const { data, error } = await supabase
         .from("messages")
-        .select("*")
+        .select(
+          "users(username, profile_img), id, content, created_at, channel_id, user_id"
+        )
         .eq("channel_id", activeChannelId);
+      if (error) throw error;
 
       if (data) {
         setMessages(data);
+        console.log("messages:", data);
+      } else {
+        console.log(error);
       }
     }
     getMessages();
@@ -74,39 +88,35 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
   return (
     <main ref={messageEndRef} className={styles.scrollable}>
-      {filteredMessages.map(
-        ({ sender_username, content, id, created_at, sender_pp }) => (
-          <div
-            key={id}
-            className={
-              username === sender_username
-                ? styles.myMessageContainer
-                : styles.messageContainer
-            }
-          >
-            <div>
-              <Image
-                className={styles.avatar}
-                src={sender_pp}
-                alt=""
-                width={40}
-                height={40}
-              />
-            </div>
-            <div
-              className={
-                username === sender_username ? styles.myMessage : styles.message
-              }
-            >
-              {username !== sender_username && (
-                <p className={styles.username}>{sender_username}</p>
-              )}
-              <p className={styles.content}>{content}</p>
-              <p className={styles.createdAt}>{created_at}</p>
-            </div>
+      {filteredMessages.map(({ user_id, content, id, created_at, users }) => (
+        <div
+          key={id}
+          className={
+            userId === user_id
+              ? styles.myMessageContainer
+              : styles.messageContainer
+          }
+        >
+          <div>
+            <Image
+              className={styles.avatar}
+              src={users?.profile_img}
+              alt=""
+              width={40}
+              height={40}
+            />
           </div>
-        )
-      )}
+          <div
+            className={userId === user_id ? styles.myMessage : styles.message}
+          >
+            {userId !== user_id && (
+              <p className={styles.username}>{users?.username}</p>
+            )}
+            <p className={styles.content}>{content}</p>
+            <p className={styles.createdAt}>{created_at}</p>
+          </div>
+        </div>
+      ))}
     </main>
   );
 };

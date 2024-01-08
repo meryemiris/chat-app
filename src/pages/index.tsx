@@ -17,31 +17,31 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileImg, setProfileImg] = useState("");
 
-  const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
     async function checkUser() {
       const { data } = await supabase.auth.getUser();
 
-      if (data.user === null) {
+      if (!data.user) {
         router.push("/login");
       } else {
         setIsLoggedIn(true);
-        setUsername(data.user.user_metadata.username);
+
         setUserId(data.user.id);
+        console.log(userId);
       }
     }
 
     checkUser();
-  }, [router]);
+  }, [router, userId]);
 
   useEffect(() => {
     async function getProfilePic() {
       let { data, error } = await supabase
         .from("users")
         .select("profile_img")
-        .eq("auth_id", userId);
+        .eq("id", userId);
 
       const profilePic = data?.[0]?.profile_img;
       if (profilePic) {
@@ -54,8 +54,6 @@ export default function Home() {
   return (
     <AuthContext.Provider
       value={{
-        username,
-        setUsername,
         userId,
         setUserId,
         isLoggedIn,

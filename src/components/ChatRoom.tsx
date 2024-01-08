@@ -10,18 +10,9 @@ import styles from "./ChatRoom.module.css";
 import { IoSearch, IoSend } from "react-icons/io5";
 import AuthContext from "@/lib/AuthContext";
 
-export type Message = {
-  sender_username: string;
-  content: string;
-  id: number;
-  created_at: string;
-  channel_id: number;
-  sender_pp: string;
-};
-
 export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
-  const { username, profileImg } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [isSearch, setIsSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,11 +34,10 @@ export default function ChatRoom() {
         .from("messages")
         .insert([
           {
-            sender_username: username,
             content: message,
             created_at: time,
             channel_id: activeChannelId,
-            sender_pp: profileImg,
+            user_id: userId,
           },
         ])
         .select();

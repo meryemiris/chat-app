@@ -15,7 +15,6 @@ export default function Home() {
   const [activeChannelId, setActiveChannelId] = useState(1);
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [profileImg, setProfileImg] = useState("");
 
   const [userId, setUserId] = useState("");
 
@@ -36,21 +35,6 @@ export default function Home() {
     checkUser();
   }, [router, userId]);
 
-  useEffect(() => {
-    async function getProfilePic() {
-      let { data, error } = await supabase
-        .from("users")
-        .select("profile_img")
-        .eq("id", userId);
-
-      const profilePic = data?.[0]?.profile_img;
-      if (profilePic) {
-        setProfileImg(profilePic);
-      }
-    }
-    getProfilePic();
-  }, [userId]);
-
   return (
     <AuthContext.Provider
       value={{
@@ -58,8 +42,6 @@ export default function Home() {
         setUserId,
         isLoggedIn,
         setIsLoggedIn,
-        profileImg,
-        setProfileImg,
       }}
     >
       <ChannelsContext.Provider
@@ -71,9 +53,7 @@ export default function Home() {
         }}
       >
         {isLoggedIn && (
-          <ChatLayout>
-            <ChatRoom />
-          </ChatLayout>
+          <ChatLayout>{activeChannelName && <ChatRoom />}</ChatLayout>
         )}
       </ChannelsContext.Provider>
     </AuthContext.Provider>

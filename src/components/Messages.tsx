@@ -5,7 +5,6 @@ import styles from "./Messages.module.css";
 import { supabase } from "@/lib/supabase";
 
 import ChannelsContext from "@/lib/ChannelsContext";
-import { QueryResult, QueryData, QueryError } from "@supabase/supabase-js";
 
 import Image from "next/image";
 import AuthContext from "@/lib/AuthContext";
@@ -16,6 +15,10 @@ export type Message = {
   created_at: string;
   channel_id: number;
   user_id: string;
+  users: {
+    username: string;
+    profile_img: string;
+  };
 };
 
 type MessagesProps = {
@@ -27,6 +30,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
   const { activeChannelId } = useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
+  console.log("userId:", userId);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +39,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
       const { data, error } = await supabase
         .from("messages")
         .select(
-          "users(username, profile_img), id, content, created_at, channel_id, user_id"
+          "users(username, profile_img), id, content, created_at, user_id"
         )
         .eq("channel_id", activeChannelId);
       if (error) throw error;
@@ -61,8 +65,20 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
           table: "messages",
           filter: `channel_id=eq.${activeChannelId}`,
         },
-        (payload: { new: Message }) => {
-          setMessages((prev) => [...prev, payload.new]);
+        async (payload: { new: Message }) => {
+          const userData = await supabase
+            .from("users")
+            .select("username, profile_img")
+            .eq("id", payload.new.user_id)
+            .single();
+
+          console.log("userData:", userData.data);
+          const newMessage = {
+            ...payload.new,
+            users: userData.data,
+          };
+
+          setMessages((prev) => [...prev, newMessage]);
         }
       )
       .subscribe();
@@ -70,7 +86,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [activeChannelId]);
+  }, [activeChannelId, userId]);
 
   const filteredMessages = messages.filter((message) =>
     message.content.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,13 +114,15 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
           }
         >
           <div>
-            <Image
-              className={styles.avatar}
-              src={users?.profile_img}
-              alt=""
-              width={40}
-              height={40}
-            />
+            {userId !== user_id && (
+              <Image
+                className={styles.avatar}
+                src={users?.profile_img}
+                alt=""
+                width={40}
+                height={40}
+              />
+            )}
           </div>
           <div
             className={userId === user_id ? styles.myMessage : styles.message}

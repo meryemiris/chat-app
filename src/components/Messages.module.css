@@ -1,5 +1,5 @@
 .scrollable {
-    height: 350px;
+    height: 450px;
     overflow-y: auto;
     flex-direction: column;
     justify-content: flex-end;

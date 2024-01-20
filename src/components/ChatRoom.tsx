@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";

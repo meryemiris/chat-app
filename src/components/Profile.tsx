@@ -35,18 +35,23 @@ export default function Profile() {
     console.log("Request Payload:", { profile_img: profileImg, userId });
     console.log("Response from Supabase:", data, error);
 
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .select("profile_img, username")
-      .eq("id", userId);
-
-    if (user) {
-      setProfileImg(user[0]?.profile_img);
-      setUsername(user[0]?.username);
-    }
-
     setIsEdit(false);
   };
+
+  useEffect(() => {
+    async function getUser() {
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("profile_img, username")
+        .eq("id", userId);
+
+      if (user) {
+        setProfileImg(user[0]?.profile_img);
+        setUsername(user[0]?.username);
+      }
+    }
+    getUser();
+  }, [userId]);
 
   return (
     <div className={styles.profile}>
@@ -85,7 +90,11 @@ export default function Profile() {
       )}
 
       <form>
-        <input className={styles.profileInput} name="username" />
+        <input
+          className={styles.profileInput}
+          name="username"
+          value={username}
+        />
       </form>
     </div>
   );

@@ -2,6 +2,8 @@ import { supabase } from "@/lib/supabase";
 import styles from "./Login.module.css";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Image from "next/image";
+import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 
 export default function Login() {
   const router = useRouter();
@@ -30,49 +32,69 @@ export default function Login() {
     }
   };
 
+  const loginImg = "/login.svg";
+
   return (
     <div className={styles.container}>
+      <Image src={loginImg} width={600} height={900} alt="loginImg" />
       <form
-        className={styles.login}
+        className={styles.formContainer}
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
         }}
       >
-        <label className={styles.label} htmlFor="email">
-          email
-        </label>
-        <input
-          className={styles.input}
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email"
-          type="text"
-          id="email"
-        />
-        <label className={styles.label} htmlFor="password">
-          password
-        </label>
-        <input
-          name="password"
-          placeholder="password"
-          className={styles.input}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          id="password"
-        />
+        <h1>Welcome!</h1>
+        <h2>Ready to Sign In?</h2>
+        <div className={styles.inputGroup}>
+          <input
+            id="email"
+            type="text"
+            name="email"
+            autoComplete="off"
+            className={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <label className={styles.userLabel} htmlFor="email">
+            Email
+          </label>
+        </div>
+        <div className={styles.inputGroup}>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            autoComplete="off"
+            className={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <label className={styles.userLabel} htmlFor="password">
+            Password
+          </label>
+        </div>
+        <p className={styles.forgotPassword}>Forgot password?</p>
         <button className={styles.button} type="submit">
           Login
         </button>
-
-        <p className={styles.text}>
-          Do not have an account?{" "}
-          <a className={styles.link} href="signup">
-            Signup
-          </a>
-        </p>
+        <div className={styles.socialLogin}>
+          <i>OR</i>
+          <div className={styles.socialButtons}>
+            <button type="button">
+              <IoLogoGoogle />
+            </button>
+            <button type="button">
+              <IoLogoGithub />
+            </button>
+          </div>
+        </div>
+        <div className={styles.link}>
+          <i>No account?</i>
+          <a href="signup">Signup</a>
+        </div>
       </form>
     </div>
   );

@@ -48,68 +48,64 @@ export default function Signup() {
     }
   };
 
-  const signupImg = "/signup.svg";
   return (
-    <div className={styles.container}>
-      <Image src={signupImg} alt="signup" width={600} height={900} />
-      <form onSubmit={handleRegister} className={styles.formContainer}>
-        <h1>Start Now!</h1>
-        <h2>Join for Free.</h2>
-        <div className={styles.inputGroup}>
-          <input
-            className={styles.input}
-            type="email"
-            id="email"
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            required
-          />
-          <label className={styles.userLabel} htmlFor="email">
-            email
-          </label>
-        </div>
+    <form onSubmit={handleRegister} className={styles.form}>
+      <h1>Start Now!</h1>
+      <h2>Join for Free.</h2>
+      <div className={styles.inputGroup}>
+        <input
+          className={styles.input}
+          type="email"
+          id="email"
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          required
+        />
+        <label className={styles.userLabel} htmlFor="email">
+          email
+        </label>
+      </div>
 
-        <div className={styles.inputGroup}>
-          <input
-            className={styles.input}
-            type="text"
-            id="username"
-            onChange={(e) => setUsername(e.currentTarget.value)}
-            required
-          />
-          <label className={styles.userLabel} htmlFor="username">
-            username
-          </label>
+      <div className={styles.inputGroup}>
+        <input
+          className={styles.input}
+          type="text"
+          id="username"
+          onChange={(e) => setUsername(e.currentTarget.value)}
+          required
+        />
+        <label className={styles.userLabel} htmlFor="username">
+          username
+        </label>
+      </div>
+      <div className={styles.inputGroup}>
+        <input
+          className={styles.input}
+          type="password"
+          id="password"
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          required
+        />
+        <label className={styles.userLabel} htmlFor="password">
+          password
+        </label>
+      </div>
+      <button className={styles.button}>Signup</button>
+      <div className={styles.socialLogin}>
+        <i>OR</i>
+        <div className={styles.socialButtons}>
+          <button type="button">
+            <IoLogoGoogle />
+          </button>
+          <button type="button">
+            <IoLogoGithub />
+          </button>
         </div>
-        <div className={styles.inputGroup}>
-          <input
-            className={styles.input}
-            type="password"
-            id="password"
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            required
-          />
-          <label className={styles.userLabel} htmlFor="password">
-            password
-          </label>
-        </div>
-        <button className={styles.button}>Signup</button>
-        <div className={styles.socialLogin}>
-          <i>OR</i>
-          <div className={styles.socialButtons}>
-            <button type="button">
-              <IoLogoGoogle />
-            </button>
-            <button type="button">
-              <IoLogoGithub />
-            </button>
-          </div>
-        </div>
+      </div>
 
-        <div className={styles.link}>
-          <i>Already have an account?</i>
-          <a href="login">Login</a>
-        </div>
-      </form>
-    </div>
+      <div className={styles.link}>
+        <i>Already have an account?</i>
+        <a href="login">Login</a>
+      </div>
+    </form>
   );
 }

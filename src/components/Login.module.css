@@ -1,45 +1,37 @@
-.container {
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.container h1 {
-    align-self: center;
-    color: #fff;
-    font-size: 3rem;
-    font-weight: 600;
-}
-
-.container h2 {
-    align-self: center;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.formContainer {
+.form {
+    width: 500px;
     display: flex;
     flex-direction: column;
     border-radius: 2rem;
-    padding: 2rem;
+    padding: 1rem 3rem;
     box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
 }
+
+
+.form h1 {
+    font-weight: 600;
+    align-self: center;
+}
+
+.form h2 {
+    align-self: center;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+
 
 .inputGroup {
     position: relative;
 }
 
 .input {
+    width: 100%;
     border: solid 1.5px #9e9e9e;
     border-radius: 1rem;
     background: none;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    margin-bottom: 0.6rem;
+    padding: 1rem 0.5rem;
     font-size: 1rem;
     transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -69,7 +61,7 @@
 
 
 .button {
-    font-size: 1rem;
+    font-size: 1.5rem;
     width: 100%;
     height: 3rem;
     background-image: linear-gradient(rgb(214, 202, 254), #E86100);
@@ -77,10 +69,8 @@
     border-radius: 50px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 1px 3px 0px #E86100;
     transition-duration: .3s;
-    margin: 1rem 0;
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -15px;
+    margin: 0.6rem 0;
 
 
 }
@@ -88,7 +78,6 @@
 .button:hover {
     transform: scale(1.05);
     box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
-
 
 }
 
@@ -103,7 +92,7 @@
     position: relative;
     font-size: 0.7rem;
     margin-left: 1rem;
-    bottom: .8rem;
+    bottom: 0.6rem;
     color: #E86100;
 }
 
@@ -118,11 +107,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.6rem;
 }
 
 .socialLogin i {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #9e9e9e;
 
 }
@@ -130,7 +119,7 @@
 
 .socialButtons {
     display: flex;
-    gap: 1rem;
+    gap: 1.2rem;
     width: 100%;
     justify-content: center;
 }
@@ -144,8 +133,8 @@
     aspect-ratio: 1;
     display: grid;
     place-content: center;
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -8px;
     transition: all 0.2s ease-in-out;
+    cursor: pointer;
 
 }
 

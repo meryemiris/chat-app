@@ -32,70 +32,65 @@ export default function Login() {
     }
   };
 
-  const loginImg = "/login.svg";
-
   return (
-    <div className={styles.container}>
-      <Image src={loginImg} width={600} height={900} alt="loginImg" />
-      <form
-        className={styles.formContainer}
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
-        <h1>Welcome!</h1>
-        <h2>Ready to Sign In?</h2>
-        <div className={styles.inputGroup}>
-          <input
-            id="email"
-            type="text"
-            name="email"
-            autoComplete="off"
-            className={styles.input}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label className={styles.userLabel} htmlFor="email">
-            Email
-          </label>
+    <form
+      className={styles.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleLogin();
+      }}
+    >
+      <h1>Welcome!</h1>
+      <h2>Ready to Sign In?</h2>
+      <div className={styles.inputGroup}>
+        <input
+          id="email"
+          type="text"
+          name="email"
+          autoComplete="off"
+          className={styles.input}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label className={styles.userLabel} htmlFor="email">
+          Email
+        </label>
+      </div>
+      <div className={styles.inputGroup}>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          autoComplete="off"
+          className={styles.input}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <label className={styles.userLabel} htmlFor="password">
+          Password
+        </label>
+      </div>
+      <p className={styles.forgotPassword}>Forgot password?</p>
+      <button className={styles.button} type="submit">
+        Login
+      </button>
+      <div className={styles.socialLogin}>
+        <i>OR</i>
+        <div className={styles.socialButtons}>
+          <button type="button">
+            <IoLogoGoogle />
+          </button>
+          <button type="button">
+            <IoLogoGithub />
+          </button>
         </div>
-        <div className={styles.inputGroup}>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            autoComplete="off"
-            className={styles.input}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <label className={styles.userLabel} htmlFor="password">
-            Password
-          </label>
-        </div>
-        <p className={styles.forgotPassword}>Forgot password?</p>
-        <button className={styles.button} type="submit">
-          Login
-        </button>
-        <div className={styles.socialLogin}>
-          <i>OR</i>
-          <div className={styles.socialButtons}>
-            <button type="button">
-              <IoLogoGoogle />
-            </button>
-            <button type="button">
-              <IoLogoGithub />
-            </button>
-          </div>
-        </div>
-        <div className={styles.link}>
-          <i>No account?</i>
-          <a href="signup">Signup</a>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div className={styles.link}>
+        <i>No account?</i>
+        <a href="signup">Signup</a>
+      </div>
+    </form>
   );
 }

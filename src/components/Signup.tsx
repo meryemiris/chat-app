@@ -61,7 +61,7 @@ export default function Signup() {
           required
         />
         <label className={styles.userLabel} htmlFor="email">
-          email
+          Email
         </label>
       </div>
 
@@ -74,7 +74,7 @@ export default function Signup() {
           required
         />
         <label className={styles.userLabel} htmlFor="username">
-          username
+          Username
         </label>
       </div>
       <div className={styles.inputGroup}>
@@ -86,7 +86,7 @@ export default function Signup() {
           required
         />
         <label className={styles.userLabel} htmlFor="password">
-          password
+          Password
         </label>
       </div>
       <button className={styles.button}>Signup</button>

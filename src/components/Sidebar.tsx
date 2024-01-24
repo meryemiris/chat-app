@@ -81,7 +81,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className={styles.sidebar}>
+    <>
       <div className={styles.controls}>
         <button onClick={handleShowChannels} className={styles.controlButtons}>
           <IoChatbubbleEllipsesSharp />
@@ -113,19 +113,16 @@ export default function Sidebar() {
               channels={channels}
             />
           )}
+          <button
+            className={styles.closeButton}
+            onClick={() => {
+              setShowPanel((prev) => !prev);
+            }}
+          >
+            {showPanel ? <IoIosArrowBack /> : <IoIosArrowForward />}
+          </button>
         </div>
       )}
-
-      <div className={styles.closePanel}>
-        <button
-          className={styles.closeButton}
-          onClick={() => {
-            setShowPanel((prev) => !prev);
-          }}
-        >
-          {showPanel ? <IoIosArrowBack /> : <IoIosArrowForward />}
-        </button>
-      </div>
-    </div>
+    </>
   );
 }

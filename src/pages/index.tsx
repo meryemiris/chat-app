@@ -1,4 +1,4 @@
-import ChatLayout from "@/components/ChatLayout";
+import Layout from "@/components/Layout";
 import ChatRoom from "@/components/ChatRoom";
 
 import ChannelsContext from "@/lib/ChannelsContext";
@@ -52,9 +52,7 @@ export default function Home() {
           setActiveChannelId,
         }}
       >
-        {isLoggedIn && (
-          <ChatLayout>{activeChannelName && <ChatRoom />}</ChatLayout>
-        )}
+        {isLoggedIn && <Layout>{activeChannelName && <ChatRoom />}</Layout>}
       </ChannelsContext.Provider>
     </AuthContext.Provider>
   );

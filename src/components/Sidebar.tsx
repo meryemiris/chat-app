@@ -1,12 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import styles from "./Sidebar.module.css";
 
-import { useRouter } from "next/router";
-import {
-  IoChatbubbleEllipsesSharp,
-  IoLogOut,
-  IoSettings,
-} from "react-icons/io5";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 import { useContext, useEffect, useState } from "react";
@@ -21,15 +15,17 @@ export type Channel = {
   member_id: string[];
 };
 
-export default function Sidebar() {
-  const router = useRouter();
+type Props = {
+  showPanel: boolean;
+  setShowPanel: React.Dispatch<React.SetStateAction<boolean>>;
+  showProfile: boolean;
+};
 
+const Sidebar: React.FC<Props> = ({ showPanel, setShowPanel, showProfile }) => {
   const { setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
 
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [showPanel, setShowPanel] = useState(true);
-  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     async function getChannels() {
@@ -64,45 +60,8 @@ export default function Sidebar() {
     setActiveChannelName(name);
   };
 
-  const handleShowProfile = () => {
-    if (showPanel) {
-      setShowProfile(true);
-    } else {
-      setShowPanel(true);
-    }
-  };
-
-  const handleShowChannels = () => {
-    if (showPanel) {
-      setShowProfile(false);
-    } else {
-      setShowPanel(true);
-    }
-  };
-
   return (
     <>
-      <div className={styles.controls}>
-        <button onClick={handleShowChannels} className={styles.controlButtons}>
-          <IoChatbubbleEllipsesSharp />
-        </button>
-
-        <div>
-          <button onClick={handleShowProfile} className={styles.controlButtons}>
-            <IoSettings />
-          </button>
-          <button
-            className={styles.controlButtons}
-            onClick={() => {
-              router.push("/login");
-              supabase.auth.signOut();
-            }}
-          >
-            <IoLogOut />
-          </button>
-        </div>
-      </div>
-
       {showPanel && (
         <div className={styles.panel}>
           {showProfile ? (
@@ -113,16 +72,18 @@ export default function Sidebar() {
               channels={channels}
             />
           )}
-          <button
+          {/* <button
             className={styles.closeButton}
             onClick={() => {
               setShowPanel((prev) => !prev);
             }}
           >
             {showPanel ? <IoIosArrowBack /> : <IoIosArrowForward />}
-          </button>
+          </button> */}
         </div>
       )}
     </>
   );
-}
+};
+
+export default Sidebar;

@@ -4,7 +4,10 @@
     width: 100%;
     justify-content: space-between;
     padding: 1rem;
-
+    background-color: #010B13;
+    margin: 1rem 0;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
 }
 
 
@@ -12,12 +15,11 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-bottom: 0.5rem;
     align-items: center;
-    color: #9db4c0;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: #ff9e00;
+
 }
+
 
 .search {
     display: flex;

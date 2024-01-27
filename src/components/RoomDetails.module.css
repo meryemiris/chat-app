@@ -1,9 +1,0 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    box-shadow: rgba(133, 189, 215, 0.8) -5px 12px 20px -15px;
-    margin: 1rem 0.5rem;
-    padding: 1rem;
-    width: 350px;
-    border-radius: 10px;
-}

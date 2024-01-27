@@ -1,19 +1,31 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 import styles from "./Layout.module.css";
 import Sidebar from "./Sidebar";
-import RoomDetails from "./RoomDetails";
+
+import Navbar from "./Navbar";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [showPanel, setShowPanel] = useState(true);
+  const [showProfile, setShowProfile] = useState(false);
+
   return (
     <div className={styles.chatLayout}>
-      <Sidebar />
+      <Navbar
+        setShowProfile={setShowProfile}
+        setShowPanel={setShowPanel}
+        showPanel={showPanel}
+      />
       {children}
-      <RoomDetails />
+      <Sidebar
+        showPanel={showPanel}
+        setShowPanel={setShowPanel}
+        showProfile={showProfile}
+      />
     </div>
   );
 };

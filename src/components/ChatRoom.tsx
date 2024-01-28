@@ -59,18 +59,18 @@ export default function ChatRoom() {
       {activeChannelName && (
         <header className={styles.header}>
           <p className={styles.title}>{activeChannelName}</p>
-          <div className={styles.search}>
-            {isSearch && (
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearch}
-              ></input>
-            )}
-            <button onClick={() => setIsSearch(!isSearch)}>
+          <div className={styles.inputWrapper}>
+            <button className={styles.icon}>
               <IoSearch />
             </button>
+            <input
+              type="text"
+              name="text"
+              className={styles.input}
+              placeholder="search.."
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           </div>
         </header>
       )}

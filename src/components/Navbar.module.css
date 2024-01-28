@@ -4,9 +4,7 @@
     justify-content: space-between;
     width: 220px;
     font-size: 1rem;
-    margin: 1rem 0.5rem;
-    border-radius: 10px;
-    padding: 1rem;
+    margin: 1rem 0 1rem 1rem;
 }
 
 
@@ -51,7 +49,8 @@
     transition-duration: .3s;
     box-shadow: rgba(133, 189, 215, 0.8) 5px 12px 20px -15px;
     padding: 0;
-    background-color: #010B13
+    background-color: #010B13;
+    color: white;
 }
 
 .button:hover .icon {

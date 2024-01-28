@@ -28,7 +28,6 @@ export default function Home() {
         setIsLoggedIn(true);
 
         setUserId(data.user.id);
-        console.log(userId);
       }
     }
 
@@ -52,7 +51,7 @@ export default function Home() {
           setActiveChannelId,
         }}
       >
-        {isLoggedIn && <Layout>{activeChannelName && <ChatRoom />}</Layout>}
+        {isLoggedIn && <Layout>{<ChatRoom />}</Layout>}
       </ChannelsContext.Provider>
     </AuthContext.Provider>
   );

@@ -56,30 +56,32 @@ export default function ChatRoom() {
 
   return (
     <div className={styles.container}>
-      {activeChannelName && (
-        <header className={styles.header}>
-          <p className={styles.title}>{activeChannelName}</p>
-          <div className={styles.inputWrapper}>
-            <button className={styles.icon}>
-              <IoSearch />
-            </button>
-            <input
-              type="text"
-              name="text"
-              className={styles.input}
-              placeholder="search.."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
-        </header>
-      )}
+      <header className={styles.header}>
+        <p className={styles.title}>{activeChannelName}</p>
+        <div className={styles.inputWrapper}>
+          <button className={styles.icon}>
+            <IoSearch />
+          </button>
+          <input
+            type="text"
+            name="text"
+            className={styles.input}
+            placeholder="search.."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
+      </header>
 
       <Messages searchTerm={searchTerm} />
-
       <footer>
         <form onSubmit={handleSendMessage} className={styles.sendBox}>
-          <input type="text" placeholder={"Type something..."} name="message" />
+          <input
+            type="text"
+            placeholder={"Type something..."}
+            name="message"
+            autoComplete="off"
+          />
           <button type="submit">
             <IoSend />
           </button>

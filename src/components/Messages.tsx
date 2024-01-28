@@ -13,7 +13,7 @@ export type Message = {
   id: number;
   content: string;
   created_at: string;
-  channel_id: number;
+  channel_id: string;
   user_id: string;
   users: {
     username: string;
@@ -30,7 +30,6 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
   const { activeChannelId } = useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
-  console.log("userId:", userId);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -72,13 +71,12 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
             .eq("id", payload.new.user_id)
             .single();
 
-          console.log("userData:", userData.data);
           const newMessage = {
             ...payload.new,
             users: userData.data,
           };
 
-          setMessages((prev) => [...prev, newMessage]);
+          setMessages((prev) => [...prev, newMessage] as Message[]);
         }
       )
       .subscribe();

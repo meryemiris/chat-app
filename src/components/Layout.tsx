@@ -15,17 +15,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className={styles.chatLayout}>
-      <Navbar
-        setShowProfile={setShowProfile}
-        setShowPanel={setShowPanel}
-        showPanel={showPanel}
-      />
+      <Navbar setShowProfile={setShowProfile} />
+      <Sidebar showProfile={showProfile} />
       {children}
-      <Sidebar
-        showPanel={showPanel}
-        setShowPanel={setShowPanel}
-        showProfile={showProfile}
-      />
     </div>
   );
 };

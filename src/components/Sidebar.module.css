@@ -1,10 +1,10 @@
 .panel {
     display: flex;
     flex-direction: row;
-    margin: 1rem 1rem 1rem 0;
-    border-top-right-radius: 40px;
-    border-bottom-right-radius: 40px;
-    background-color: #010B13;
+    margin: 0.3rem 0;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    background-color: #212529;
 
 }
 

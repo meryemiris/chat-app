@@ -14,7 +14,6 @@ export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
 
-  const [isSearch, setIsSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const time = new Date().toLocaleTimeString([], {

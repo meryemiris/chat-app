@@ -1,20 +1,27 @@
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 40px;
+    background-color: #343a40;
+
 }
 
 
 .channelContainer {
-    height: 400px;
+
     overflow-y: auto;
     scrollbar-width: auto;
+    background-color: #343a40;
+    margin-bottom: 1rem;
+
 
 
 }
 
 .channelContainer::-webkit-scrollbar {
-    width: 0.1rem;
+    display: none;
 }
 
 .channelContainer::-webkit-scrollbar-thumb {
@@ -31,7 +38,7 @@
     border-radius: 40px;
     padding: 0.5rem;
     margin-right: 1rem;
-
+    background-color: inherit;
 }
 
 
@@ -45,15 +52,14 @@
 .channelButton {
     display: flex;
     border-radius: 10px;
-    padding: 0.5rem;
-    width: 200px;
-    border: outset;
-    background-color: #9db4c0;
+    padding: 1rem;
+    width: 100%;
+    border: none;
     font-size: 0.75rem;
     cursor: pointer;
-    margin: 0.5rem;
     background-color: inherit;
     justify-content: center;
+    border-bottom: 1px solid #212529;
 }
 
 .channelButton:active {
@@ -67,35 +73,40 @@
 
 .msgCount {
     position: relative;
+    top: -0.8rem;
+    right: -3.6em;
     background-color: red;
-    border-radius: 50%;
-    width: 1rem;
-    height: 1rem;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 0.5rem;
-    height: 0.5rem;
-    font-size: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    font-size: 0.7rem;
+
 }
 
+
 .activeChannel {
-    background-color: inherit;
+    background-color: #212529;
+    border-radius: 10px;
     display: flex;
     border: none;
-    padding: 0.5rem;
-    width: 200px;
+    padding: 1rem;
+    width: 100%;
     font-size: 0.75rem;
-    cursor: pointer;
-    margin: 0.5rem;
+
+
     transition: 0.2s;
-    border-right: red 2px solid;
+    border-left: purple 3px solid;
     justify-content: center;
+
 }
 
 .channelButton:hover {
     transform: scale(1.05);
     transition: 0.1s;
+    background-color: #212529;
 }
 
 

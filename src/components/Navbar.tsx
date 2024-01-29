@@ -10,31 +10,17 @@ import styles from "./Navbar.module.css";
 
 type Props = {
   setShowProfile: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowPanel: React.Dispatch<React.SetStateAction<boolean>>;
-  showPanel: boolean;
 };
 
-const Navbar: React.FC<Props> = ({
-  setShowPanel,
-  setShowProfile,
-  showPanel,
-}) => {
+const Navbar: React.FC<Props> = ({ setShowProfile }) => {
   const router = useRouter();
 
   const handleShowProfile = () => {
-    if (showPanel) {
-      setShowProfile(true);
-    } else {
-      setShowPanel(true);
-    }
+    setShowProfile(true);
   };
 
   const handleShowChannels = () => {
-    if (showPanel) {
-      setShowProfile(false);
-    } else {
-      setShowPanel(true);
-    }
+    setShowProfile(false);
   };
 
   return (

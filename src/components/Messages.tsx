@@ -13,7 +13,7 @@ export type Message = {
   id: number;
   content: string;
   created_at: string;
-  channel_id: string;
+  channel_id: number;
   user_id: string;
   users: {
     username: string;
@@ -44,7 +44,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
       if (error) throw error;
 
       if (data) {
-        setMessages(data);
+        setMessages(data as Message[]);
         console.log("messages:", data);
       } else {
         console.log(error);

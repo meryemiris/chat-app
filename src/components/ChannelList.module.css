@@ -4,20 +4,14 @@
     margin: 1rem;
     padding-bottom: 1rem;
     border-radius: 40px;
-    background-color: #343a40;
-
+    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
 }
 
 
 .channelContainer {
-
     overflow-y: auto;
     scrollbar-width: auto;
-    background-color: #343a40;
     margin-bottom: 1rem;
-
-
-
 }
 
 .channelContainer::-webkit-scrollbar {
@@ -55,16 +49,18 @@
     padding: 1rem;
     width: 100%;
     border: none;
-    font-size: 0.75rem;
     cursor: pointer;
-    background-color: inherit;
     justify-content: center;
-    border-bottom: 1px solid #212529;
+    background-color: transparent;
+    margin: 0.2rem;
+    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 2px 0 -1px;
+
 }
 
 .channelButton:active {
     transform: scale(0.95);
     transition: 0.2s;
+
 }
 
 .channelButton:focus {
@@ -88,25 +84,26 @@
 
 
 .activeChannel {
-    background-color: #212529;
+    background-color: transparent;
+
     border-radius: 10px;
     display: flex;
     border: none;
     padding: 1rem;
     width: 100%;
     font-size: 0.75rem;
-
-
     transition: 0.2s;
-    border-left: purple 3px solid;
+    border-left: #6F00FF 3px solid;
+    border-right: #6F00FF 3px solid;
     justify-content: center;
 
 }
 
 .channelButton:hover {
-    transform: scale(1.05);
+    transform: scale(1.15);
     transition: 0.1s;
-    background-color: #212529;
+
+
 }
 
 

@@ -4,7 +4,9 @@
     margin: 0.3rem 0;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
-    background-color: #212529;
+    /* background-color: #010B13; */
+    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 2px 0 -1px;
+
 
 }
 

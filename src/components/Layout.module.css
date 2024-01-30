@@ -3,7 +3,7 @@
     flex-direction: row;
     height: 100vh;
     overflow: hidden;
-    background: inherit;
+    background-color: #E86100;
 
 }
 
@@ -12,8 +12,6 @@
     flex-direction: row;
     width: 100%;
     border-radius: 20px;
-    background: inherit;
-    box-shadow: 5px 5px 25px #898989,
-        -5px -5px 25px #ffffff;
+    background: white;
     margin: 1rem;
 }

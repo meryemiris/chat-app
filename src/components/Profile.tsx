@@ -58,7 +58,7 @@ export default function Profile() {
 
   return (
     <div className={styles.profile}>
-      <div className={styles.profileHeader}>
+      <header className={styles.profileHeader}>
         <h2 className={styles.profileTitle}>Profile</h2>
         <button
           className={styles.editProfile}
@@ -66,58 +66,60 @@ export default function Profile() {
         >
           <TbUserEdit />
         </button>
-      </div>
+      </header>
 
-      <Image
-        className={styles.profileImg}
-        src={profileImg || ""}
-        alt="profile image"
-        width={100}
-        height={100}
-        layout="fixed"
-        loading="lazy"
-      />
-
-      {isEdit && (
-        <form>
+      <main>
+        <Image
+          className={styles.profileImg}
+          src={profileImg || ""}
+          alt="profile image"
+          width={100}
+          height={100}
+          layout="fixed"
+          loading="lazy"
+        />
+        {isEdit && (
+          <form>
+            <input
+              className={styles.profileInput}
+              type="file"
+              name="profilePic"
+              onChange={handleImageChange}
+            />
+            <button className={styles.profileBtn} onClick={updateProfileImg}>
+              Update
+            </button>
+          </form>
+        )}
+        <form className={styles.username}>
           <input
-            className={styles.profileInput}
-            type="file"
-            name="profilePic"
-            onChange={handleImageChange}
+            className={styles.usernameInput}
+            type="text"
+            onChange={(e) => setUsername(e.target.value)}
+            name="username"
+            value={username}
           />
-          <button className={styles.profileBtn} onClick={updateProfileImg}>
-            Update
+          <button className={styles.editUsername}>
+            <MdEdit />
           </button>
         </form>
-      )}
+      </main>
 
-      <form className={styles.username}>
-        <input
-          className={styles.usernameInput}
-          type="text"
-          onChange={(e) => setUsername(e.target.value)}
-          name="username"
-          value={username}
-        />
-        <button className={styles.editUsername}>
-          <MdEdit />
+      <footer>
+        <button
+          className={styles.logout}
+          onClick={() => {
+            router.push("/login");
+            supabase.auth.signOut();
+          }}
+        >
+          <div className={styles.icon}>
+            <IoLogOut />
+          </div>
+
+          <div className={styles.text}>Logout</div>
         </button>
-      </form>
-
-      <button
-        className={styles.logout}
-        onClick={() => {
-          router.push("/login");
-          supabase.auth.signOut();
-        }}
-      >
-        <div className={styles.icon}>
-          <IoLogOut />
-        </div>
-
-        <div className={styles.text}>Logout</div>
-      </button>
+      </footer>
     </div>
   );
 }

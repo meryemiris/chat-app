@@ -41,8 +41,8 @@
 .message {
     display: flex;
     flex-direction: column;
-    padding: 0.3rem 0.3rem;
-
+    padding: 0.2rem 0.5rem;
+    background-color: #eaf4f4;
     border: 1px solid rgba(var(--callout-border-rgb), 0.3);
     border-radius: var(--border-radius);
     border-bottom-left-radius: 0%;
@@ -51,8 +51,8 @@
 .myMessage {
     display: flex;
     flex-direction: column;
-    padding: 0.3rem 0.3rem;
-    background-color: #3b6064;
+    padding: 0.5rem;
+    background-color: #a4c3b2;
     border: 1px solid rgba(var(--callout-border-rgb), 0.3);
     border-radius: var(--border-radius);
     border-bottom-right-radius: 0%;
@@ -81,8 +81,8 @@
 }
 
 .avatar {
-    width: 2rem;
-    height: 2rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     border: none;
     margin: 0.2rem;

@@ -64,7 +64,7 @@ export default function ChatRoom() {
           <input
             type="text"
             name="text"
-            className={styles.input}
+            className={styles.searchInput}
             placeholder="search.."
             value={searchTerm}
             onChange={handleSearch}

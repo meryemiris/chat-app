@@ -48,13 +48,13 @@
 .input:focus,
 .input:valid {
     outline: none;
-    border: 1.5px solid #E86100;
+    border: 1.5px solid;
 }
 
 .input:focus~label,
 .input:valid~label {
     transform: translateY(-50%) scale(0.8);
-    background-color: #010B13;
+    background-color: #fff;
     padding: 0 .2em;
     color: #E86100;
 }
@@ -64,7 +64,7 @@
     font-size: 1.5rem;
     width: 100%;
     height: 3rem;
-    background-image: linear-gradient(rgb(214, 202, 254), #E86100);
+    background-image: linear-gradient(#fff, #E86100);
     border: none;
     border-radius: 50px;
     font-weight: 600;

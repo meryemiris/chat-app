@@ -1,25 +1,30 @@
 .container {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
     margin: 1rem;
-    padding-bottom: 1rem;
-    border-radius: 40px;
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px #cccccc,
+        -5px -5px 10px #f4f4f4;
 }
 
 
 .channelContainer {
     overflow-y: auto;
-    scrollbar-width: auto;
     margin-bottom: 1rem;
+    background-color: transparent;
+    padding: 0.5rem 1rem;
 }
 
 .channelContainer::-webkit-scrollbar {
-    display: none;
+    width: 0.2rem;
+
 }
 
+
+
 .channelContainer::-webkit-scrollbar-thumb {
-    background-color: #9db4c0;
+    background-color: #d5d5d5;
 
 }
 
@@ -29,7 +34,7 @@
 
 .channelInput {
     border: none;
-    border-radius: 40px;
+    border-radius: 20px;
     padding: 0.5rem;
     margin-right: 1rem;
     background-color: inherit;
@@ -38,23 +43,21 @@
 
 
 .channelInput::placeholder {
-    color: #9db4c0;
     font-size: .7rem;
 }
 
 
 .channelButton {
     display: flex;
-    border-radius: 10px;
     padding: 1rem;
+    margin: 1rem 0;
     width: 100%;
-    border: none;
     cursor: pointer;
-    justify-content: center;
-    background-color: transparent;
-    margin: 0.2rem;
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 2px 0 -1px;
-
+    background-color: inherit;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 2px 3px #b5b5b5,
+        -2px -2px 3px #ebebeb;
 }
 
 .channelButton:active {
@@ -63,9 +66,22 @@
 
 }
 
-.channelButton:focus {
-    outline: none;
+.activeChannel {
+    background-color: transparent;
+    border-radius: 10px;
+    display: flex;
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    font-size: 0.75rem;
+    transition: 0.2s;
+    border-left: #E86100 5px solid;
+    box-shadow: 2px 2px 3px #b5b5b5,
+        -2px -2px 3px #ebebeb;
+
 }
+
+
 
 .msgCount {
     position: relative;
@@ -79,25 +95,10 @@
     width: 1rem;
     height: 1rem;
     font-size: 0.7rem;
-
 }
 
 
-.activeChannel {
-    background-color: transparent;
 
-    border-radius: 10px;
-    display: flex;
-    border: none;
-    padding: 1rem;
-    width: 100%;
-    font-size: 0.75rem;
-    transition: 0.2s;
-    border-left: #6F00FF 3px solid;
-    border-right: #6F00FF 3px solid;
-    justify-content: center;
-
-}
 
 .channelButton:hover {
     transform: scale(1.15);
@@ -110,11 +111,9 @@
 
 .channelTitle {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: #9db4c0;
     font-weight: bold;
     font-size: 1rem;
     margin-top: 0.5rem;
-    text-decoration: underline;
     align-self: flex-start;
     padding: 0.4rem 0.8rem;
 }

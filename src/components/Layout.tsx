@@ -10,14 +10,15 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [showPanel, setShowPanel] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
 
   return (
-    <div className={styles.chatLayout}>
+    <div className={styles.container}>
       <Navbar setShowProfile={setShowProfile} />
-      <Sidebar showProfile={showProfile} />
-      {children}
+      <div className={styles.chatContainer}>
+        <Sidebar showProfile={showProfile} />
+        {children}
+      </div>
     </div>
   );
 };

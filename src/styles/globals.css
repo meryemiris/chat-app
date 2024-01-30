@@ -7,11 +7,11 @@
 
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
 
-    color: #fff;
-    background: #010B13
+    color: #000;
+    background: #ffffff
   }
 }
 
@@ -35,8 +35,8 @@ body {
 
 
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   html {
-    color-scheme: dark;
+    color-scheme: light;
   }
 }

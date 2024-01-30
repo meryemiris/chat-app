@@ -1,20 +1,6 @@
 .panel {
     display: flex;
-    flex-direction: row;
-    margin: 0.3rem 0;
+    margin: 0.5rem 0;
     border-top-left-radius: 40px;
     border-bottom-left-radius: 40px;
-    /* background-color: #010B13; */
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 2px 0 -1px;
-
-
-}
-
-
-.closeButton {
-    background-color: inherit;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #ff9e00;
 }

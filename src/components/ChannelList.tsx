@@ -138,12 +138,13 @@ const ChannelList = () => {
       <h2 className={styles.channelTitle}>Channels</h2>
       <form onSubmit={handleCreateChannel}>
         <input
-          className={styles.channelInput}
+          className={styles.channelSearch}
           name="channelName"
           placeholder="Search or create a new channel"
           value={searchTerm}
           onChange={handleSearch}
           autoFocus
+          autoComplete="off"
         />
       </form>
       <div className={styles.channelContainer}>

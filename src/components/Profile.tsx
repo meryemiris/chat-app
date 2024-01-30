@@ -4,6 +4,9 @@ import { TbUserEdit } from "react-icons/tb";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { IoLogOut } from "react-icons/io5";
+import { useRouter } from "next/router";
+import { MdEdit } from "react-icons/md";
 
 export default function Profile() {
   const { userId } = useContext(AuthContext);
@@ -11,7 +14,7 @@ export default function Profile() {
   const [username, setUsername] = useState("");
 
   const [isEdit, setIsEdit] = useState(false);
-
+  const router = useRouter();
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -89,13 +92,32 @@ export default function Profile() {
         </form>
       )}
 
-      <form>
+      <form className={styles.username}>
         <input
-          className={styles.profileInput}
+          className={styles.usernameInput}
+          type="text"
+          onChange={(e) => setUsername(e.target.value)}
           name="username"
           value={username}
         />
+        <button className={styles.editUsername}>
+          <MdEdit />
+        </button>
       </form>
+
+      <button
+        className={styles.logout}
+        onClick={() => {
+          router.push("/login");
+          supabase.auth.signOut();
+        }}
+      >
+        <div className={styles.icon}>
+          <IoLogOut />
+        </div>
+
+        <div className={styles.text}>Logout</div>
+      </button>
     </div>
   );
 }

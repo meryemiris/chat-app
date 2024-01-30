@@ -1,10 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/router";
-import {
-  IoChatbubbleEllipsesSharp,
-  IoLogOut,
-  IoSettings,
-} from "react-icons/io5";
+import { IoChatbubbleEllipsesSharp, IoSettings } from "react-icons/io5";
 
 import styles from "./Navbar.module.css";
 
@@ -13,8 +9,6 @@ type Props = {
 };
 
 const Navbar: React.FC<Props> = ({ setShowProfile }) => {
-  const router = useRouter();
-
   const handleShowProfile = () => {
     setShowProfile(true);
   };
@@ -26,32 +20,12 @@ const Navbar: React.FC<Props> = ({ setShowProfile }) => {
   return (
     <div className={styles.container}>
       <button onClick={handleShowChannels} className={styles.button}>
-        <div className={styles.icon}>
-          <IoChatbubbleEllipsesSharp />
-        </div>
-        <div className={styles.text}>Chats</div>
+        <IoChatbubbleEllipsesSharp />
       </button>
 
       <div>
         <button onClick={handleShowProfile} className={styles.button}>
-          <div className={styles.icon}>
-            <IoSettings />
-          </div>
-          <div className={styles.text}>Profile</div>
-        </button>
-
-        <button
-          className={styles.button}
-          onClick={() => {
-            router.push("/login");
-            supabase.auth.signOut();
-          }}
-        >
-          <div className={styles.icon}>
-            <IoLogOut />
-          </div>
-
-          <div className={styles.text}>Logout</div>
+          <IoSettings />
         </button>
       </div>
     </div>

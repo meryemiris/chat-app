@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useRef, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChannelList.module.css";
@@ -17,16 +17,17 @@ const ChannelList = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { activeChannelId } = useContext(ChannelsContext);
-  const { userId } = useContext(AuthContext);
-  const { setActiveChannelId, setActiveChannelName } =
+  const { activeChannelId, setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
+  const { userId } = useContext(AuthContext);
 
-  const [isNewMessages, setIsNewMessages] = useState(false);
-  const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
-  const [newMsgSenderId, setNewMsgSenderId] = useState("");
   const [newMessages, setNewMessages] = useState<Message[]>([]);
-  const [newMsgCount, setNewMsgCount] = useState(0);
+  console.log("newMessages", newMessages);
+
+  const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
+
+  const [senderName, setSenderName] = useState("");
+  const senderIdRef = useRef<string>("");
 
   useEffect(() => {
     async function getChannelList() {
@@ -67,20 +68,17 @@ const ChannelList = () => {
           table: "messages",
         },
         (payload: { new: Message }) => {
-          const channel_id = payload.new.channel_id;
-          const user_id = payload.new.user_id;
+          const newMsgChannelId = payload.new.channel_id;
 
-          setIsNewMessages(true);
           setNewMessages((prevMessages) => [...prevMessages, payload.new]);
 
           setNewMsgChannelIds((prevIds: number[]) => {
-            if (!prevIds.includes(channel_id)) {
-              return [...prevIds, channel_id];
+            if (prevIds.includes(newMsgChannelId)) {
+              return prevIds;
             }
-            return prevIds;
+            return [...prevIds, newMsgChannelId];
           });
-          setNewMsgSenderId(user_id);
-          console.log(channel_id);
+          senderIdRef.current = payload.new.user_id;
         }
       )
       .subscribe();
@@ -88,12 +86,11 @@ const ChannelList = () => {
     return () => {
       supabase.removeChannel(subcribeMessages);
     };
-  }, [activeChannelId]);
+  }, []);
 
   const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const ChannelData = new FormData(e.currentTarget);
-    const channelName = ChannelData.get("channelName");
+    const channelName = new FormData(e.currentTarget).get("channelName");
 
     const { data, error } = await supabase
       .from("channels")
@@ -106,32 +103,50 @@ const ChannelList = () => {
     setSearchTerm("");
   };
 
-  const handleChannelChange = (id: number, name: string) => {
-    setActiveChannelId(id);
-    setActiveChannelName(name);
-  };
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredChannels = channels.filter((channel) =>
-    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredChannelsWithMessages = channels
+    .filter((channel) =>
+      channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .map(({ id, name }) => {
+      const channelMessages = newMessages.filter(
+        (msg) => msg.channel_id === id
+      );
 
-  console.log("newMsgChannelIds", newMsgChannelIds);
-  console.log("newMessges", newMessages);
+      const lastMsg = channelMessages[channelMessages.length - 1];
+      const isSender = lastMsg?.user_id === userId;
+      const newMsgCount = channelMessages.length;
 
-  const handleReadNewMessages = (id: number) => {
-    const count = newMessages.filter((msg) => msg.channel_id === id).length + 1;
-    setNewMsgCount(count);
-    setNewMsgChannelIds((prevIds: number[]) =>
-      prevIds.filter((channelId) => channelId !== id)
-    );
+      return { id, name, lastMsg, newMsgCount, isSender };
+    });
+
+  const handleReadNewMessages = (id: number, name: string) => {
     setNewMessages((prevMessages) =>
       prevMessages.filter((msg) => msg.channel_id !== id)
     );
+    setNewMsgChannelIds((prevIds: number[]) =>
+      prevIds.filter((channelId) => channelId !== id)
+    );
   };
+
+  useEffect(() => {
+    async function getUser() {
+      if (senderIdRef.current) {
+        const { data: user, error: userError } = await supabase
+          .from("users")
+          .select("profile_img, username")
+          .eq("id", senderIdRef.current);
+
+        if (user) {
+          setSenderName(user[0]?.username);
+        }
+      }
+    }
+    getUser();
+  }, [senderIdRef]);
 
   return (
     <div className={styles.container}>
@@ -148,28 +163,48 @@ const ChannelList = () => {
         />
       </form>
       <div className={styles.channelContainer}>
-        {filteredChannels.map(({ id, name }) => (
-          <button
-            onClick={() => {
-              handleChannelChange(id, name);
-              handleReadNewMessages(id);
-            }}
-            key={id}
-            className={
-              activeChannelId === id
-                ? styles.activeChannel
-                : styles.channelButton
-            }
-          >
-            {name}
+        {filteredChannelsWithMessages.map(
+          ({ id, name, newMsgCount, lastMsg, isSender }) => (
+            <button
+              onClick={() => {
+                setActiveChannelId(id);
+                setActiveChannelName(name);
+                handleReadNewMessages(id, name);
+              }}
+              key={id}
+              className={
+                activeChannelId === id
+                  ? styles.activeChannel
+                  : styles.channelButton
+              }
+            >
+              <div className={styles.channelDetails}>
+                <h6>{name}</h6>
+                {newMsgCount > 0 ? (
+                  <>
+                    <p className={styles.lastMsg}>
+                      <span className={styles.senderName}>
+                        {isSender ? "You: " : `${senderName}: `}
+                      </span>
+                      {lastMsg && lastMsg.content.length > 20
+                        ? lastMsg.content.slice(0, 20) + "..."
+                        : lastMsg.content}
+                    </p>
+                    <p> {lastMsg?.created_at}</p>
+                  </>
+                ) : (
+                  <i style={{ color: "grey" }}>No messages yet</i>
+                )}
+              </div>
 
-            {newMsgChannelIds.includes(id) &&
-              activeChannelId !== id &&
-              userId !== newMsgSenderId && (
-                <span className={styles.msgCount}>{newMsgCount}</span>
-              )}
-          </button>
-        ))}
+              {!isSender &&
+                newMsgCount > 0 &&
+                newMsgChannelIds.includes(id) && (
+                  <span className={styles.msgCount}>{newMsgCount}</span>
+                )}
+            </button>
+          )
+        )}
       </div>
     </div>
   );

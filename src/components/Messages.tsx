@@ -44,8 +44,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
       if (error) throw error;
 
       if (data) {
-        setMessages(data as Message[]);
-        console.log("messages:", data);
+        setMessages(data as []);
       } else {
         console.log(error);
       }

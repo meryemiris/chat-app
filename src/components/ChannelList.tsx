@@ -6,6 +6,8 @@ import styles from "./ChannelList.module.css";
 import ChannelsContext from "@/lib/ChannelsContext";
 import AuthContext from "@/lib/AuthContext";
 import { Message } from "./Messages";
+import { TbMushroom } from "react-icons/tb";
+import Image from "next/image";
 
 export type Channel = {
   id: number;
@@ -119,8 +121,23 @@ const ChannelList = () => {
       const lastMsg = channelMessages[channelMessages.length - 1];
       const isSender = lastMsg?.user_id === userId;
       const newMsgCount = channelMessages.length;
+      const lastMsgCreatedAt = lastMsg?.created_at;
+      const [hour, minute] = lastMsgCreatedAt
+        ? lastMsgCreatedAt?.split(".").slice(0, 2)
+        : ["", ""];
+      const lastMsgTime = `${hour}:${minute}`;
+      console.log(lastMsgTime);
 
-      return { id, name, lastMsg, newMsgCount, isSender };
+      return {
+        id,
+        name,
+        lastMsg,
+        newMsgCount,
+        isSender,
+        lastMsgTime,
+        hour,
+        minute,
+      };
     });
 
   const handleReadNewMessages = (id: number, name: string) => {
@@ -148,21 +165,31 @@ const ChannelList = () => {
     getUser();
   }, [senderIdRef]);
 
+  const threeMushrooms = "./threeMushrooms.svg";
+
   return (
     <div className={styles.container}>
-      <h2 className={styles.channelTitle}>Channels</h2>
+      <div className={styles.header}>
+        <Image
+          src={threeMushrooms}
+          alt="threeMushrooms"
+          width={40}
+          height={40}
+        />
+        <h2 className={styles.channelTitle}>mushRooms</h2>
+      </div>
       <form onSubmit={handleCreateChannel}>
         <input
           className={styles.channelSearch}
           name="channelName"
-          placeholder="Search or create a new channel"
+          placeholder={`Search or create a new channel`}
           value={searchTerm}
           onChange={handleSearch}
           autoFocus
           autoComplete="off"
         />
       </form>
-      <div className={styles.channelContainer}>
+      <div className={styles.scrollable}>
         {filteredChannelsWithMessages.map(
           ({ id, name, newMsgCount, lastMsg, isSender }) => (
             <button
@@ -179,21 +206,21 @@ const ChannelList = () => {
               }
             >
               <div className={styles.channelDetails}>
-                <h6>{name}</h6>
+                <div className={styles.roomName}>
+                  <h6>{name}</h6>
+                  <p className={styles.lastMsgTime}>{lastMsg?.created_at}</p>
+                </div>
                 {newMsgCount > 0 ? (
-                  <>
-                    <p className={styles.lastMsg}>
-                      <span className={styles.senderName}>
-                        {isSender ? "You: " : `${senderName}: `}
-                      </span>
-                      {lastMsg && lastMsg.content.length > 20
-                        ? lastMsg.content.slice(0, 20) + "..."
-                        : lastMsg.content}
-                    </p>
-                    <p> {lastMsg?.created_at}</p>
-                  </>
+                  <p className={styles.lastMsgPreview}>
+                    <span className={styles.senderName}>
+                      {isSender ? "You: " : `${senderName}: `}
+                    </span>
+                    {lastMsg && lastMsg.content.length > 20
+                      ? lastMsg.content.slice(0, 20) + "..."
+                      : lastMsg.content}
+                  </p>
                 ) : (
-                  <i style={{ color: "grey" }}>No messages yet</i>
+                  ""
                 )}
               </div>
 

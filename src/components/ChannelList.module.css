@@ -3,10 +3,10 @@
     display: flex;
     flex-direction: column;
     padding: 1rem 0.5rem;
-    margin: 0.5rem;
+    margin: 0 0.5rem;
     border-radius: 20px;
-    box-shadow: 5px 5px 10px #cccccc,
-        -5px -5px 10px #f4f4f4;
+    box-shadow: 5px 5px 3px #f4f4f4,
+        -5px -2px 10px #f4f4f4;
 }
 
 
@@ -22,8 +22,21 @@
     margin: 0.5rem 0 1rem 0;
 }
 
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
 
-.channelContainer {
+.channelTitle {
+    font-size: 1.5rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #f56d44;
+    margin-left: 0.5rem;
+}
+
+.scrollable {
     overflow-y: auto;
     margin-bottom: 1rem;
     background-color: transparent;
@@ -31,19 +44,19 @@
 
 }
 
-.channelContainer::-webkit-scrollbar {
+.scrollable::-webkit-scrollbar {
     width: 0.2rem;
 
 }
 
 
 
-.channelContainer::-webkit-scrollbar-thumb {
+.scrollable::-webkit-scrollbar-thumb {
     background-color: #d5d5d5;
 
 }
 
-.channelContainer::-webkit-scrollbar-track {
+.scrollable::-webkit-scrollbar-track {
     background-color: inherit;
 }
 
@@ -54,7 +67,7 @@
 }
 
 .channelSearch:focus {
-    outline: #E86100 solid 2px;
+    outline: #f56d44 solid 2px;
 }
 
 
@@ -62,7 +75,7 @@
 
 .channelButton {
     display: flex;
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     margin-bottom: 0.5rem;
     width: 100%;
     cursor: pointer;
@@ -80,11 +93,10 @@
     border-radius: 10px;
     display: flex;
     border: none;
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     width: 100%;
     font-size: 1rem;
-    transition: 0.2s;
-    border-left: #E86100 5px solid;
+    border-left: #f56d44 5px solid;
     box-shadow: 2px 2px 3px #b5b5b5,
         -2px -2px 3px #ebebeb;
     margin-bottom: 0.5rem;
@@ -96,17 +108,19 @@
 .msgCount {
     position: relative;
     top: -1rem;
-    right: -3.5rem;
-    background-color: #81b29a;
+    right: -1rem;
+    background-color: #f56d44;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.8rem;
+    width: 1.7rem;
+    height: 1.5rem;
+    font-size: 1rem;
+    box-shadow: 2px 2px 3px #b5b5b5,
+        -2px -2px 3px #ebebeb;
     color: white;
-    font-weight: 600;
+
 
 }
 
@@ -124,17 +138,20 @@
 }
 
 
-.channelTitle {
-    font-size: 1rem;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    align-self: flex-start;
-    color: #9db4c0;
-}
+
 
 .channelDetails {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
+
+}
+
+.roomName {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .channelDetails h6 {
@@ -143,17 +160,21 @@
 }
 
 .senderName {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #E86100;
-}
 
-.lastMsg {
-    font-size: 1rem;
 
 }
 
-.time {
-    size: 0.6rem;
+
+.lastMsgTime {
+    font-size: 0.8rem;
     color: #9db4c0;
+    align-self: flex-end;
+}
 
+.lastMsgPreview {
+    font-size: 0.8rem;
+    align-self: flex-start;
+    margin-top: 0.2rem;
 }

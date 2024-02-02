@@ -1,11 +1,13 @@
 .container {
-    background-color: #aeb8fe;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 1rem;
     width: 100px;
+    background-color: inherit;
+
+
 }
 
 .button {

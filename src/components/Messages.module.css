@@ -1,9 +1,8 @@
 .scrollable {
-    height: 450px;
     overflow-y: auto;
     flex-direction: column;
-    justify-content: flex-end;
-
+    padding: 0.5rem 1rem 0 0;
+    margin: 0.3rem 0;
 }
 
 .scrollable::-webkit-scrollbar {
@@ -24,9 +23,9 @@
 .messageContainer {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    justify-content: flex-start;
     margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
+
 }
 
 .myMessageContainer {
@@ -34,32 +33,30 @@
     flex-direction: row-reverse;
     align-items: flex-start;
     margin-bottom: 0.5rem;
-    margin-right: 0.5rem;
 }
 
 
 .message {
     display: flex;
     flex-direction: column;
-    padding: 0.2rem 0.5rem;
-    background-color: #eaf4f4;
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    border-radius: 20px;
     border-bottom-left-radius: 0%;
+    box-shadow: 0px 0px 10px 0px #9db4c0;
+
 }
 
 .myMessage {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
-    background-color: #a4c3b2;
-    border: 1px solid rgba(var(--callout-border-rgb), 0.3);
-    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background-color: #a5c6c6;
+    border-radius: 20px;
     border-bottom-right-radius: 0%;
 }
 
 .username {
-    color: #ff9e00;
+    color: #f56d44;
     font-weight: 600;
     font-size: .8rem;
     font-family: monospace;
@@ -75,7 +72,7 @@
 
 .createdAt {
     font-size: 0.5rem;
-    color: #999999;
+    color: gray;
     font-family: monospace;
     align-self: flex-end;
 }

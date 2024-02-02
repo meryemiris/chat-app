@@ -73,7 +73,7 @@ export default function ChatRoom() {
       </header>
 
       <Messages searchTerm={searchTerm} />
-      <footer>
+      <footer className={styles.footer}>
         <form onSubmit={handleSendMessage} className={styles.sendBox}>
           <input
             type="text"

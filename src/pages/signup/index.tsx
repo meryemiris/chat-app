@@ -1,8 +1,8 @@
 import Signup from "@/components/Signup";
 import Image from "next/image";
-import styles from "@/styles/SignupPage.module.css";
+import styles from "@/styles/Login-SignupPages.module.css";
 
-const signupImg = "/signup.svg";
+const signupImg = "/mushroom.svg";
 
 export default function SignupPage() {
   return (
@@ -10,8 +10,8 @@ export default function SignupPage() {
       <Image
         src={signupImg}
         className={styles.image}
-        width={500}
-        height={500}
+        width={50}
+        height={50}
         alt="signup"
       />
       <Signup />

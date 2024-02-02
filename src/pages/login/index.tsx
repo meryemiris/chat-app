@@ -1,8 +1,8 @@
 import Login from "@/components/Login";
 import Image from "next/image";
-import styles from "@/styles/LoginPage.module.css";
+import styles from "@/styles/Login-SignupPages.module.css";
 
-const loginImage = "/login.svg";
+const loginImage = "/mushroom.svg";
 
 export default function LoginPage() {
   return (

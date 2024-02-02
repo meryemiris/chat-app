@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import AuthContext from "@/lib/AuthContext";
+import Head from "next/head";
 
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
 
   const [activeChannelId, setActiveChannelId] = useState(1);
@@ -35,24 +36,33 @@ export default function Home() {
   }, [router, userId]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        userId,
-        setUserId,
-        isLoggedIn,
-        setIsLoggedIn,
-      }}
-    >
-      <ChannelsContext.Provider
+    <>
+      <Head>
+        <title>mushRoom</title>
+        <meta
+          name="description"
+          content="Join the Fungal Fun, Chat with your friends"
+        />
+      </Head>
+      <AuthContext.Provider
         value={{
-          activeChannelName,
-          setActiveChannelName,
-          activeChannelId,
-          setActiveChannelId,
+          userId,
+          setUserId,
+          isLoggedIn,
+          setIsLoggedIn,
         }}
       >
-        {isLoggedIn && <Layout>{<ChatRoom />}</Layout>}
-      </ChannelsContext.Provider>
-    </AuthContext.Provider>
+        <ChannelsContext.Provider
+          value={{
+            activeChannelName,
+            setActiveChannelName,
+            activeChannelId,
+            setActiveChannelId,
+          }}
+        >
+          {isLoggedIn && <Layout>{<ChatRoom />}</Layout>}
+        </ChannelsContext.Provider>
+      </AuthContext.Provider>
+    </>
   );
 }

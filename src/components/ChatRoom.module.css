@@ -50,11 +50,12 @@
     display: flex;
     justify-content: center;
 
+
 }
 
 .sendBox input:focus {
     outline: none;
-    border-bottom: #E86100 3px solid;
+
 }
 
 .sendBox input,

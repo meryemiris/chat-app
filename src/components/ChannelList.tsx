@@ -1,13 +1,13 @@
-import { useRef, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChannelList.module.css";
-
-import ChannelsContext from "@/lib/ChannelsContext";
-import AuthContext from "@/lib/AuthContext";
-import { Message } from "./Messages";
-import { TbMushroom } from "react-icons/tb";
 import Image from "next/image";
+
+import AuthContext from "@/lib/AuthContext";
+import ChannelsContext from "@/lib/ChannelsContext";
+
+import { Message } from "./Messages";
 
 export type Channel = {
   id: number;
@@ -27,9 +27,6 @@ const ChannelList = () => {
   console.log("newMessages", newMessages);
 
   const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
-
-  const [senderName, setSenderName] = useState("");
-  const senderIdRef = useRef<string>("");
 
   useEffect(() => {
     async function getChannelList() {
@@ -80,7 +77,6 @@ const ChannelList = () => {
             }
             return [...prevIds, newMsgChannelId];
           });
-          senderIdRef.current = payload.new.user_id;
         }
       )
       .subscribe();
@@ -109,36 +105,37 @@ const ChannelList = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredChannelsWithMessages = channels
-    .filter((channel) =>
-      channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .map(({ id, name }) => {
-      const channelMessages = newMessages.filter(
-        (msg) => msg.channel_id === id
-      );
+  type ChannelWithMessages = {
+    id: number;
+    name: string;
+    newMsgCount: number;
+    isSender: boolean;
+  };
 
-      const lastMsg = channelMessages[channelMessages.length - 1];
-      const isSender = lastMsg?.user_id === userId;
-      const newMsgCount = channelMessages.length;
-      const lastMsgCreatedAt = lastMsg?.created_at;
-      const [hour, minute] = lastMsgCreatedAt
-        ? lastMsgCreatedAt?.split(".").slice(0, 2)
-        : ["", ""];
-      const lastMsgTime = `${hour}:${minute}`;
-      console.log(lastMsgTime);
+  const filteredChannelsWithMessages: ChannelWithMessages[] = useMemo(() => {
+    return channels
+      .filter((channel) =>
+        channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map(({ id, name }) => {
+        const channelMessages = newMessages.filter(
+          (msg) => msg.channel_id === id
+        );
 
-      return {
-        id,
-        name,
-        lastMsg,
-        newMsgCount,
-        isSender,
-        lastMsgTime,
-        hour,
-        minute,
-      };
-    });
+        const lastMsg = channelMessages[channelMessages.length - 1];
+        const isSender = lastMsg?.user_id === userId;
+        const newMsgCount = channelMessages.length;
+
+        return {
+          id,
+          name,
+          newMsgCount,
+          isSender,
+        };
+      });
+  }, [channels, searchTerm, newMessages, userId]);
+
+  console.log("filteredChannelsWithMessages", filteredChannelsWithMessages);
 
   const handleReadNewMessages = (id: number, name: string) => {
     setNewMessages((prevMessages) =>
@@ -149,22 +146,6 @@ const ChannelList = () => {
     );
   };
 
-  useEffect(() => {
-    async function getUser() {
-      if (senderIdRef.current) {
-        const { data: user, error: userError } = await supabase
-          .from("users")
-          .select("profile_img, username")
-          .eq("id", senderIdRef.current);
-
-        if (user) {
-          setSenderName(user[0]?.username);
-        }
-      }
-    }
-    getUser();
-  }, [senderIdRef]);
-
   const threeMushrooms = "./threeMushrooms.svg";
 
   return (
@@ -173,8 +154,8 @@ const ChannelList = () => {
         <Image
           src={threeMushrooms}
           alt="threeMushrooms"
-          width={40}
-          height={40}
+          width={45}
+          height={45}
         />
         <h2 className={styles.channelTitle}>mushRooms</h2>
       </div>
@@ -191,7 +172,7 @@ const ChannelList = () => {
       </form>
       <div className={styles.scrollable}>
         {filteredChannelsWithMessages.map(
-          ({ id, name, newMsgCount, lastMsg, isSender }) => (
+          ({ id, name, newMsgCount, isSender }) => (
             <button
               onClick={() => {
                 setActiveChannelId(id);
@@ -205,24 +186,7 @@ const ChannelList = () => {
                   : styles.channelButton
               }
             >
-              <div className={styles.channelDetails}>
-                <div className={styles.roomName}>
-                  <h6>{name}</h6>
-                  <p className={styles.lastMsgTime}>{lastMsg?.created_at}</p>
-                </div>
-                {newMsgCount > 0 ? (
-                  <p className={styles.lastMsgPreview}>
-                    <span className={styles.senderName}>
-                      {isSender ? "You: " : `${senderName}: `}
-                    </span>
-                    {lastMsg && lastMsg.content.length > 20
-                      ? lastMsg.content.slice(0, 20) + "..."
-                      : lastMsg.content}
-                  </p>
-                ) : (
-                  ""
-                )}
-              </div>
+              <p>{name}</p>
 
               {!isSender &&
                 newMsgCount > 0 &&

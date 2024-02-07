@@ -78,11 +78,22 @@ export default function Login() {
       </button>
       <div className={styles.socialLogin}>
         <i>OR</i>
+        {/* "need external OAuth providers credentials, since this is not real project I did not pay :)" */}
         <div className={styles.socialButtons}>
-          <button type="button">
+          <button
+            type="button"
+            onClick={() =>
+              supabase.auth.signInWithOAuth({ provider: "google" })
+            }
+          >
             <IoLogoGoogle />
           </button>
-          <button type="button">
+          <button
+            type="button"
+            onClick={() =>
+              supabase.auth.signInWithOAuth({ provider: "github" })
+            }
+          >
             <IoLogoGithub />
           </button>
         </div>

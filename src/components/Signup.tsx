@@ -48,6 +48,25 @@ export default function Signup() {
     }
   };
 
+  // "need external OAuth providers credentials, since this is not real project I did not pay :)"
+  const handleSignUpWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "/",
+      },
+    });
+  };
+
+  const handleSignUpWithGithub = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: "/",
+      },
+    });
+  };
+
   return (
     <form onSubmit={handleRegister} className={styles.form}>
       <h1>Start Now!</h1>
@@ -93,10 +112,10 @@ export default function Signup() {
       <div className={styles.socialLogin}>
         <i>OR</i>
         <div className={styles.socialButtons}>
-          <button type="button">
+          <button type="button" onClick={handleSignUpWithGoogle}>
             <IoLogoGoogle />
           </button>
-          <button type="button">
+          <button type="button" onClick={handleSignUpWithGithub}>
             <IoLogoGithub />
           </button>
         </div>

@@ -1,0 +1,94 @@
+.alert {
+    position: fixed;
+    z-index: 9999;
+    top: 1rem;
+    right: 1rem;
+    align-self: center;
+    width: auto;
+    height: auto;
+    padding: 1rem;
+    margin: 10px;
+    line-height: 1.8;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.alert h1 {
+    font-size: 1.2rem;
+    align-self: center;
+}
+
+.alertClose {
+    position: absolute;
+    background-color: inherit;
+    border: none;
+    font-size: 1.5rem;
+    right: 0.5rem;
+    top: 0.5rem;
+    cursor: pointer;
+    color: inherit;
+
+
+}
+
+.alertClose:hover {
+    transform: scale(1.2);
+}
+
+
+
+.alertCheckbox {
+    display: none;
+}
+
+:checked+.alert {
+    display: none;
+}
+
+.alertText {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+.clear {
+    clear: both;
+}
+
+.info {
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    color: #999;
+}
+
+.success {
+    background-color: #EFE;
+    border: 1px solid #DED;
+    color: #9A9;
+}
+
+.notice {
+    background-color: #EFF;
+    border: 1px solid #DEE;
+    color: #9AA;
+}
+
+.warning {
+    background-color: #FDF7DF;
+    border: 1px solid #FEEC6F;
+    color: #C9971C;
+}
+
+.error {
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
+}

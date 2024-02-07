@@ -2,16 +2,16 @@ import { useState } from "react";
 import { supabase } from "../lib/supabase";
 
 import styles from "./Login.module.css";
-import { useRouter } from "next/router";
-import Image from "next/image";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
+
+import Alert, { alertMessage } from "./Alert";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const router = useRouter();
+  const [alert, setAlert] = useState<alertMessage | null>(null);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,6 +25,7 @@ export default function Signup() {
         password,
         options: {
           data: { username },
+          emailRedirectTo: "/",
         },
       });
 
@@ -42,9 +43,18 @@ export default function Signup() {
           } else console.log("User inserted successfully:", data);
         }
       }
-      router.push("/login");
+      setAlert({
+        title: "Welcome to Mushroom! 🍄",
+        message: `\nPlease check your email (${email}) and confirm your account. `,
+        type: "success",
+      });
     } catch (error) {
       console.error("Error registering user:", error);
+      setAlert({
+        title: "Error",
+        message: "Error registering user. Please try again.",
+        type: "error",
+      });
     }
   };
 
@@ -68,63 +78,73 @@ export default function Signup() {
   };
 
   return (
-    <form onSubmit={handleRegister} className={styles.form}>
-      <h1>Start Now!</h1>
-      <h2>Join for Free.</h2>
-      <div className={styles.inputGroup}>
-        <input
-          className={styles.input}
-          type="email"
-          id="email"
-          onChange={(e) => setEmail(e.currentTarget.value)}
-          required
+    <>
+      {alert && (
+        <Alert
+          title={alert.title}
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
         />
-        <label className={styles.userLabel} htmlFor="email">
-          Email
-        </label>
-      </div>
-
-      <div className={styles.inputGroup}>
-        <input
-          className={styles.input}
-          type="text"
-          id="username"
-          onChange={(e) => setUsername(e.currentTarget.value)}
-          required
-        />
-        <label className={styles.userLabel} htmlFor="username">
-          Username
-        </label>
-      </div>
-      <div className={styles.inputGroup}>
-        <input
-          className={styles.input}
-          type="password"
-          id="password"
-          onChange={(e) => setPassword(e.currentTarget.value)}
-          required
-        />
-        <label className={styles.userLabel} htmlFor="password">
-          Password
-        </label>
-      </div>
-      <button className={styles.button}>Signup</button>
-      <div className={styles.socialLogin}>
-        <i>OR</i>
-        <div className={styles.socialButtons}>
-          <button type="button" onClick={handleSignUpWithGoogle}>
-            <IoLogoGoogle />
-          </button>
-          <button type="button" onClick={handleSignUpWithGithub}>
-            <IoLogoGithub />
-          </button>
+      )}
+      <form onSubmit={handleRegister} className={styles.form}>
+        <h1>Start Now!</h1>
+        <h2>Join for Free.</h2>
+        <div className={styles.inputGroup}>
+          <input
+            className={styles.input}
+            type="email"
+            id="email"
+            onChange={(e) => setEmail(e.currentTarget.value)}
+            required
+          />
+          <label className={styles.userLabel} htmlFor="email">
+            Email
+          </label>
         </div>
-      </div>
 
-      <div className={styles.link}>
-        <i>Already have an account?</i>
-        <a href="login">Login</a>
-      </div>
-    </form>
+        <div className={styles.inputGroup}>
+          <input
+            className={styles.input}
+            type="text"
+            id="username"
+            onChange={(e) => setUsername(e.currentTarget.value)}
+            required
+          />
+          <label className={styles.userLabel} htmlFor="username">
+            Username
+          </label>
+        </div>
+        <div className={styles.inputGroup}>
+          <input
+            className={styles.input}
+            type="password"
+            id="password"
+            onChange={(e) => setPassword(e.currentTarget.value)}
+            required
+          />
+          <label className={styles.userLabel} htmlFor="password">
+            Password
+          </label>
+        </div>
+        <button className={styles.button}>Signup</button>
+        <div className={styles.socialLogin}>
+          <i>OR</i>
+          <div className={styles.socialButtons}>
+            <button type="button" onClick={handleSignUpWithGoogle}>
+              <IoLogoGoogle />
+            </button>
+            <button type="button" onClick={handleSignUpWithGithub}>
+              <IoLogoGithub />
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.link}>
+          <i>Already have an account?</i>
+          <a href="login">Login</a>
+        </div>
+      </form>
+    </>
   );
 }

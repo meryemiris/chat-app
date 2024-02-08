@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChannelList.module.css";
@@ -146,6 +146,24 @@ const ChannelList = () => {
     );
   };
 
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const handleToggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+  // TODO: add addEventListener to document for click outside
+
+  const handleDeleteChannel = async (id: number) => {
+    const { data, error } = await supabase
+      .from("channels")
+      .delete()
+      .eq("id", id);
+
+    setChannels((prev) => prev.filter((channel) => channel.id !== id));
+  };
+
+  // TODO: add edit function for channels
+
   const threeMushrooms = "./threeMushrooms.svg";
 
   return (
@@ -187,6 +205,36 @@ const ChannelList = () => {
               }
             >
               <p>{name}</p>
+              {activeChannelId === id && (
+                <div className={styles.threeDots}>
+                  {/* Three dot menu */}
+                  <div className={styles.dropdown}>
+                    {/* Three dots */}
+                    <ul
+                      className={`${styles.dropbtn} ${styles.icons} ${
+                        styles.btnRight
+                      } ${dropdownVisible ? styles.showLeft : ""}`}
+                      onClick={handleToggleDropdown}
+                    >
+                      <li></li>
+                      <li></li>
+                      <li></li>
+                    </ul>
+                    {/* Menu */}
+                    <div
+                      id="dropdown"
+                      className={`${styles.dropdownContent} ${
+                        dropdownVisible ? styles.show : ""
+                      }`}
+                    >
+                      <button onClick={() => handleDeleteChannel(id)}>
+                        Delete
+                      </button>
+                      <button>Edit</button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {!isSender &&
                 newMsgCount > 0 &&

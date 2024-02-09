@@ -181,11 +181,12 @@ const ChannelList = () => {
         <input
           className={styles.channelSearch}
           name="channelName"
-          placeholder={`Search or create a new channel`}
+          placeholder="Search or create a new mushRoom"
           value={searchTerm}
           onChange={handleSearch}
           autoFocus
           autoComplete="off"
+          maxLength={35}
         />
       </form>
       <div className={styles.scrollable}>
@@ -204,7 +205,7 @@ const ChannelList = () => {
                   : styles.channelButton
               }
             >
-              <p>{name}</p>
+              <p className={styles.channelName}>{name}</p>
               {activeChannelId === id && (
                 <div className={styles.threeDots}>
                   {/* Three dot menu */}

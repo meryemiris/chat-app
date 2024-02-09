@@ -128,7 +128,9 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
               <p className={styles.username}>{users?.username}</p>
             )}
             <p className={styles.content}>{content}</p>
-            <p className={styles.createdAt}>{created_at}</p>
+            <p className={styles.createdAt}>
+              {created_at.split(":").slice(0, 2).join(":")}
+            </p>
           </div>
         </div>
       ))}

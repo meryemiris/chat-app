@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: flex-start;
     margin-bottom: 0.5rem;
 
 }
@@ -41,51 +41,56 @@
 .message {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 1rem 0.5rem 0.5rem;
+
     border-radius: 20px;
-    border-bottom-left-radius: 0%;
-    box-shadow: 0px 0px 10px 0px #9db4c0;
+    border-top-left-radius: 0%;
+    box-shadow: 0px 0px 5px 0px #9db4c0;
+
+
+
 
 }
 
 .myMessage {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    background-color: #a5c6c6;
+    background-color: #fcf6bd;
     border-radius: 20px;
-    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    box-shadow: 0px 0px 5px 0px #9db4c0;
+
+
 
 }
-
-
-
-
 
 .username {
     color: #f56d44;
     font-weight: 600;
     font-size: .8rem;
     font-family: monospace;
+    margin: 0.2rem 0 0 0.5rem;
 }
 
 .content {
+    margin: 0.2rem 1rem 0.2rem 0.5rem;
     max-width: 300px;
     word-wrap: break-word;
-    font-size: 0.75rem;
-    padding: 0.3rem 0;
+    font-size: 1rem;
+    padding: 0.2rem 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .createdAt {
-    font-size: 0.5rem;
-    color: gray;
+    font-size: 0.8rem;
+    color: #9db4c0;
     font-family: monospace;
     align-self: flex-end;
+    margin: 0 0.5rem 0.5rem 0;
+
 }
 
 .avatar {
     border: none;
     margin-right: 0.2rem;
-
+    border-radius: 50%;
 }

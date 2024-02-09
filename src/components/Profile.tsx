@@ -70,11 +70,10 @@ export default function Profile() {
 
       <main>
         <Image
-          className={styles.profileImg}
-          src={profileImg || ""}
+          src={profileImg ? profileImg : "/defaultPp.png"}
           alt="profile image"
-          width={100}
-          height={100}
+          width={150}
+          height={150}
           layout="fixed"
           loading="lazy"
         />

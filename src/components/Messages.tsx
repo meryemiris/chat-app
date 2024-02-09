@@ -114,10 +114,10 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
             {userId !== user_id && (
               <Image
                 className={styles.avatar}
-                src={users?.profile_img}
+                src={users.profile_img ? users.profile_img : "/defaultPp.png"}
                 alt=""
-                width={40}
-                height={40}
+                width={50}
+                height={50}
               />
             )}
           </div>

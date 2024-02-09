@@ -24,14 +24,16 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-items: flex-end;
     margin-bottom: 0.5rem;
 
 }
 
+
 .myMessageContainer {
     display: flex;
     flex-direction: row-reverse;
-    align-items: flex-start;
+    align-items: flex-end;
     margin-bottom: 0.5rem;
 }
 
@@ -52,8 +54,13 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     background-color: #a5c6c6;
     border-radius: 20px;
-    border-bottom-right-radius: 0%;
+    border-bottom-right-radius: 0;
+
 }
+
+
+
+
 
 .username {
     color: #f56d44;
@@ -78,9 +85,7 @@
 }
 
 .avatar {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
     border: none;
-    margin: 0.2rem;
+    margin-right: 0.2rem;
+
 }

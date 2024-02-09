@@ -42,7 +42,7 @@ export default function Login() {
         showAlert(
           "warning",
           "Hey there!",
-          "Please enter a valid password (at least 8 characters)."
+          "Please enter a valid password (at least 6 characters)."
         );
         return;
       }

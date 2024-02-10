@@ -3,11 +3,18 @@ import { supabase } from "@/lib/supabase";
 
 import styles from "./ChannelList.module.css";
 import Image from "next/image";
+import { SlOptionsVertical } from "react-icons/sl";
 
 import AuthContext from "@/lib/AuthContext";
 import ChannelsContext from "@/lib/ChannelsContext";
 
 import { Message } from "./Messages";
+import {
+  AiOutlineLogout,
+  AiOutlineEdit,
+  AiOutlineDelete,
+  AiOutlineUserAdd,
+} from "react-icons/ai";
 
 export type Channel = {
   id: number;
@@ -18,13 +25,14 @@ export type Channel = {
 const ChannelList = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [isEditing, setIsEditing] = useState(false);
   const { activeChannelId, setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
 
   const [newMessages, setNewMessages] = useState<Message[]>([]);
-  console.log("newMessages", newMessages);
+
+  const [channelName, setChannelName] = useState<string>("");
 
   const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
 
@@ -151,7 +159,26 @@ const ChannelList = () => {
   const handleToggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
-  // TODO: add addEventListener to document for click outside
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownVisible(false);
+        setIsEditing(false);
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [dropdownRef]);
 
   const handleDeleteChannel = async (id: number) => {
     const { data, error } = await supabase
@@ -162,13 +189,35 @@ const ChannelList = () => {
     setChannels((prev) => prev.filter((channel) => channel.id !== id));
   };
 
-  // TODO: add edit function for channels
+  const handleEditChannel = (id: number) => {
+    setIsEditing(true);
+    setActiveChannelId(id);
+  };
+
+  const handleSave = async (
+    id: number,
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    const { data, error } = await supabase
+      .from("channels")
+      .update({ name: channelName })
+      .eq("id", activeChannelId);
+    if (data) {
+      setChannels((prevChannels) =>
+        prevChannels.map((channel) =>
+          channel.id === id ? { ...channel, name: channelName } : channel
+        )
+      );
+    }
+    setIsEditing(false);
+  };
 
   const threeMushrooms = "./threeMushrooms.svg";
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <header className={styles.header}>
         <Image
           src={threeMushrooms}
           alt="threeMushrooms"
@@ -176,7 +225,7 @@ const ChannelList = () => {
           height={45}
         />
         <h2 className={styles.channelTitle}>mushRooms</h2>
-      </div>
+      </header>
       <form onSubmit={handleCreateChannel}>
         <input
           className={styles.channelSearch}
@@ -192,57 +241,78 @@ const ChannelList = () => {
       <div className={styles.scrollable}>
         {filteredChannelsWithMessages.map(
           ({ id, name, newMsgCount, isSender }) => (
-            <button
-              onClick={() => {
-                setActiveChannelId(id);
-                setActiveChannelName(name);
-                handleReadNewMessages(id, name);
-              }}
-              key={id}
-              className={
-                activeChannelId === id
-                  ? styles.activeChannel
-                  : styles.channelButton
-              }
-            >
-              <p className={styles.channelName}>{name}</p>
-              {activeChannelId === id && (
-                <div className={styles.threeDots}>
-                  {/* Three dot menu */}
-                  <div className={styles.dropdown}>
-                    {/* Three dots */}
-                    <ul
-                      className={`${styles.dropbtn} ${styles.icons} ${
-                        styles.btnRight
-                      } ${dropdownVisible ? styles.showLeft : ""}`}
+            <div key={id} className={styles.channelItem}>
+              <button
+                onClick={() => {
+                  setActiveChannelId(id);
+                  setActiveChannelName(name);
+                  handleReadNewMessages(id, name);
+                }}
+                className={
+                  activeChannelId === id
+                    ? styles.activeChannel
+                    : styles.channelButton
+                }
+              >
+                {isEditing && activeChannelId === id ? (
+                  <form onSubmit={(e) => handleSave(id, e)}>
+                    <input
+                      type="text"
+                      className={styles.channelName}
+                      defaultValue={name}
+                      maxLength={35}
+                      onChange={(e) => setChannelName(e.target.value)}
+                    />
+                    <button type="submit">Save</button>
+                  </form>
+                ) : (
+                  <p className={styles.channelName}>{name}</p>
+                )}
+                {activeChannelId === id && (
+                  <div
+                    className={`${styles.kebabMenu} ${styles.showLeft}`}
+                    ref={dropdownRef}
+                  >
+                    <button
+                      className={styles.threeDots}
                       onClick={handleToggleDropdown}
                     >
-                      <li></li>
-                      <li></li>
-                      <li></li>
-                    </ul>
-                    {/* Menu */}
+                      <SlOptionsVertical />
+                    </button>
                     <div
                       id="dropdown"
-                      className={`${styles.dropdownContent} ${
+                      className={`${styles.dropdown} ${
                         dropdownVisible ? styles.show : ""
                       }`}
                     >
-                      <button onClick={() => handleDeleteChannel(id)}>
-                        Delete
+                      {/* TODO: add are you sure modal */}
+                      <button>
+                        Add Friend <AiOutlineUserAdd />
                       </button>
-                      <button>Edit</button>
+                      <button
+                        onClick={() => {
+                          handleToggleDropdown();
+                          handleEditChannel(id);
+                        }}
+                      >
+                        Edit Room <AiOutlineEdit />
+                      </button>
+                      <button onClick={() => handleDeleteChannel(id)}>
+                        Delete Room <AiOutlineDelete />
+                      </button>
+                      <button style={{ color: "red" }}>
+                        Leave Room <AiOutlineLogout />
+                      </button>
                     </div>
                   </div>
-                </div>
-              )}
-
-              {!isSender &&
-                newMsgCount > 0 &&
-                newMsgChannelIds.includes(id) && (
-                  <span className={styles.msgCount}>{newMsgCount}</span>
                 )}
-            </button>
+                {!isSender &&
+                  newMsgCount > 0 &&
+                  newMsgChannelIds.includes(id) && (
+                    <span className={styles.msgCount}>{newMsgCount}</span>
+                  )}
+              </button>
+            </div>
           )
         )}
       </div>

@@ -67,9 +67,6 @@
     outline: #f56d44 solid 2px;
 }
 
-
-
-
 .channelButton {
     display: flex;
     padding: 0.7rem;
@@ -89,6 +86,8 @@
     background-color: inherit;
     border-radius: 10px;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     border: none;
     padding: 0.7rem;
     width: 200px;
@@ -102,14 +101,95 @@
 
 
 .channelName {
-    max-width: 100px;
+    max-width: 150px;
     word-wrap: break-word;
-    padding-bottom: 0.2rem;
+}
 
+
+.channelButton:hover {
+    transform: scale(1.05);
+    transition: 0.2s;
+}
+
+
+.channelButton:active {
+    transform: translate(2px, 2px);
+}
+
+/* threeDots */
+
+.kebabMenu {
+    position: absolute;
+    cursor: pointer;
+}
+
+.showLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+}
+
+.threeDots {
+    background-color: inherit;
+    color: #f56d44;
+    border: none;
+
+}
+
+.threeDots:hover {
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.threeDots:active {
+    transform: translate(2px, 2px);
 }
 
 
 
+
+
+.dropdown {
+    background-color: white;
+    position: absolute;
+    display: none;
+    width: 140px;
+    margin: 0.5rem;
+    border-radius: 10px;
+    border-top-right-radius: 0;
+    overflow: auto;
+    box-shadow: 0 -2px 1px #b5b5b5,
+        0 2px 3px #ebebeb;
+
+
+
+}
+
+.dropdown button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.75rem;
+    border: none;
+    background-color: inherit;
+    padding: 0.5rem;
+    cursor: pointer;
+
+}
+
+.dropdown button:hover {
+    background-color: #f56d44;
+    color: white;
+
+
+}
+
+.show {
+    display: block;
+}
+
+/* notifier */
 
 .msgCount {
     position: relative;
@@ -128,91 +208,4 @@
     box-shadow: inset 1px 1px 20px #f56d44,
         inset -2px -1px 2px #f56d44;
 
-}
-
-
-.channelButton:hover {
-    transform: scale(1.05);
-    transition: 0.2s;
-}
-
-
-.channelButton:active {
-    transform: translate(2px, 2px);
-}
-
-/* threeDots */
-
-.threeDots {
-    position: relative;
-    right: -5.2rem;
-    cursor: pointer;
-
-}
-
-
-
-
-.showLeft {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-
-
-}
-
-.icons li {
-    background: none repeat scroll 0 0 #f56d44;
-    height: 5px;
-    width: 5px;
-    margin-bottom: 1px;
-    list-style: none outside none;
-    vertical-align: top;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-
-.dropdown {
-    position: absolute;
-    display: inline-block;
-    right: 0;
-    color: #f56d44;
-
-}
-
-.dropdownContent {
-    display: none;
-    width: 80px;
-    margin-right: 0.3rem;
-    background-color: inherit;
-    border-radius: 10px;
-    border-top-right-radius: 0;
-    cursor: pointer;
-    overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.dropdownContent button {
-    width: 100%;
-    font-size: 0.8rem;
-    border: none;
-    background-color: inherit;
-    padding: 0.2rem;
-    text-decoration: none;
-    display: block;
-    cursor: pointer;
-
-}
-
-.dropdown button:hover {
-    background-color: #f56d44;
-    color: white;
-
-
-}
-
-.show {
-    display: block;
 }

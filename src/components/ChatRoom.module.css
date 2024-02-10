@@ -24,6 +24,15 @@
 }
 
 
+
+.title {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
 .search input::placeholder {
     font-size: .75rem;
 }
@@ -140,4 +149,26 @@
     background-color: white;
     border-bottom: 3px solid #E86100;
     transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
+}
+
+
+@media screen and (max-width: 600px) {
+    .title {
+        max-width: 100px;
+        /* Adjust this value for smaller screens */
+    }
+}
+
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .title {
+        max-width: 150px;
+        /* Adjust this value for medium-sized screens */
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .title {
+        max-width: 300px;
+        /* Adjust this value for larger screens */
+    }
 }

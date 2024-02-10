@@ -7,6 +7,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 
 import AuthContext from "@/lib/AuthContext";
 import ChannelsContext from "@/lib/ChannelsContext";
+import { MdAddCircle, MdSearch } from "react-icons/md";
 
 import { Message } from "./Messages";
 import {
@@ -15,6 +16,12 @@ import {
   AiOutlineDelete,
   AiOutlineUserAdd,
 } from "react-icons/ai";
+import {
+  IoAdd,
+  IoSearch,
+  IoSearchCircle,
+  IoSearchOutline,
+} from "react-icons/io5";
 
 export type Channel = {
   id: number;
@@ -226,17 +233,20 @@ const ChannelList = () => {
         />
         <h2 className={styles.channelTitle}>mushRooms</h2>
       </header>
-      <form onSubmit={handleCreateChannel}>
+
+      <form className={styles.channelSearch} onSubmit={handleCreateChannel}>
         <input
-          className={styles.channelSearch}
           name="channelName"
-          placeholder="Search or create a new mushRoom"
+          placeholder="Search or create a room"
           value={searchTerm}
           onChange={handleSearch}
           autoFocus
           autoComplete="off"
           maxLength={35}
         />
+        <button type="submit" className={styles.channelSearchIcon}>
+          {searchTerm ? <MdAddCircle /> : <MdSearch />}
+        </button>
       </form>
       <div className={styles.scrollable}>
         {filteredChannelsWithMessages.map(
@@ -250,7 +260,7 @@ const ChannelList = () => {
                 }}
                 className={
                   activeChannelId === id
-                    ? styles.activeChannel
+                    ? `${styles.channelButton} ${styles.active}`
                     : styles.channelButton
                 }
               >

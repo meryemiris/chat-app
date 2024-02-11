@@ -15,7 +15,7 @@ type AlertProps = {
   onClose: () => void;
 };
 
-const Alert: React.FC<AlertProps> = ({ message, type, onClose, title }) => {
+const Alert: React.FC<AlertProps> = ({ title, message, type, onClose }) => {
   return (
     <label>
       <input type="checkbox" className={styles.alertCheckbox} />

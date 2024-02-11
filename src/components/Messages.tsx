@@ -8,6 +8,8 @@ import ChannelsContext from "@/lib/ChannelsContext";
 
 import Image from "next/image";
 import AuthContext from "@/lib/AuthContext";
+import FeedbackContext from "@/lib/FeedbackContext";
+import Loading from "./Loading";
 
 export type Message = {
   id: number;
@@ -32,25 +34,37 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
   const { userId } = useContext(AuthContext);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const { messageLoading, setMessageLoading } = useContext(FeedbackContext);
 
   useEffect(() => {
     async function getMessages() {
-      const { data, error } = await supabase
-        .from("messages")
-        .select(
-          "users(username, profile_img), id, content, created_at, user_id"
-        )
-        .eq("channel_id", activeChannelId);
-      if (error) throw error;
+      try {
+        setMessageLoading(true);
+        const { data, error } = await supabase
+          .from("messages")
+          .select(
+            "users(username, profile_img), id, content, created_at, user_id"
+          )
+          .eq("channel_id", activeChannelId);
 
-      if (data) {
-        setMessages(data as []);
-      } else {
-        console.log(error);
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          setMessages(data as []);
+        } else {
+          console.log(error);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setMessageLoading(false);
       }
     }
+
     getMessages();
-  }, [activeChannelId]);
+  }, [activeChannelId, userId, setMessageLoading]);
 
   useEffect(() => {
     const channel = supabase
@@ -101,39 +115,51 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
   return (
     <main ref={messageEndRef} className={styles.scrollable}>
-      {filteredMessages.map(({ user_id, content, id, created_at, users }) => (
-        <div
-          key={id}
-          className={
-            userId === user_id
-              ? styles.myMessageContainer
-              : styles.messageContainer
-          }
-        >
-          <div>
-            {userId !== user_id && (
-              <Image
-                className={styles.avatar}
-                src={users.profile_img ? users.profile_img : "/defaultPp.png"}
-                alt=""
-                width={50}
-                height={50}
-              />
-            )}
-          </div>
-          <div
-            className={userId === user_id ? styles.myMessage : styles.message}
-          >
-            {userId !== user_id && (
-              <p className={styles.username}>{users?.username}</p>
-            )}
-            <p className={styles.content}>{content}</p>
-            <p className={styles.createdAt}>
-              {created_at.split(":").slice(0, 2).join(":")}
-            </p>
-          </div>
-        </div>
-      ))}
+      {messageLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {filteredMessages.map(
+            ({ user_id, content, id, created_at, users }) => (
+              <div
+                key={id}
+                className={
+                  userId === user_id
+                    ? styles.myMessageContainer
+                    : styles.messageContainer
+                }
+              >
+                <div>
+                  {userId !== user_id && (
+                    <Image
+                      className={styles.avatar}
+                      src={
+                        users.profile_img ? users.profile_img : "/defaultPp.png"
+                      }
+                      alt=""
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                </div>
+                <div
+                  className={
+                    userId === user_id ? styles.myMessage : styles.message
+                  }
+                >
+                  {userId !== user_id && (
+                    <p className={styles.username}>{users?.username}</p>
+                  )}
+                  <p className={styles.content}>{content}</p>
+                  <p className={styles.createdAt}>
+                    {created_at.split(":").slice(0, 2).join(":")}
+                  </p>
+                </div>
+              </div>
+            )
+          )}
+        </>
+      )}
     </main>
   );
 };

@@ -4,11 +4,14 @@ import ChatRoom from "@/components/ChatRoom";
 import ChannelsContext from "@/lib/ChannelsContext";
 import { supabase } from "@/lib/supabase";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 import AuthContext from "@/lib/AuthContext";
 import Head from "next/head";
+import FeedbackContext from "@/lib/FeedbackContext";
+import { alertMessage } from "@/components/Alert";
+import Loading from "@/components/Loading";
 
 export default function HomePage() {
   const router = useRouter();
@@ -17,7 +20,13 @@ export default function HomePage() {
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [messageLoading, setMessageLoading] = useState(false);
+  const [alert, setAlert] = useState<alertMessage | null>(null);
+
   const [userId, setUserId] = useState("");
+
+  // check if user is logged in
 
   useEffect(() => {
     async function checkUser() {
@@ -60,7 +69,19 @@ export default function HomePage() {
             setActiveChannelId,
           }}
         >
-          {isLoggedIn && <Layout>{<ChatRoom />}</Layout>}
+          <FeedbackContext.Provider
+            value={{
+              alert,
+              setAlert,
+              isLoading,
+              setIsLoading,
+              messageLoading,
+              setMessageLoading,
+            }}
+          >
+            {isLoading && <Loading />}
+            {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
+          </FeedbackContext.Provider>
         </ChannelsContext.Provider>
       </AuthContext.Provider>
     </>

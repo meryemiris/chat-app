@@ -1,16 +1,17 @@
 import { supabase } from "@/lib/supabase";
 import styles from "./Login.module.css";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 import Alert, { alertMessage } from "./Alert";
 import Loading from "./Loading";
+import FeedbackContext from "@/lib/FeedbackContext";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const { setIsLoading } = useContext(FeedbackContext);
   const [alert, setAlert] = useState<alertMessage | null>(null);
 
   const showAlert = (type: string, title: string, message: string) => {
@@ -20,6 +21,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       if (!email || !password) {
         showAlert(
           "warning",
@@ -78,6 +80,7 @@ export default function Login() {
         "Something unexpected happened. Please try again later."
       );
     } finally {
+      setIsLoading(false);
       setEmail("");
       setPassword("");
     }

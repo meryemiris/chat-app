@@ -9,6 +9,7 @@ import styles from "./ChatRoom.module.css";
 
 import { IoSearch, IoSend } from "react-icons/io5";
 import AuthContext from "@/lib/AuthContext";
+import { BsFillEmojiSmileFill } from "react-icons/bs";
 
 export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
@@ -71,9 +72,19 @@ export default function ChatRoom() {
           />
         </div>
       </header>
-
-      <Messages searchTerm={searchTerm} />
+      {activeChannelName ? (
+        <Messages searchTerm={searchTerm} />
+      ) : (
+        <p className={styles.welcomeMessage}>
+          🍄 Explore mushroom magic! Join existing rooms or create your own.
+          Your journey starts here!
+        </p>
+      )}
       <footer className={styles.footer}>
+        <button className={styles.emojiButton}>
+          <BsFillEmojiSmileFill />
+        </button>
+
         <form onSubmit={handleSendMessage} className={styles.sendBox}>
           <input
             type="text"

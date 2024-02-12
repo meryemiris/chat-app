@@ -1,6 +1,5 @@
 .container {
     width: 250px;
-
     display: flex;
     flex-direction: column;
     padding: 1rem 0.5rem;
@@ -97,6 +96,8 @@
 .scrollable {
     overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
+
     background-color: transparent;
     padding: 0.5rem 1rem 2rem 1rem;
 

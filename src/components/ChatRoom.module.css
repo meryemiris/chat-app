@@ -23,6 +23,15 @@
         -5px -2px 10px #f4f4f4;
 }
 
+.welcomeMessage {
+    color: #9db4c0;
+    font-family: monospace;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    text-align: center;
+
+}
+
 
 
 .title {
@@ -75,7 +84,7 @@
 
 .sendBox input {
     width: 100%;
-    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+    padding: 0.5rem 1.5rem 0.5rem 2rem;
     border-radius: 10px;
     border: none;
 
@@ -84,6 +93,19 @@
 
 .sendBox input::placeholder {
     font-size: .75rem;
+}
+
+.emojiButton {
+    position: relative;
+    left: 25px;
+    background-color: inherit;
+    border: none;
+    color: #E86100;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
 
@@ -99,6 +121,18 @@
     background-color: inherit;
     color: #f56d44;
 }
+
+.sendBox button,
+.emojiButton:hover {
+    transform: scale(1.2);
+    transition: all 0.5s;
+}
+
+.sendBox button:focus {
+    outline: none;
+}
+
+
 
 .inputWrapper {
     display: flex;

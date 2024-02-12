@@ -119,6 +119,11 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
         <Loading />
       ) : (
         <>
+          {filteredMessages.length === 0 && (
+            <p className={styles.noMessages}>
+              No messages? Time to break the silence! 🤐💬
+            </p>
+          )}
           {filteredMessages.map(
             ({ user_id, content, id, created_at, users }) => (
               <div

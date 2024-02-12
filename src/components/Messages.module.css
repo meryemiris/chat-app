@@ -94,3 +94,11 @@
     margin-right: 0.2rem;
     border-radius: 50%;
 }
+
+.noMessages {
+    color: #9db4c0;
+    font-family: monospace;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    text-align: center;
+}

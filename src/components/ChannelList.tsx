@@ -2,12 +2,17 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChannelList.module.css";
-import Image from "next/image";
-import { SlOptionsVertical } from "react-icons/sl";
 
 import AuthContext from "@/lib/AuthContext";
 import ChannelsContext from "@/lib/ChannelsContext";
-import { MdAddCircle, MdSearch } from "react-icons/md";
+import {
+  MdAddCircle,
+  MdCheckCircleOutline,
+  MdNewReleases,
+  MdOutlineMarkUnreadChatAlt,
+  MdSave,
+  MdSearch,
+} from "react-icons/md";
 
 import { Message } from "./Messages";
 import {
@@ -16,12 +21,8 @@ import {
   AiOutlineDelete,
   AiOutlineUserAdd,
 } from "react-icons/ai";
-import {
-  IoAdd,
-  IoSearch,
-  IoSearchCircle,
-  IoSearchOutline,
-} from "react-icons/io5";
+import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
+import { SlOptionsVertical } from "react-icons/sl";
 
 export type Channel = {
   id: number;
@@ -42,6 +43,7 @@ const ChannelList = () => {
   const [channelName, setChannelName] = useState<string>("");
 
   const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
+  const [isFilter, setIsFilter] = useState(false);
 
   useEffect(() => {
     async function getChannelList() {
@@ -150,8 +152,6 @@ const ChannelList = () => {
       });
   }, [channels, searchTerm, newMessages, userId]);
 
-  console.log("filteredChannelsWithMessages", filteredChannelsWithMessages);
-
   const handleReadNewMessages = (id: number, name: string) => {
     setNewMessages((prevMessages) =>
       prevMessages.filter((msg) => msg.channel_id !== id)
@@ -168,24 +168,52 @@ const ChannelList = () => {
   };
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const filterRoomsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
+    const handleClickOutsideDropdown = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
         setDropdownVisible(false);
+      }
+    };
+
+    const handleClickOnChannelButton = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.classList.contains(styles.channelName)) {
         setIsEditing(false);
       }
     };
 
-    document.addEventListener("click", handleClick);
+    const handleClickOutsideFilterRooms = (e: MouseEvent) => {
+      if (
+        filterRoomsRef.current &&
+        !filterRoomsRef.current.contains(e.target as Node)
+      ) {
+        setIsFilter(false);
+      }
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      handleClickOutsideDropdown(e);
+      handleClickOnChannelButton(e);
+      handleClickOutsideFilterRooms(e);
+    };
+
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
-  }, [dropdownRef]);
+  }, [
+    dropdownRef,
+    filterRoomsRef,
+    setIsEditing,
+    setDropdownVisible,
+    setIsFilter,
+  ]);
 
   const handleDeleteChannel = async (id: number) => {
     const { data, error } = await supabase
@@ -220,9 +248,43 @@ const ChannelList = () => {
     setIsEditing(false);
   };
 
+  const handleToggleFilter = () => {
+    setIsFilter(!isFilter);
+  };
+
+  const handleShowUnread = () => {
+    setIsFilter(false);
+    // TODO: add unread filter function
+  };
+
+  const handleShowMuted = () => {
+    setIsFilter(false);
+    // TODO: add muted filter function
+  };
+
   return (
     <div className={styles.container}>
-      <h2 className={styles.channelTitle}>mushRooms</h2>
+      <header>
+        <h2 className={styles.channelTitle}>mushRooms</h2>
+        <div className={`${styles.kebabMenu} ${styles.showLeft}`}>
+          <button className={styles.threeDots} onClick={handleToggleFilter}>
+            <IoFilter />
+          </button>
+          <div
+            id="filterRooms"
+            ref={filterRoomsRef}
+            className={`${styles.dropdown} ${isFilter ? styles.show : ""}`}
+          >
+            {/* TODO: add fiter functions */}
+            <button onClick={handleShowUnread}>
+              Unread <MdOutlineMarkUnreadChatAlt />
+            </button>
+            <button onClick={handleShowMuted}>
+              Muted <IoVolumeMuteOutline />
+            </button>
+          </div>
+        </div>
+      </header>
 
       <form className={styles.channelSearch} onSubmit={handleCreateChannel}>
         <input
@@ -255,15 +317,21 @@ const ChannelList = () => {
                 }
               >
                 {isEditing && activeChannelId === id ? (
-                  <form onSubmit={(e) => handleSave(id, e)}>
+                  <form
+                    className={styles.channelNameForm}
+                    onSubmit={(e) => handleSave(id, e)}
+                  >
                     <input
-                      type="text"
                       className={styles.channelName}
+                      type="text"
                       defaultValue={name}
                       maxLength={35}
                       onChange={(e) => setChannelName(e.target.value)}
+                      autoFocus
                     />
-                    <button type="submit">Save</button>
+                    <button className={styles.saveButton} type="submit">
+                      <MdCheckCircleOutline />
+                    </button>
                   </form>
                 ) : (
                   <p className={styles.channelName}>{name}</p>

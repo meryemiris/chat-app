@@ -13,11 +13,19 @@
 
 }
 
+.container header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #9db4c0;
+    padding: 0 .5rem;
+}
+
 
 .channelTitle {
     font-size: 1rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: #9db4c0;
 }
 
 
@@ -147,6 +155,36 @@
     transform: translate(2px, 2px);
 }
 
+.channelNameForm {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.channelNameForm input {
+    border: none;
+}
+
+.channelNameForm input:focus {
+    outline: unset;
+    border-bottom: #f56d44 1px solid;
+}
+
+
+
+.saveButton {
+    background-color: inherit;
+    border: none;
+
+    margin: auto;
+    color: #f56d44;
+
+
+}
+
+.saveButton:hover {
+    transform: scale(1.2);
+}
 
 .channelName {
     display: -webkit-box;
@@ -198,13 +236,14 @@
     background-color: white;
     position: absolute;
     display: none;
-    width: 140px;
+    width: 130px;
     margin: 0.5rem;
     border-radius: 10px;
     border-top-right-radius: 0;
     overflow: auto;
-    box-shadow: 0 -2px 1px #b5b5b5,
-        0 2px 3px #ebebeb;
+    box-shadow: 0 2px 1px #b5b5b5,
+        0 2px 2px #ebebeb;
+    z-index: 1;
 
 
 

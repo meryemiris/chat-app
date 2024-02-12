@@ -220,19 +220,9 @@ const ChannelList = () => {
     setIsEditing(false);
   };
 
-  const threeMushrooms = "./threeMushrooms.svg";
-
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Image
-          src={threeMushrooms}
-          alt="threeMushrooms"
-          width={45}
-          height={45}
-        />
-        <h2 className={styles.channelTitle}>mushRooms</h2>
-      </header>
+      <h2 className={styles.channelTitle}>mushRooms</h2>
 
       <form className={styles.channelSearch} onSubmit={handleCreateChannel}>
         <input

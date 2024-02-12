@@ -9,7 +9,7 @@ import styles from "./ChatRoom.module.css";
 
 import { IoSearch, IoSend } from "react-icons/io5";
 import AuthContext from "@/lib/AuthContext";
-import { BsFillEmojiSmileFill } from "react-icons/bs";
+import { RiEmojiStickerLine } from "react-icons/ri";
 
 export default function ChatRoom() {
   const { activeChannelId, activeChannelName } = useContext(ChannelsContext);
@@ -82,7 +82,7 @@ export default function ChatRoom() {
       )}
       <footer className={styles.footer}>
         <button className={styles.emojiButton}>
-          <BsFillEmojiSmileFill />
+          <RiEmojiStickerLine />
         </button>
 
         <form onSubmit={handleSendMessage} className={styles.sendBox}>

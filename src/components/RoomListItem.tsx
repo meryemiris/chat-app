@@ -1,3 +1,12 @@
+import { useContext, useEffect, useRef, useState } from "react";
+
+import styles from "./ChannelList.module.css";
+import { Channel, Message } from "@/types";
+
+import ChannelsContext from "@/lib/ChannelsContext";
+import AuthContext from "@/lib/AuthContext";
+import { supabase } from "@/lib/supabase";
+
 import {
   AiOutlineDelete,
   AiOutlineEdit,
@@ -5,15 +14,7 @@ import {
   AiOutlineUserAdd,
 } from "react-icons/ai";
 import { MdCheckCircleOutline } from "react-icons/md";
-
-import styles from "./ChannelList.module.css";
 import { SlOptionsVertical } from "react-icons/sl";
-import { supabase } from "@/lib/supabase";
-import { useContext, useEffect, useRef, useState } from "react";
-import ChannelsContext from "@/lib/ChannelsContext";
-import { Channel } from "./ChannelList";
-import { Message } from "./Messages";
-import AuthContext from "@/lib/AuthContext";
 
 type RoomListItemProps = {
   isSender: boolean;
@@ -34,16 +35,13 @@ const RoomListItem: React.FC<RoomListItemProps> = ({
 }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const handleToggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
   const [channelName, setChannelName] = useState<string>("");
   const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const { activeChannelId, setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
-  const { userId } = useContext(AuthContext);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const subcribeMessages = supabase
@@ -144,6 +142,10 @@ const RoomListItem: React.FC<RoomListItemProps> = ({
     setNewMsgChannelIds((prevIds: number[]) =>
       prevIds.filter((channelId) => channelId !== id)
     );
+  };
+
+  const handleToggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
   };
 
   return (

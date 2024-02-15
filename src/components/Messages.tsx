@@ -1,27 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import styles from "./Messages.module.css";
 
 import { supabase } from "@/lib/supabase";
-
 import ChannelsContext from "@/lib/ChannelsContext";
-
-import Image from "next/image";
 import AuthContext from "@/lib/AuthContext";
 import FeedbackContext from "@/lib/FeedbackContext";
-import Loading from "./Loading";
+import { Message } from "@/types";
 
-export type Message = {
-  id: number;
-  content: string;
-  created_at: string;
-  channel_id: number;
-  user_id: string;
-  users: {
-    username: string;
-    profile_img: string;
-  };
-};
+import Loading from "./Loading";
 
 type MessagesProps = {
   searchTerm: string;

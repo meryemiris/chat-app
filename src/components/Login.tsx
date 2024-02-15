@@ -110,7 +110,7 @@ export default function Login() {
             id="email"
             type="text"
             name="email"
-            autoComplete="off"
+            // autoComplete="off"
             className={styles.input}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -124,7 +124,7 @@ export default function Login() {
             id="password"
             type="password"
             name="password"
-            autoComplete="off"
+            // autoComplete="off"
             className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}

@@ -9,17 +9,10 @@ import {
   MdSearch,
 } from "react-icons/md";
 
-import { Message } from "./Messages";
-
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
 import RoomListItem from "./RoomListItem";
 import AuthContext from "@/lib/AuthContext";
-
-export type Channel = {
-  id: number;
-  name: string;
-  member_id: string[];
-};
+import { Channel, Message } from "@/types";
 
 const ChannelList = () => {
   const [newMessages, setNewMessages] = useState<Message[]>([]);

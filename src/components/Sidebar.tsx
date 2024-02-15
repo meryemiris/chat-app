@@ -1,6 +1,6 @@
 import styles from "./Sidebar.module.css";
 import Profile from "./Profile";
-import ChannelList from "./ChannelList";
+import RoomList from "./RoomlList";
 
 type Props = {
   showProfile: boolean;
@@ -9,7 +9,7 @@ type Props = {
 const Sidebar: React.FC<Props> = ({ showProfile }) => {
   return (
     <div className={styles.panel}>
-      {showProfile ? <Profile /> : <ChannelList />}
+      {showProfile ? <Profile /> : <RoomList />}
     </div>
   );
 };

@@ -4,7 +4,6 @@
     flex-direction: column;
     padding: 1rem 0.5rem;
     margin: 0.5rem;
-
     border-radius: 20px;
     border-radius: 20px;
     box-shadow: 5px 5px 3px #f4f4f4,
@@ -23,13 +22,13 @@
 }
 
 
-.channelTitle {
+.title {
     font-size: 1rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 
-.channelSearch {
+.roomSearch {
     display: flex;
     flex-direction: row;
     align-self: center;
@@ -42,7 +41,7 @@
 
 }
 
-.channelSearch input {
+.roomSearch input {
     background-color: inherit;
     border: none;
     padding: 0.5rem;
@@ -51,19 +50,19 @@
 
 }
 
-.channelSearch input:focus {
+.roomSearch input:focus {
     outline: none;
     border-radius: 10px;
 
 }
 
-.channelSearch input::placeholder {
+.roomSearch input::placeholder {
     word-wrap: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.channelSearchIcon {
+.roomSearchIcon {
     position: relative;
     background-color: inherit;
     color: #f56d44;
@@ -76,20 +75,20 @@
 
 }
 
-.channelSearchIcon:hover {
+.roomSearchIcon:hover {
     transform: scale(1.2);
     transition: 0.2s;
 
 }
 
 
-.channelSearch::placeholder {
+.roomSearch::placeholder {
     font-size: .7rem;
     align-self: center;
 
 }
 
-.channelSearch:focus {
+.roomSearch:focus {
     outline: #f56d44 solid 2px;
 }
 
@@ -118,90 +117,7 @@
     background-color: inherit;
 }
 
-
-
-
-.channelButton {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.2rem 0.5rem 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    width: 200px;
-    background-color: inherit;
-    border: none;
-    border-radius: 10px;
-    border-bottom: #ebebeb 3px solid;
-
-}
-
-.active {
-    border-left: #f56d44 5px solid;
-    color: #f56d44;
-}
-
-.channelButton:not(.active):hover {
-    transform: scale(1.05);
-    transition: 0.2s;
-    box-shadow: inset 0 -2px 1px #b5b5b5,
-        inset 0 2px 3px #ebebeb;
-    cursor: pointer;
-}
-
-
-.channelButton:not(.active):active {
-    transform: translate(2px, 2px);
-}
-
-.channelNameForm {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-}
-
-.channelNameForm input {
-    border: none;
-}
-
-.channelNameForm input:focus {
-    outline: unset;
-    border-bottom: #f56d44 1px solid;
-}
-
-
-
-.saveButton {
-    background-color: inherit;
-    border: none;
-
-    margin: auto;
-    color: #f56d44;
-
-
-}
-
-.saveButton:hover {
-    transform: scale(1.2);
-}
-
-.channelName {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-    max-width: 130px;
-    word-wrap: break-word;
-    text-overflow: ellipsis;
-}
-
-
-
-
-
 /* threeDots */
-
 .kebabMenu {
     position: absolute;
 }
@@ -270,25 +186,4 @@
 
 .show {
     display: block;
-}
-
-/* notifier */
-
-.msgCount {
-    position: relative;
-    top: -0.8rem;
-    right: -5.4rem;
-    background-color: red;
-    border-radius: 50%;
-    color: white;
-    font-size: 0.6rem;
-    padding: 0.2rem;
-    width: 1.2rem;
-    height: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: inset 1px 1px 20px #f56d44,
-        inset -2px -1px 2px #f56d44;
-
 }

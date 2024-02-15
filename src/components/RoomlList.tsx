@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-import styles from "./ChannelList.module.css";
+import styles from "./RoomList.module.css";
 
 import {
   MdAddCircle,
@@ -10,27 +10,26 @@ import {
 } from "react-icons/md";
 
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
-import RoomListItem from "./RoomListItem";
+import ListItem from "./ListItem";
 import AuthContext from "@/lib/AuthContext";
 import { Channel, Message } from "@/types";
 
-const ChannelList = () => {
+const RoomList = () => {
   const [newMessages, setNewMessages] = useState<Message[]>([]);
-
   const [channels, setChannels] = useState<Channel[]>([]);
   const { userId } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFilter, setIsFilter] = useState(false);
 
   useEffect(() => {
-    async function getChannelList() {
+    async function getRoomList() {
       let { data, error } = await supabase.from("channels").select("id, name");
       if (data) {
         setChannels(data as Channel[]);
       }
     }
 
-    getChannelList();
+    getRoomList();
   }, []);
 
   useEffect(() => {
@@ -139,7 +138,7 @@ const ChannelList = () => {
   return (
     <div className={styles.container}>
       <header>
-        <h2 className={styles.channelTitle}>mushRooms</h2>
+        <h2 className={styles.title}>mushRooms</h2>
         <div className={`${styles.kebabMenu} ${styles.showLeft}`}>
           <button className={styles.threeDots} onClick={handleToggleFilter}>
             <IoFilter />
@@ -160,7 +159,7 @@ const ChannelList = () => {
         </div>
       </header>
 
-      <form className={styles.channelSearch} onSubmit={handleCreateChannel}>
+      <form className={styles.roomSearch} onSubmit={handleCreateChannel}>
         <input
           name="channelName"
           placeholder="Search or create a room"
@@ -170,14 +169,14 @@ const ChannelList = () => {
           autoComplete="off"
           maxLength={35}
         />
-        <button type="submit" className={styles.channelSearchIcon}>
+        <button type="submit" className={styles.roomSearchIcon}>
           {searchTerm ? <MdAddCircle /> : <MdSearch />}
         </button>
       </form>
       <div className={styles.scrollable}>
         {filteredChannelsWithMessages.map(
           ({ id, name, newMsgCount, isSender }) => (
-            <RoomListItem
+            <ListItem
               key={id}
               id={id}
               name={name}
@@ -193,4 +192,4 @@ const ChannelList = () => {
   );
 };
 
-export default ChannelList;
+export default RoomList;

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
-import styles from "./ChannelList.module.css";
+import styles from "./ListItem.module.css";
+
 import { Channel, Message } from "@/types";
 
 import ChannelsContext from "@/lib/ChannelsContext";
-import AuthContext from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
 
 import {
   AiOutlineDelete,
@@ -25,7 +25,7 @@ type RoomListItemProps = {
   setNewMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 };
 
-const RoomListItem: React.FC<RoomListItemProps> = ({
+const ListItem: React.FC<RoomListItemProps> = ({
   isSender,
   newMsgCount,
   id,
@@ -71,7 +71,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({
     return () => {
       supabase.removeChannel(subcribeMessages);
     };
-  }, [setNewMessages, setNewMsgChannelIds]);
+  }, [setNewMessages]);
 
   useEffect(() => {
     const handleClickOutsideDropdown = (e: MouseEvent) => {
@@ -149,7 +149,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({
   };
 
   return (
-    <div className={styles.channelItem}>
+    <>
       <button
         onClick={() => {
           setActiveChannelId(id);
@@ -221,8 +221,8 @@ const RoomListItem: React.FC<RoomListItemProps> = ({
           <span className={styles.msgCount}>{newMsgCount}</span>
         )}
       </button>
-    </div>
+    </>
   );
 };
 
-export default RoomListItem;
+export default ListItem;

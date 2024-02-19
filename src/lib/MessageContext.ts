@@ -1,25 +1,14 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import { Message } from "@/types";
+import { createContext } from "react";
 
-interface MessageContextProps {
-  newMsgSender: string;
-  setNewMsgSender: Dispatch<SetStateAction<string>>;
+const MessageContext = createContext({
+  unreadMessages: [] as Message[],
+  setUnreadMessages: (unreadMessages: (messages: Message[]) => Message[]) => {},
 
-  newMsgCount: number; // Change this line
-  setNewMsgCount: Dispatch<SetStateAction<number>>; // Change this line
-
-  newMsgRoomIDs: number[];
-  setNewMsgRoomIDs: Dispatch<SetStateAction<number[]>>; // Change this line
-}
-
-const MessageContext = createContext<MessageContextProps>({
-  newMsgSender: "",
-  setNewMsgSender: () => {},
-
-  newMsgCount: 0,
-  setNewMsgCount: () => {},
-
-  newMsgRoomIDs: [],
-  setNewMsgRoomIDs: () => {},
+  roomIdsWithUnreadMessages: [] as number[],
+  setRoomIdsWithUnreadMessages: (
+    roomIDs: (roomIDs: number[]) => number[]
+  ) => {},
 });
 
 export default MessageContext;

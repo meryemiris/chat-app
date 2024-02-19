@@ -12,14 +12,15 @@ import {
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
 import ListItem from "./ListItem";
 import AuthContext from "@/lib/AuthContext";
-import { Channel, Message } from "@/types";
+import { Channel } from "@/types";
 
 const RoomList = () => {
-  const [newMessages, setNewMessages] = useState<Message[]>([]);
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const { userId } = useContext(AuthContext);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isFilter, setIsFilter] = useState(false);
+
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { userId } = useContext(AuthContext);
 
   useEffect(() => {
     async function getRoomList() {
@@ -66,13 +67,6 @@ const RoomList = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-  };
-
-  type ChannelWithMessages = {
-    id: number;
-    name: string;
-    newMsgCount: number;
-    isSender: boolean;
   };
 
   const filteredChannels = channels.filter((channel) =>
@@ -156,7 +150,12 @@ const RoomList = () => {
       </form>
       <div className={styles.scrollable}>
         {filteredChannels.map(({ id, name }) => (
-          <ListItem key={id} id={id} name={name} setChannels={setChannels} />
+          <ListItem
+            key={id}
+            roomID={id}
+            roomName={name}
+            setChannels={setChannels}
+          />
         ))}
       </div>
     </div>

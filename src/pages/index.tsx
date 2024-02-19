@@ -13,6 +13,7 @@ import FeedbackContext from "@/lib/FeedbackContext";
 import { alertMessage } from "@/components/Alert";
 import Loading from "@/components/Loading";
 import MessageContext from "@/lib/MessageContext";
+import { Message } from "@/types";
 
 export default function HomePage() {
   const router = useRouter();
@@ -27,9 +28,10 @@ export default function HomePage() {
 
   const [userId, setUserId] = useState("");
 
-  const [newMsgRoomIDs, setNewMsgRoomIDs] = useState<number[]>([]);
-  const [newMsgSender, setNewMsgSender] = useState<string>("");
-  const [newMsgCount, setNewMsgCount] = useState<number>(0);
+  const [unreadMessages, setUnreadMessages] = useState<Message[]>([]);
+  const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
+    number[]
+  >([]);
 
   useEffect(() => {
     async function checkUser() {
@@ -84,12 +86,10 @@ export default function HomePage() {
           >
             <MessageContext.Provider
               value={{
-                newMsgRoomIDs,
-                setNewMsgRoomIDs,
-                newMsgSender,
-                setNewMsgSender,
-                newMsgCount,
-                setNewMsgCount,
+                unreadMessages,
+                setUnreadMessages,
+                roomIdsWithUnreadMessages,
+                setRoomIdsWithUnreadMessages,
               }}
             >
               {isLoading && <Loading />}

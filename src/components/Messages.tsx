@@ -25,11 +25,9 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
   const { messageLoading, setMessageLoading } = useContext(FeedbackContext);
 
   const {
-    setNewMsgSender,
-    setNewMsgRoomIDs,
-    newMsgCount,
-    setNewMsgCount,
-    newMsgRoomIDs,
+    setUnreadMessages,
+    roomIdsWithUnreadMessages,
+    setRoomIdsWithUnreadMessages,
   } = useContext(MessageContext);
 
   useEffect(() => {
@@ -60,7 +58,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
     }
 
     getMessages();
-  }, [activeChannelId, userId, setMessageLoading]);
+  }, [activeChannelId, setMessages, setMessageLoading]);
 
   useEffect(() => {
     const channel = supabase
@@ -71,7 +69,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
           event: "INSERT",
           schema: "public",
           table: "messages",
-          filter: `channel_id=eq.${activeChannelId}`,
+          // filter: `channel_id=eq.${activeChannelId}`,
         },
         async (payload: { new: Message }) => {
           const userData = await supabase
@@ -80,31 +78,31 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
             .eq("id", payload.new.user_id)
             .single();
 
-          const newMsg = payload.new;
-
-          if (newMsgRoomIDs.includes(payload.new.channel_id)) {
-            return;
-          } else {
-            setNewMsgRoomIDs(
-              (prev) => [...prev, newMsg.channel_id] as number[]
-            );
-          }
-
-          setNewMsgSender(newMsg.user_id);
-
           const newMessage = {
             ...payload.new,
             users: userData.data,
           };
 
-          setMessages((prev) => [...prev, newMessage] as Message[]);
-          // setNewMsgCount(newMsgCount + 1);
+          if (payload.new.channel_id === activeChannelId) {
+            setMessages(
+              (prev: Message[]) => [...prev, newMessage] as Message[]
+            );
+          } else {
+          }
 
-          if (activeChannelId === newMsg.channel_id) {
-            setNewMsgCount(newMsgCount + 1);
+          if (
+            userId !== payload.new.user_id &&
+            !roomIdsWithUnreadMessages.includes(activeChannelId)
+          ) {
+            setUnreadMessages((prev) => [...prev, payload.new]);
+            setRoomIdsWithUnreadMessages((prev: number[]) => [
+              ...prev,
+              payload.new.channel_id,
+            ]);
           }
         }
       )
+
       .subscribe();
 
     return () => {
@@ -112,12 +110,10 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
     };
   }, [
     activeChannelId,
+    setUnreadMessages,
+    setRoomIdsWithUnreadMessages,
+    roomIdsWithUnreadMessages,
     userId,
-    setNewMsgSender,
-    setNewMsgRoomIDs,
-    newMsgCount,
-    setNewMsgCount,
-    newMsgRoomIDs,
   ]);
 
   const filteredMessages = messages.filter((message) =>
@@ -145,7 +141,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
               No messages? Time to break the silence! 🤐💬
             </p>
           )}
-          {filteredMessages.map(
+          {filteredMessages?.map(
             ({ user_id, content, id, created_at, users }) => (
               <div
                 key={id}

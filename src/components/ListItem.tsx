@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 
 import styles from "./ListItem.module.css";
 
-import { Channel, Message } from "@/types";
+import { Channel } from "@/types";
 
 import ChannelsContext from "@/lib/ChannelsContext";
 import MessageContext from "@/lib/MessageContext";
@@ -16,35 +16,30 @@ import {
 } from "react-icons/ai";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
-import AuthContext from "@/lib/AuthContext";
+
+import UnreadMessages from "./UnreadMessage";
 
 type RoomListItemProps = {
-  id: number;
-  name: string;
+  roomID: number;
+  roomName: string;
   setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
 };
 
-const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
+const ListItem: React.FC<RoomListItemProps> = ({
+  roomID,
+  roomName,
+  setChannels,
+}) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { setRoomIdsWithUnreadMessages, setUnreadMessages } =
+    useContext(MessageContext);
 
   const [channelName, setChannelName] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
+
   const { activeChannelId, setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
-  const {
-    newMsgRoomIDs,
-
-    setNewMsgCount,
-    setNewMsgRoomIDs,
-    newMsgCount,
-    newMsgSender,
-    setNewMsgSender,
-  } = useContext(MessageContext);
-
-  const { userId } = useContext(AuthContext);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  console.log("newMsgRoomIDs", newMsgRoomIDs);
 
   useEffect(() => {
     const handleClickOutsideDropdown = (e: MouseEvent) => {
@@ -75,7 +70,7 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
     };
   }, []);
 
-  const handleDeleteChannel = async (id: number) => {
+  const handleDeleteRoom = async (id: number) => {
     const { data, error } = await supabase
       .from("channels")
       .delete()
@@ -84,12 +79,12 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
     setChannels((prev) => prev.filter((channel) => activeChannelId !== id));
   };
 
-  const handleEditChannel = (id: number) => {
+  const handleEditRoom = (id: number) => {
     setIsEditing(true);
     setActiveChannelId(id);
   };
 
-  const handleSave = async (
+  const handleSaveRoom = async (
     id: number,
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -108,12 +103,13 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
     setIsEditing(false);
   };
 
-  const handleReadNewMessages = (id: number, name: string) => {
-    setNewMsgCount(0);
-    setNewMsgRoomIDs((prev) => prev.filter((roomId) => roomId !== id));
-    setNewMsgSender("");
-    setActiveChannelId(id);
-    setActiveChannelName(name);
+  const handleReadMessages = (roomID: number, roomName: string) => {
+    setRoomIdsWithUnreadMessages((prev) => prev.filter((id) => id !== roomID));
+    setUnreadMessages((prev) =>
+      prev.filter((message) => message.channel_id !== roomID)
+    );
+    setActiveChannelId(roomID);
+    setActiveChannelName(roomName);
   };
 
   const handleToggleDropdown = () => {
@@ -124,25 +120,25 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
     <>
       <button
         onClick={() => {
-          setActiveChannelId(id);
-          setActiveChannelName(name);
-          handleReadNewMessages(id, name);
+          setActiveChannelId(roomID);
+          setActiveChannelName(roomName);
+          handleReadMessages(roomID, roomName);
         }}
         className={
-          activeChannelId === id
+          activeChannelId === roomID
             ? `${styles.channelButton} ${styles.active}`
             : styles.channelButton
         }
       >
-        {isEditing && activeChannelId === id ? (
+        {isEditing && activeChannelId === roomID ? (
           <form
             className={styles.channelNameForm}
-            onSubmit={(e) => handleSave(id, e)}
+            onSubmit={(e) => handleSaveRoom(roomID, e)}
           >
             <input
               className={styles.channelName}
               type="text"
-              defaultValue={name}
+              defaultValue={roomName}
               maxLength={35}
               onChange={(e) => setChannelName(e.target.value)}
               autoFocus
@@ -152,9 +148,9 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
             </button>
           </form>
         ) : (
-          <p className={styles.channelName}>{name}</p>
+          <p className={styles.channelName}>{roomName}</p>
         )}
-        {activeChannelId === id && (
+        {activeChannelId === roomID && (
           <div
             className={`${styles.kebabMenu} ${styles.showLeft}`}
             ref={dropdownRef}
@@ -175,12 +171,12 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
               <button
                 onClick={() => {
                   handleToggleDropdown();
-                  handleEditChannel(id);
+                  handleEditRoom(roomID);
                 }}
               >
                 Edit Room <AiOutlineEdit />
               </button>
-              <button onClick={() => handleDeleteChannel(id)}>
+              <button onClick={() => handleDeleteRoom(roomID)}>
                 Delete Room <AiOutlineDelete />
               </button>
               <button style={{ color: "red" }}>
@@ -190,13 +186,8 @@ const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
           </div>
         )}
       </button>
-      {newMsgCount > 0 &&
-        activeChannelId !== id &&
-        newMsgRoomIDs.includes(id) && (
-          <span className={styles.newMessage}>
-            {newMsgCount} {newMsgCount === 1 ? "new message" : "new messages"}
-          </span>
-        )}
+
+      {activeChannelId !== roomID && <UnreadMessages roomID={roomID} />}
     </>
   );
 };

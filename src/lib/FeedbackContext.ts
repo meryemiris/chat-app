@@ -7,9 +7,6 @@ const FeedbackContext = createContext({
 
   isLoading: false,
   setIsLoading: (isLoading: boolean) => {},
-
-  messageLoading: false,
-  setMessageLoading: (messageLoading: boolean) => {},
 });
 
 export default FeedbackContext;

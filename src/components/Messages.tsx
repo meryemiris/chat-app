@@ -1,13 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 import styles from "./Messages.module.css";
+
+import Image from "next/image";
 
 import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";
 import AuthContext from "@/lib/AuthContext";
-import FeedbackContext from "@/lib/FeedbackContext";
 import MessageContext from "@/lib/MessageContext";
+
 import { Message } from "@/types";
 
 import Loading from "./Loading";
@@ -17,12 +18,13 @@ type MessagesProps = {
 };
 
 const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
   const { activeChannelId } = useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
 
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [messageLoading, setMessageLoading] = useState(false);
+
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const { messageLoading, setMessageLoading } = useContext(FeedbackContext);
 
   const {
     setUnreadMessages,
@@ -51,7 +53,6 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
           console.log(error);
         }
       } catch (error) {
-        console.error(error);
       } finally {
         setMessageLoading(false);
       }
@@ -69,7 +70,6 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
           event: "INSERT",
           schema: "public",
           table: "messages",
-          // filter: `channel_id=eq.${activeChannelId}`,
         },
         async (payload: { new: Message }) => {
           const userData = await supabase

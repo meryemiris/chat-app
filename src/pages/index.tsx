@@ -1,32 +1,32 @@
+import { useEffect, useState } from "react";
+
+import { useRouter } from "next/router";
+import Head from "next/head";
+
+import { alertMessage } from "@/components/Alert";
+import Loading from "@/components/Loading";
 import Layout from "@/components/Layout";
 import ChatRoom from "@/components/ChatRoom";
 
-import ChannelsContext from "@/lib/ChannelsContext";
 import { supabase } from "@/lib/supabase";
-
-import { useContext, useEffect, useState } from "react";
-
-import { useRouter } from "next/router";
 import AuthContext from "@/lib/AuthContext";
-import Head from "next/head";
 import FeedbackContext from "@/lib/FeedbackContext";
-import { alertMessage } from "@/components/Alert";
-import Loading from "@/components/Loading";
 import MessageContext from "@/lib/MessageContext";
+import ChannelsContext from "@/lib/ChannelsContext";
+
 import { Message } from "@/types";
 
 export default function HomePage() {
   const router = useRouter();
 
-  const [activeChannelId, setActiveChannelId] = useState(1);
+  const [userId, setUserId] = useState("");
+
+  const [activeChannelId, setActiveChannelId] = useState(0);
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [messageLoading, setMessageLoading] = useState(false);
   const [alert, setAlert] = useState<alertMessage | null>(null);
-
-  const [userId, setUserId] = useState("");
 
   const [unreadMessages, setUnreadMessages] = useState<Message[]>([]);
   const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
@@ -80,8 +80,6 @@ export default function HomePage() {
               setAlert,
               isLoading,
               setIsLoading,
-              messageLoading,
-              setMessageLoading,
             }}
           >
             <MessageContext.Provider

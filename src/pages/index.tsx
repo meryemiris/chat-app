@@ -12,6 +12,7 @@ import Head from "next/head";
 import FeedbackContext from "@/lib/FeedbackContext";
 import { alertMessage } from "@/components/Alert";
 import Loading from "@/components/Loading";
+import MessageContext from "@/lib/MessageContext";
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,7 +27,9 @@ export default function HomePage() {
 
   const [userId, setUserId] = useState("");
 
-  // check if user is logged in
+  const [newMsgRoomIDs, setNewMsgRoomIDs] = useState<number[]>([]);
+  const [newMsgSender, setNewMsgSender] = useState<string>("");
+  const [newMsgCount, setNewMsgCount] = useState<number>(0);
 
   useEffect(() => {
     async function checkUser() {
@@ -79,8 +82,19 @@ export default function HomePage() {
               setMessageLoading,
             }}
           >
-            {isLoading && <Loading />}
-            {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
+            <MessageContext.Provider
+              value={{
+                newMsgRoomIDs,
+                setNewMsgRoomIDs,
+                newMsgSender,
+                setNewMsgSender,
+                newMsgCount,
+                setNewMsgCount,
+              }}
+            >
+              {isLoading && <Loading />}
+              {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
+            </MessageContext.Provider>
           </FeedbackContext.Provider>
         </ChannelsContext.Provider>
       </AuthContext.Provider>

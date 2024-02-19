@@ -6,6 +6,7 @@ import styles from "./ListItem.module.css";
 import { Channel, Message } from "@/types";
 
 import ChannelsContext from "@/lib/ChannelsContext";
+import MessageContext from "@/lib/MessageContext";
 
 import {
   AiOutlineDelete,
@@ -15,63 +16,35 @@ import {
 } from "react-icons/ai";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
+import AuthContext from "@/lib/AuthContext";
 
 type RoomListItemProps = {
-  isSender: boolean;
-  newMsgCount: number;
   id: number;
   name: string;
   setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
-  setNewMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 };
 
-const ListItem: React.FC<RoomListItemProps> = ({
-  isSender,
-  newMsgCount,
-  id,
-  name,
-  setChannels,
-  setNewMessages,
-}) => {
+const ListItem: React.FC<RoomListItemProps> = ({ id, name, setChannels }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const [channelName, setChannelName] = useState<string>("");
-  const [newMsgChannelIds, setNewMsgChannelIds] = useState<number[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const { activeChannelId, setActiveChannelId, setActiveChannelName } =
     useContext(ChannelsContext);
+  const {
+    newMsgRoomIDs,
+
+    setNewMsgCount,
+    setNewMsgRoomIDs,
+    newMsgCount,
+    newMsgSender,
+    setNewMsgSender,
+  } = useContext(MessageContext);
+
+  const { userId } = useContext(AuthContext);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const subcribeMessages = supabase
-      .channel("messages")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-        },
-        (payload: { new: Message }) => {
-          const newMsgChannelId = payload.new.channel_id;
-
-          setNewMessages((prevMessages) => [...prevMessages, payload.new]);
-
-          setNewMsgChannelIds((prevIds: number[]) => {
-            if (prevIds.includes(newMsgChannelId)) {
-              return prevIds;
-            }
-            return [...prevIds, newMsgChannelId];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subcribeMessages);
-    };
-  }, [setNewMessages]);
+  console.log("newMsgRoomIDs", newMsgRoomIDs);
 
   useEffect(() => {
     const handleClickOutsideDropdown = (e: MouseEvent) => {
@@ -136,12 +109,11 @@ const ListItem: React.FC<RoomListItemProps> = ({
   };
 
   const handleReadNewMessages = (id: number, name: string) => {
-    setNewMessages((prevMessages) =>
-      prevMessages.filter((msg) => msg.channel_id !== id)
-    );
-    setNewMsgChannelIds((prevIds: number[]) =>
-      prevIds.filter((channelId) => channelId !== id)
-    );
+    setNewMsgCount(0);
+    setNewMsgRoomIDs((prev) => prev.filter((roomId) => roomId !== id));
+    setNewMsgSender("");
+    setActiveChannelId(id);
+    setActiveChannelName(name);
   };
 
   const handleToggleDropdown = () => {
@@ -217,10 +189,14 @@ const ListItem: React.FC<RoomListItemProps> = ({
             </div>
           </div>
         )}
-        {!isSender && newMsgCount > 0 && newMsgChannelIds.includes(id) && (
-          <span className={styles.msgCount}>{newMsgCount}</span>
-        )}
       </button>
+      {newMsgCount > 0 &&
+        activeChannelId !== id &&
+        newMsgRoomIDs.includes(id) && (
+          <span className={styles.newMessage}>
+            {newMsgCount} {newMsgCount === 1 ? "new message" : "new messages"}
+          </span>
+        )}
     </>
   );
 };

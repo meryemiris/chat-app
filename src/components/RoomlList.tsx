@@ -75,28 +75,9 @@ const RoomList = () => {
     isSender: boolean;
   };
 
-  const filteredChannelsWithMessages: ChannelWithMessages[] = useMemo(() => {
-    return channels
-      .filter((channel) =>
-        channel.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .map(({ id, name }) => {
-        const channelMessages = newMessages.filter(
-          (msg) => msg.channel_id === id
-        );
-
-        const lastMsg = channelMessages[channelMessages.length - 1];
-        const isSender = lastMsg?.user_id === userId;
-        const newMsgCount = channelMessages.length;
-
-        return {
-          id,
-          name,
-          newMsgCount,
-          isSender,
-        };
-      });
-  }, [channels, searchTerm, newMessages, userId]);
+  const filteredChannels = channels.filter((channel) =>
+    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const filterRoomsRef = useRef<HTMLDivElement>(null);
 
@@ -174,19 +155,9 @@ const RoomList = () => {
         </button>
       </form>
       <div className={styles.scrollable}>
-        {filteredChannelsWithMessages.map(
-          ({ id, name, newMsgCount, isSender }) => (
-            <ListItem
-              key={id}
-              id={id}
-              name={name}
-              newMsgCount={newMsgCount}
-              isSender={isSender}
-              setChannels={setChannels}
-              setNewMessages={setNewMessages}
-            />
-          )
-        )}
+        {filteredChannels.map(({ id, name }) => (
+          <ListItem key={id} id={id} name={name} setChannels={setChannels} />
+        ))}
       </div>
     </div>
   );

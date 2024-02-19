@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import ChannelsContext from "@/lib/ChannelsContext";
 import AuthContext from "@/lib/AuthContext";
 import FeedbackContext from "@/lib/FeedbackContext";
+import MessageContext from "@/lib/MessageContext";
 import { Message } from "@/types";
 
 import Loading from "./Loading";
@@ -17,12 +18,19 @@ type MessagesProps = {
 
 const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-
   const { activeChannelId } = useContext(ChannelsContext);
   const { userId } = useContext(AuthContext);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
   const { messageLoading, setMessageLoading } = useContext(FeedbackContext);
+
+  const {
+    setNewMsgSender,
+    setNewMsgRoomIDs,
+    newMsgCount,
+    setNewMsgCount,
+    newMsgRoomIDs,
+  } = useContext(MessageContext);
 
   useEffect(() => {
     async function getMessages() {
@@ -72,12 +80,29 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
             .eq("id", payload.new.user_id)
             .single();
 
+          const newMsg = payload.new;
+
+          if (newMsgRoomIDs.includes(payload.new.channel_id)) {
+            return;
+          } else {
+            setNewMsgRoomIDs(
+              (prev) => [...prev, newMsg.channel_id] as number[]
+            );
+          }
+
+          setNewMsgSender(newMsg.user_id);
+
           const newMessage = {
             ...payload.new,
             users: userData.data,
           };
 
           setMessages((prev) => [...prev, newMessage] as Message[]);
+          // setNewMsgCount(newMsgCount + 1);
+
+          if (activeChannelId === newMsg.channel_id) {
+            setNewMsgCount(newMsgCount + 1);
+          }
         }
       )
       .subscribe();
@@ -85,7 +110,15 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [activeChannelId, userId]);
+  }, [
+    activeChannelId,
+    userId,
+    setNewMsgSender,
+    setNewMsgRoomIDs,
+    newMsgCount,
+    setNewMsgCount,
+    newMsgRoomIDs,
+  ]);
 
   const filteredMessages = messages.filter((message) =>
     message.content.toLowerCase().includes(searchTerm.toLowerCase())

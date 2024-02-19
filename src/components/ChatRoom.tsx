@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
-import ChannelsContext from "@/lib/ChannelsContext";
+import ChannelsContext from "@/lib/RoomContext";
 
 import Messages from "./Messages";
 

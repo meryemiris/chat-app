@@ -1,11 +1,14 @@
 import { createContext } from "react";
 
-const ChannelsContext = createContext({
+const RoomContext = createContext({
   activeChannelName: "",
   setActiveChannelName: (name: string) => {},
 
   activeChannelId: 1,
   setActiveChannelId: (id: number) => {},
+
+  mutedRooms: [] as number[],
+  setMutedRooms: (roomIDs: (roomIDs: number[]) => number[]) => {},
 });
 
-export default ChannelsContext;
+export default RoomContext;

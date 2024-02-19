@@ -13,6 +13,9 @@ import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
 import ListItem from "./ListItem";
 import AuthContext from "@/lib/AuthContext";
 import { Channel } from "@/types";
+import RoomContext from "@/lib/RoomContext";
+import MessageContext from "@/lib/MessageContext";
+import { GoArrowLeft } from "react-icons/go";
 
 const RoomList = () => {
   const [isFilter, setIsFilter] = useState(false);
@@ -21,6 +24,13 @@ const RoomList = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { userId } = useContext(AuthContext);
+
+  const [showMuted, setShowMuted] = useState(false);
+  const [showUnread, setShowUnread] = useState(false);
+
+  const { roomIdsWithUnreadMessages } = useContext(MessageContext);
+
+  const { mutedRooms } = useContext(RoomContext);
 
   useEffect(() => {
     async function getRoomList() {
@@ -31,7 +41,7 @@ const RoomList = () => {
     }
 
     getRoomList();
-  }, []);
+  }, [channels]);
 
   useEffect(() => {
     const subcribeChannels = supabase
@@ -69,8 +79,11 @@ const RoomList = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredChannels = channels.filter((channel) =>
-    channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredChannels = channels.filter(
+    (channel) =>
+      channel.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (showMuted ? mutedRooms.includes(channel.id) : true) &&
+      (showUnread ? roomIdsWithUnreadMessages.includes(channel.id) : true)
   );
 
   const filterRoomsRef = useRef<HTMLDivElement>(null);
@@ -102,36 +115,60 @@ const RoomList = () => {
 
   const handleShowUnread = () => {
     setIsFilter(false);
-    // TODO: add unread filter function
+    setShowUnread(true);
   };
 
   const handleShowMuted = () => {
     setIsFilter(false);
-    // TODO: add muted filter function
+    setShowMuted(true);
   };
 
   return (
     <div className={styles.container}>
       <header>
-        <h2 className={styles.title}>mushRooms</h2>
-        <div className={`${styles.kebabMenu} ${styles.showLeft}`}>
-          <button className={styles.threeDots} onClick={handleToggleFilter}>
-            <IoFilter />
-          </button>
-          <div
-            id="filterRooms"
-            ref={filterRoomsRef}
-            className={`${styles.dropdown} ${isFilter ? styles.show : ""}`}
-          >
-            {/* TODO: add fiter functions */}
-            <button onClick={handleShowUnread}>
-              Unread <MdOutlineMarkUnreadChatAlt />
+        {showMuted ? (
+          <>
+            <button
+              className={styles.backButton}
+              onClick={() => setShowMuted(false)}
+            >
+              <GoArrowLeft />
             </button>
-            <button onClick={handleShowMuted}>
-              Muted <IoVolumeMuteOutline />
+            <h2 className={styles.title}>Muted</h2>
+          </>
+        ) : showUnread ? (
+          <>
+            <button
+              className={styles.backButton}
+              onClick={() => setShowUnread(false)}
+            >
+              <GoArrowLeft />
             </button>
-          </div>
-        </div>
+            <h2 className={styles.title}>Unread</h2>
+          </>
+        ) : (
+          <>
+            <h2 className={styles.title}>mushRooms</h2>
+            <div className={`${styles.kebabMenu} ${styles.showLeft}`}>
+              <button className={styles.threeDots} onClick={handleToggleFilter}>
+                <IoFilter />
+              </button>
+              <div
+                id="filterRooms"
+                ref={filterRoomsRef}
+                className={`${styles.dropdown} ${isFilter ? styles.show : ""}`}
+              >
+                {/* TODO: add fiter functions */}
+                <button onClick={handleShowUnread}>
+                  Unread <MdOutlineMarkUnreadChatAlt />
+                </button>
+                <button onClick={handleShowMuted}>
+                  Muted <IoVolumeMuteOutline />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </header>
 
       <form className={styles.roomSearch} onSubmit={handleCreateChannel}>

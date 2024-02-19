@@ -158,5 +158,10 @@
 
     font-size: 0.8rem;
     color: #f56d44;
+}
 
+.muted {
+    position: relative;
+    top: 1rem;
+    color: #9db4c0;
 }

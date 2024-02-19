@@ -5,7 +5,7 @@ import styles from "./Messages.module.css";
 import Image from "next/image";
 
 import { supabase } from "@/lib/supabase";
-import ChannelsContext from "@/lib/ChannelsContext";
+import ChannelsContext from "@/lib/RoomContext";
 import AuthContext from "@/lib/AuthContext";
 import MessageContext from "@/lib/MessageContext";
 

@@ -1,12 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { supabase } from "@/lib/supabase";
 
 import styles from "./ListItem.module.css";
 
 import { Channel } from "@/types";
 
-import ChannelsContext from "@/lib/ChannelsContext";
+import { supabase } from "@/lib/supabase";
+import RoomContext from "@/lib/RoomContext";
 import MessageContext from "@/lib/MessageContext";
+
+import UnreadMessages from "./UnreadMessage";
 
 import {
   AiOutlineDelete,
@@ -16,8 +18,7 @@ import {
 } from "react-icons/ai";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
-
-import UnreadMessages from "./UnreadMessage";
+import { GoMute, GoUnmute } from "react-icons/go";
 
 type RoomListItemProps = {
   roomID: number;
@@ -38,8 +39,13 @@ const ListItem: React.FC<RoomListItemProps> = ({
   const [channelName, setChannelName] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const { activeChannelId, setActiveChannelId, setActiveChannelName } =
-    useContext(ChannelsContext);
+  const {
+    activeChannelId,
+    setActiveChannelId,
+    setActiveChannelName,
+    mutedRooms,
+    setMutedRooms,
+  } = useContext(RoomContext);
 
   useEffect(() => {
     const handleClickOutsideDropdown = (e: MouseEvent) => {
@@ -116,6 +122,16 @@ const ListItem: React.FC<RoomListItemProps> = ({
     setDropdownVisible(!dropdownVisible);
   };
 
+  const handleToggleMute = (roomID: number) => {
+    setMutedRooms((prev) => {
+      if (prev.includes(roomID)) {
+        return prev.filter((id) => id !== roomID);
+      } else {
+        return [...prev, roomID];
+      }
+    });
+  };
+
   return (
     <>
       <button
@@ -165,6 +181,18 @@ const ListItem: React.FC<RoomListItemProps> = ({
               }`}
             >
               {/* TODO: add are you sure modal */}
+              <button onClick={() => handleToggleMute(roomID)}>
+                {mutedRooms.includes(roomID) ? (
+                  <>
+                    Unmute <GoUnmute />
+                  </>
+                ) : (
+                  <>
+                    Mute <GoMute />
+                  </>
+                )}
+              </button>
+
               <button>
                 Add Friend <AiOutlineUserAdd />
               </button>
@@ -185,9 +213,16 @@ const ListItem: React.FC<RoomListItemProps> = ({
             </div>
           </div>
         )}
+        {mutedRooms.includes(roomID) && activeChannelId !== roomID && (
+          <div className={styles.muted}>
+            <GoMute />
+          </div>
+        )}
       </button>
 
-      {activeChannelId !== roomID && <UnreadMessages roomID={roomID} />}
+      {activeChannelId !== roomID && !mutedRooms.includes(roomID) && (
+        <UnreadMessages roomID={roomID} />
+      )}
     </>
   );
 };

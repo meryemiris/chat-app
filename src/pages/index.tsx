@@ -12,7 +12,7 @@ import { supabase } from "@/lib/supabase";
 import AuthContext from "@/lib/AuthContext";
 import FeedbackContext from "@/lib/FeedbackContext";
 import MessageContext from "@/lib/MessageContext";
-import ChannelsContext from "@/lib/ChannelsContext";
+import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
 
@@ -32,6 +32,8 @@ export default function HomePage() {
   const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
     number[]
   >([]);
+
+  const [mutedRooms, setMutedRooms] = useState<number[]>([]);
 
   useEffect(() => {
     async function checkUser() {
@@ -66,12 +68,14 @@ export default function HomePage() {
           setIsLoggedIn,
         }}
       >
-        <ChannelsContext.Provider
+        <RoomContext.Provider
           value={{
             activeChannelName,
             setActiveChannelName,
             activeChannelId,
             setActiveChannelId,
+            mutedRooms,
+            setMutedRooms,
           }}
         >
           <FeedbackContext.Provider
@@ -94,7 +98,7 @@ export default function HomePage() {
               {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
             </MessageContext.Provider>
           </FeedbackContext.Provider>
-        </ChannelsContext.Provider>
+        </RoomContext.Provider>
       </AuthContext.Provider>
     </>
   );

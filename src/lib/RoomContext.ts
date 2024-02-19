@@ -9,6 +9,9 @@ const RoomContext = createContext({
 
   mutedRooms: [] as number[],
   setMutedRooms: (roomIDs: (roomIDs: number[]) => number[]) => {},
+
+  showRoomDetails: false,
+  setShowRoomDetails: (show: boolean) => {},
 });
 
 export default RoomContext;

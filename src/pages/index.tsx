@@ -32,6 +32,7 @@ export default function HomePage() {
   const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
     number[]
   >([]);
+  const [showRoomDetails, setShowRoomDetails] = useState<boolean>(false);
 
   const [mutedRooms, setMutedRooms] = useState<number[]>([]);
 
@@ -76,6 +77,8 @@ export default function HomePage() {
             setActiveChannelId,
             mutedRooms,
             setMutedRooms,
+            showRoomDetails,
+            setShowRoomDetails,
           }}
         >
           <FeedbackContext.Provider

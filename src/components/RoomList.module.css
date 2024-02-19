@@ -39,6 +39,9 @@
     transition: 0.2s;
 }
 
+.backButton:active {
+    transform: scale(0.9);
+}
 
 .roomSearch {
     display: flex;

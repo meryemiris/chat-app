@@ -61,18 +61,46 @@ const RoomList = () => {
   }, []);
 
   const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const channelName = new FormData(e.currentTarget).get("channelName");
+    try {
+      e.preventDefault();
+      const channelName = new FormData(e.currentTarget).get("channelName");
 
-    const { data, error } = await supabase
-      .from("channels")
-      .insert([{ name: channelName, member_id: [userId] }])
-      .select();
+      // Insert channel data into the 'channels' table
+      const { data: channelData, error: channelError } = await supabase
+        .from("channels")
+        .insert([{ name: channelName }])
+        .select();
 
-    if (e.target instanceof HTMLFormElement) {
-      e.target.reset();
+      if (channelError) {
+        throw new Error(`Error creating channel: ${channelError.message}`);
+      }
+      if (e.target instanceof HTMLFormElement) {
+        e.target.reset();
+      }
+
+      // Retrieve the channelId for the newly created channel
+      const { data: channelId, error: channelIdError } = await supabase
+        .from("channels")
+        .select("id")
+        .eq("name", channelName);
+
+      if (channelIdError) {
+        throw new Error(`Error getting channel ID: ${channelIdError.message}`);
+      }
+
+      // Insert member data into the 'members' table
+      const { data: members, error: memberError } = await supabase
+        .from("members")
+        .insert([{ user_id: userId, room_id: channelId[0].id }])
+        .select();
+
+      if (memberError) {
+        throw new Error(`Error inserting member: ${memberError.message}`);
+      }
+      setSearchTerm("");
+    } catch (error) {
+      console.error("Error in handleCreateChannel:", error);
     }
-    setSearchTerm("");
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

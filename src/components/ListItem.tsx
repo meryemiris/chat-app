@@ -19,6 +19,7 @@ import {
 import { MdCheckCircleOutline } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoUnmute } from "react-icons/go";
+import Image from "next/image";
 
 type RoomListItemProps = {
   roomID: number;
@@ -146,6 +147,17 @@ const ListItem: React.FC<RoomListItemProps> = ({
             : styles.channelButton
         }
       >
+        <Image
+          src={
+            activeChannelId === roomID
+              ? "/activeRoomPic.png"
+              : "/inactiveRoomPic.png"
+          }
+          alt="room"
+          width={30}
+          height={30}
+        />
+
         {isEditing && activeChannelId === roomID ? (
           <form
             className={styles.channelNameForm}

@@ -87,11 +87,11 @@ const RoomList = () => {
       if (channelIdError) {
         throw new Error(`Error getting channel ID: ${channelIdError.message}`);
       }
-
+      const memberoomId = channelData[0].id;
       // Insert member data into the 'members' table
       const { data: members, error: memberError } = await supabase
         .from("members")
-        .insert([{ user_id: userId, room_id: channelId[0].id }])
+        .insert([{ user_id: userId, room_id: memberoomId }])
         .select();
 
       if (memberError) {
@@ -100,6 +100,8 @@ const RoomList = () => {
       setSearchTerm("");
     } catch (error) {
       console.error("Error in handleCreateChannel:", error);
+    } finally {
+      setSearchTerm("");
     }
   };
 

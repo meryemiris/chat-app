@@ -1,0 +1,60 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    padding: 0 1rem;
+
+
+}
+
+.roomName {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+
+
+}
+
+.membersTitle {
+    display: flex;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    gap: 0.2rem;
+
+}
+
+.members {
+    display: flex;
+    flex-direction: column;
+}
+
+.member {
+    display: flex;
+    list-style: none;
+    border-radius: 10px;
+    margin-bottom: 0.3rem;
+    background-color: white;
+}
+
+.member p {
+    position: relative;
+    right: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f56d44;
+    align-self: flex-start;
+}
+
+
+
+.profilePic {
+    position: relative;
+    right: 0.6rem;
+    border-radius: 50%;
+
+}

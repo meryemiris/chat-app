@@ -10,16 +10,10 @@ import MessageContext from "@/lib/MessageContext";
 
 import UnreadMessages from "./UnreadMessage";
 
-import {
-  AiOutlineDelete,
-  AiOutlineEdit,
-  AiOutlineLogout,
-  AiOutlineUserAdd,
-} from "react-icons/ai";
 import { MdCheckCircleOutline } from "react-icons/md";
-import { SlOptionsVertical } from "react-icons/sl";
-import { GoMute, GoUnmute } from "react-icons/go";
+import { GoMute } from "react-icons/go";
 import Image from "next/image";
+import ActionButtons from "./ActionButtons";
 
 type RoomListItemProps = {
   roomID: number;
@@ -32,8 +26,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
   roomName,
   setChannels,
 }) => {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const { setRoomIdsWithUnreadMessages, setUnreadMessages } =
     useContext(MessageContext);
 
@@ -45,51 +37,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
     setActiveChannelId,
     setActiveChannelName,
     mutedRooms,
-    setMutedRooms,
   } = useContext(RoomContext);
-
-  useEffect(() => {
-    const handleClickOutsideDropdown = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownVisible(false);
-      }
-    };
-
-    const handleClickOnChannelButton = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.classList.contains(styles.channelName)) {
-        setIsEditing(false);
-      }
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      handleClickOutsideDropdown(e);
-      handleClickOnChannelButton(e);
-    };
-
-    document.addEventListener("mousedown", handleClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
-
-  const handleDeleteRoom = async (id: number) => {
-    const { data, error } = await supabase
-      .from("channels")
-      .delete()
-      .eq("id", id);
-
-    setChannels((prev) => prev.filter((channel) => activeChannelId !== id));
-  };
-
-  const handleEditRoom = (id: number) => {
-    setIsEditing(true);
-    setActiveChannelId(id);
-  };
 
   const handleSaveRoom = async (
     id: number,
@@ -117,20 +65,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
     );
     setActiveChannelId(roomID);
     setActiveChannelName(roomName);
-  };
-
-  const handleToggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
-
-  const handleToggleMute = (roomID: number) => {
-    setMutedRooms((prev) => {
-      if (prev.includes(roomID)) {
-        return prev.filter((id) => id !== roomID);
-      } else {
-        return [...prev, roomID];
-      }
-    });
   };
 
   return (
@@ -179,51 +113,11 @@ const ListItem: React.FC<RoomListItemProps> = ({
           <p className={styles.channelName}>{roomName}</p>
         )}
         {activeChannelId === roomID && (
-          <div
-            className={`${styles.kebabMenu} ${styles.showLeft}`}
-            ref={dropdownRef}
-          >
-            <button className={styles.threeDots} onClick={handleToggleDropdown}>
-              <SlOptionsVertical />
-            </button>
-            <div
-              id="dropdown"
-              className={`${styles.dropdown} ${
-                dropdownVisible ? styles.show : ""
-              }`}
-            >
-              {/* TODO: add are you sure modal */}
-              <button onClick={() => handleToggleMute(roomID)}>
-                {mutedRooms.includes(roomID) ? (
-                  <>
-                    Unmute <GoUnmute />
-                  </>
-                ) : (
-                  <>
-                    Mute <GoMute />
-                  </>
-                )}
-              </button>
-
-              <button>
-                Add Friend <AiOutlineUserAdd />
-              </button>
-              <button
-                onClick={() => {
-                  handleToggleDropdown();
-                  handleEditRoom(roomID);
-                }}
-              >
-                Edit Room <AiOutlineEdit />
-              </button>
-              <button onClick={() => handleDeleteRoom(roomID)}>
-                Delete Room <AiOutlineDelete />
-              </button>
-              <button style={{ color: "red" }}>
-                Leave Room <AiOutlineLogout />
-              </button>
-            </div>
-          </div>
+          <ActionButtons
+            roomID={roomID}
+            setChannels={setChannels}
+            setIsEditing={setIsEditing}
+          />
         )}
         {mutedRooms.includes(roomID) && activeChannelId !== roomID && (
           <div className={styles.muted}>

@@ -1,7 +1,7 @@
 export type Channel = {
   id: number;
   name: string;
-  member_id: string[];
+  // member_id: string[];
 };
 
 export type Message = {

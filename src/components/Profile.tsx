@@ -76,6 +76,7 @@ export default function Profile() {
           height={150}
           layout="fixed"
           loading="lazy"
+          style={{ borderRadius: "50%" }}
         />
         {isEdit && (
           <form>

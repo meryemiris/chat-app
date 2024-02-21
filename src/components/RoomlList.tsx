@@ -41,7 +41,7 @@ const RoomList = () => {
     }
 
     getRoomList();
-  }, [channels]);
+  }, []);
 
   useEffect(() => {
     const subcribeChannels = supabase

@@ -90,6 +90,8 @@
 }
 
 .threeDots {
+    position: relative;
+    top: -3rem;
     background-color: inherit;
     color: #f56d44;
     border: none;
@@ -104,13 +106,10 @@
 }
 
 
-
-
-
-
 .dropdown {
     background-color: white;
     position: absolute;
+    top: -3rem;
     display: none;
     width: 130px;
     margin: 0.5rem;
@@ -134,14 +133,20 @@
     background-color: inherit;
     padding: 0.5rem;
     cursor: pointer;
+    z-index: 2;
+
 
 }
 
 .dropdown button:hover {
     background-color: #f56d44;
     color: white;
+    z-index: 1;
+}
 
-
+.dropdown button:active {
+    transform: scale(1.05);
+    transition: 0.2s;
 }
 
 .show {
@@ -164,4 +169,13 @@
     position: relative;
     top: 1rem;
     color: #9db4c0;
+}
+
+.nonMember {
+    position: relative;
+    bottom: 1.5rem;
+    left: 0.3rem;
+    color: #9db4c0;
+    font-size: 0.6rem;
+
 }

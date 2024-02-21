@@ -14,6 +14,7 @@ import { MdCheckCircleOutline } from "react-icons/md";
 import { GoMute } from "react-icons/go";
 import Image from "next/image";
 import ActionButtons from "./ActionButtons";
+import { FaUserAltSlash } from "react-icons/fa";
 
 type RoomListItemProps = {
   roomID: number;
@@ -38,6 +39,8 @@ const ListItem: React.FC<RoomListItemProps> = ({
     setActiveChannelName,
     mutedRooms,
   } = useContext(RoomContext);
+
+  const [isMember, setIsMember] = useState(true);
 
   const handleSaveRoom = async (
     id: number,
@@ -76,14 +79,14 @@ const ListItem: React.FC<RoomListItemProps> = ({
           handleReadMessages(roomID, roomName);
         }}
         className={
-          activeChannelId === roomID
+          activeChannelId === roomID && isMember
             ? `${styles.channelButton} ${styles.active}`
             : styles.channelButton
         }
       >
         <Image
           src={
-            activeChannelId === roomID
+            activeChannelId === roomID && isMember
               ? "/activeRoomPic.png"
               : "/inactiveRoomPic.png"
           }
@@ -112,13 +115,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
         ) : (
           <p className={styles.channelName}>{roomName}</p>
         )}
-        {activeChannelId === roomID && (
-          <ActionButtons
-            roomID={roomID}
-            setChannels={setChannels}
-            setIsEditing={setIsEditing}
-          />
-        )}
+
         {mutedRooms.includes(roomID) && activeChannelId !== roomID && (
           <div className={styles.muted}>
             <GoMute />
@@ -126,6 +123,18 @@ const ListItem: React.FC<RoomListItemProps> = ({
         )}
       </button>
 
+      {activeChannelId === roomID && (
+        <ActionButtons
+          roomID={roomID}
+          setChannels={setChannels}
+          setIsEditing={setIsEditing}
+          isMember={isMember}
+          setIsMember={setIsMember}
+        />
+      )}
+      {!isMember && activeChannelId !== roomID && (
+        <p className={styles.nonMember}>You are not a member of this room.</p>
+      )}
       {activeChannelId !== roomID && !mutedRooms.includes(roomID) && (
         <UnreadMessages roomID={roomID} />
       )}

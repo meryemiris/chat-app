@@ -14,7 +14,7 @@ import { MdCheckCircleOutline } from "react-icons/md";
 import { GoMute } from "react-icons/go";
 import Image from "next/image";
 import ActionButtons from "./ActionButtons";
-import { FaUserAltSlash } from "react-icons/fa";
+import AuthContext from "@/lib/AuthContext";
 
 type RoomListItemProps = {
   roomID: number;
@@ -33,6 +33,8 @@ const ListItem: React.FC<RoomListItemProps> = ({
   const [channelName, setChannelName] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
 
+  const { userId } = useContext(AuthContext);
+
   const {
     activeChannelId,
     setActiveChannelId,
@@ -41,6 +43,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
   } = useContext(RoomContext);
 
   const [isMember, setIsMember] = useState(true);
+  const { isRoomMuted } = useContext(RoomContext);
 
   const handleSaveRoom = async (
     id: number,
@@ -70,11 +73,35 @@ const ListItem: React.FC<RoomListItemProps> = ({
     setActiveChannelName(roomName);
   };
 
+  const handleActiveChannel = async (roomID: number) => {
+    try {
+      await Promise.all([
+        supabase
+          .from("members")
+          .update({ isActive: false })
+          .eq("user_id", userId)
+          .neq("room_id", roomID)
+          .select(),
+
+        supabase
+          .from("members")
+          .update({ isActive: true })
+          .eq("user_id", userId)
+          .eq("room_id", roomID)
+          .select(),
+      ]);
+
+      setActiveChannelId(roomID);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <button
         onClick={() => {
-          setActiveChannelId(roomID);
+          handleActiveChannel(roomID);
           setActiveChannelName(roomName);
           handleReadMessages(roomID, roomName);
         }}
@@ -116,7 +143,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
           <p className={styles.channelName}>{roomName}</p>
         )}
 
-        {mutedRooms.includes(roomID) && activeChannelId !== roomID && (
+        {mutedRooms?.includes(roomID) && (
           <div className={styles.muted}>
             <GoMute />
           </div>
@@ -135,7 +162,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
       {!isMember && activeChannelId !== roomID && (
         <p className={styles.nonMember}>You are not a member of this room.</p>
       )}
-      {activeChannelId !== roomID && !mutedRooms.includes(roomID) && (
+      {activeChannelId !== roomID && !mutedRooms?.includes(roomID) && (
         <UnreadMessages roomID={roomID} />
       )}
     </>

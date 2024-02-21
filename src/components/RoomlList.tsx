@@ -30,7 +30,8 @@ const RoomList = () => {
 
   const { roomIdsWithUnreadMessages } = useContext(MessageContext);
 
-  const { mutedRooms } = useContext(RoomContext);
+  const { mutedRooms, setMutedRooms, setActiveChannelId } =
+    useContext(RoomContext);
 
   useEffect(() => {
     async function getRoomList() {
@@ -38,10 +39,37 @@ const RoomList = () => {
       if (data) {
         setChannels(data as Channel[]);
       }
+
+      const { data: muteRooms, error: memberError } = await supabase
+        .from("members")
+        .select("room_id")
+        .eq("user_id", userId)
+        .eq("isMuted", true);
+
+      if (memberError) {
+        throw new Error(`Error getting muted rooms: ${memberError.message}`);
+      }
+      const mutedIds = muteRooms.map((member) => member.room_id) as number[];
+      setMutedRooms(mutedIds);
+
+      const { data: activeRoom, error: activeRoomError } = await supabase
+        .from("members")
+        .select("room_id")
+        .eq("user_id", userId)
+        .eq("isActive", true);
+
+      if (activeRoomError) {
+        throw new Error(
+          `Error getting active room: ${activeRoomError.message}`
+        );
+      }
+      console.log("active", activeRoom[0].room_id);
+      const activeRoomId = activeRoom[0].room_id as number;
+      setActiveChannelId(activeRoomId);
     }
 
     getRoomList();
-  }, []);
+  }, [setMutedRooms, userId, setActiveChannelId]);
 
   useEffect(() => {
     const subcribeChannels = supabase
@@ -112,7 +140,7 @@ const RoomList = () => {
   const filteredChannels = channels.filter(
     (channel) =>
       channel.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (showMuted ? mutedRooms.includes(channel.id) : true) &&
+      (showMuted ? mutedRooms?.includes(channel.id) : true) &&
       (showUnread ? roomIdsWithUnreadMessages.includes(channel.id) : true)
   );
 

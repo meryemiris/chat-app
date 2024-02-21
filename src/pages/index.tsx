@@ -35,6 +35,7 @@ export default function HomePage() {
   const [showRoomDetails, setShowRoomDetails] = useState<boolean>(false);
 
   const [mutedRooms, setMutedRooms] = useState<number[]>([]);
+  const [isRoomMuted, setIsRoomMuted] = useState<boolean>(false);
 
   useEffect(() => {
     async function checkUser() {
@@ -79,6 +80,8 @@ export default function HomePage() {
             setMutedRooms,
             showRoomDetails,
             setShowRoomDetails,
+            isRoomMuted,
+            setIsRoomMuted,
           }}
         >
           <FeedbackContext.Provider

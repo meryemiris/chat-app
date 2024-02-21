@@ -58,7 +58,7 @@ export default function ChatRoom() {
 
   return (
     <div className={styles.container}>
-      {activeChannelName ? (
+      {activeChannelId ? (
         <>
           <header className={styles.header}>
             <div className={styles.titleWrapper}>

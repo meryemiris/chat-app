@@ -14,6 +14,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoUnmute } from "react-icons/go";
 import { Channel } from "@/types";
 import AuthContext from "@/lib/AuthContext";
+import { tree } from "next/dist/build/templates/app-page";
 
 type Props = {
   roomID: number;
@@ -34,7 +35,16 @@ const ActionButtons: React.FC<Props> = ({
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const { setActiveChannelId, setMutedRooms, mutedRooms } =
     useContext(RoomContext);
+
+  console.log("mutedRooms", mutedRooms);
+
   const { userId } = useContext(AuthContext);
+
+  const [isRoomMuted, setIsRoomMuted] = useState(false);
+
+  //   const [isMuted, setIsMuted] = useState(false);
+
+  // TODO: add functionalityes to the action buttons
 
   // TODO: remove channels from supabase after add all functionalityes to the action buttons
 
@@ -63,14 +73,42 @@ const ActionButtons: React.FC<Props> = ({
     setDropdownVisible(!dropdownVisible);
   };
 
-  const handleToggleMute = (roomID: number) => {
-    setMutedRooms((prev) => {
-      if (prev.includes(roomID)) {
-        return prev.filter((id) => id !== roomID);
-      } else {
-        return [...prev, roomID];
-      }
-    });
+  const handleMute = async (roomID: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("members")
+        .update({ isMuted: true })
+        .eq("room_id", roomID)
+        .eq("user_id", userId)
+        .select();
+
+      if (!mutedRooms?.includes(roomID)) {
+        setMutedRooms((prev: number[]) => [...prev, roomID]);
+      } else return;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDropdownVisible(false);
+    }
+  };
+
+  const handleUnmute = async (roomID: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("members")
+        .update({ isMuted: false })
+        .eq("room_id", roomID)
+        .eq("user_id", userId)
+        .select();
+
+      if (mutedRooms?.includes(roomID)) {
+        setMutedRooms((prev: number[]) => prev?.filter((id) => id !== roomID));
+      } else return;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDropdownVisible(false);
+    }
   };
 
   useEffect(() => {
@@ -128,17 +166,23 @@ const ActionButtons: React.FC<Props> = ({
       >
         {isMember ? (
           <>
-            <button onClick={() => handleToggleMute(roomID)}>
-              {mutedRooms.includes(roomID) ? (
-                <>
-                  Unmute <GoUnmute />
-                </>
-              ) : (
-                <>
-                  Mute <GoMute />
-                </>
-              )}
-            </button>
+            {mutedRooms?.includes(roomID) ? (
+              <button
+                onClick={() => {
+                  handleUnmute(roomID);
+                }}
+              >
+                Unmute <GoUnmute />
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  handleMute(roomID);
+                }}
+              >
+                Mute <GoMute />
+              </button>
+            )}
 
             <button>
               Add Friend <AiOutlineUserAdd />

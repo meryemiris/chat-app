@@ -5,7 +5,7 @@ interface RoomContextProps {
   setActiveChannelName: Dispatch<SetStateAction<string>>;
 
   activeChannelId: number | null;
-  setActiveChannelId: Dispatch<SetStateAction<number>>;
+  setActiveChannelId: Dispatch<SetStateAction<number | null>>;
 
   mutedRooms: number[] | null;
   setMutedRooms: Dispatch<SetStateAction<number[]>>;

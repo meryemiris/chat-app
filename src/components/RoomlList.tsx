@@ -33,11 +33,39 @@ const RoomList = () => {
   const { mutedRooms, setMutedRooms, setActiveChannelId } =
     useContext(RoomContext);
 
+  const [memberRooms, setMemberRooms] = useState<number[]>([]);
+
   useEffect(() => {
     async function getRoomList() {
-      let { data, error } = await supabase.from("channels").select("id, name");
+      const { data: membership, error: memberRoomsError } = await supabase
+        .from("members")
+        .select("room_id")
+        .eq("user_id", userId);
+
+      if (memberRoomsError) {
+        throw new Error(
+          `Error getting member rooms: ${memberRoomsError.message}`
+        );
+      }
+
+      console.log("membership", membership);
+      const memberRoomIds = membership?.map(
+        (member) => member.room_id
+      ) as number[];
+
+      setMemberRooms(memberRoomIds);
+
+      // Extract the room IDs from the memberRooms data
+
+      let { data, error } = await supabase
+        .from("channels")
+        .select("id, name")
+        .in("id", memberRoomIds);
+
       if (data) {
         setChannels(data as Channel[]);
+      } else {
+        setChannels([]);
       }
 
       const { data: muteRooms, error: memberError } = await supabase
@@ -63,30 +91,15 @@ const RoomList = () => {
           `Error getting active room: ${activeRoomError.message}`
         );
       }
-      console.log("active", activeRoom[0].room_id);
-      const activeRoomId = activeRoom[0].room_id as number;
+
+      const activeRoomId = activeRoom
+        ? (activeRoom[0]?.room_id as number)
+        : null;
       setActiveChannelId(activeRoomId);
     }
 
     getRoomList();
   }, [setMutedRooms, userId, setActiveChannelId]);
-
-  useEffect(() => {
-    const subcribeChannels = supabase
-      .channel("channels")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "channels" },
-        (payload: { new: Channel }) => {
-          setChannels((prev) => [...prev, payload.new]);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subcribeChannels);
-    };
-  }, []);
 
   const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -99,11 +112,12 @@ const RoomList = () => {
         .insert([{ name: channelName }])
         .select();
 
+      if (channelData) {
+        setChannels([...channels, channelData?.[0]]);
+      }
+
       if (channelError) {
         throw new Error(`Error creating channel: ${channelError.message}`);
-      }
-      if (e.target instanceof HTMLFormElement) {
-        e.target.reset();
       }
 
       // Retrieve the channelId for the newly created channel

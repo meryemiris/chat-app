@@ -40,7 +40,7 @@ const ActionButtons: React.FC<Props> = ({
 
   const { userId } = useContext(AuthContext);
 
-  const [isRoomMuted, setIsRoomMuted] = useState(false);
+  const friendUserId = "e980c3ea-c38a-48ba-8fc3-a24b7ae9c91b";
 
   //   const [isMuted, setIsMuted] = useState(false);
 
@@ -151,6 +151,29 @@ const ActionButtons: React.FC<Props> = ({
     setDropdownVisible(false);
   };
 
+  const handleAddFriend = async (roomID: number) => {
+    try {
+      // Assuming friendUserId is defined somewhere in your component
+      const { data, error } = await supabase
+        .from("members")
+        .insert([{ room_id: roomID, user_id: friendUserId }])
+        .select();
+
+      if (error) {
+        console.error("Error adding friend:", error.message);
+        // Handle error, show user feedback, etc.
+      } else {
+        console.log("Friend added successfully:", data);
+        // Provide positive feedback to the user, update UI, etc.
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      // Handle unexpected errors, show user feedback, etc.
+    } finally {
+      setDropdownVisible(false);
+    }
+  };
+
   return (
     <div className={`${styles.kebabMenu} ${styles.showLeft}`} ref={dropdownRef}>
       <button
@@ -184,7 +207,7 @@ const ActionButtons: React.FC<Props> = ({
               </button>
             )}
 
-            <button>
+            <button onClick={() => handleAddFriend(roomID)}>
               Add Friend <AiOutlineUserAdd />
             </button>
             <button

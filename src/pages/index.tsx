@@ -21,7 +21,8 @@ export default function HomePage() {
 
   const [userId, setUserId] = useState("");
 
-  const [activeChannelId, setActiveChannelId] = useState(0);
+  const [activeChannelId, setActiveChannelId] = useState<number | null>(null);
+  const [activeChannel, setActiveChannel] = useState([]);
   const [activeChannelName, setActiveChannelName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

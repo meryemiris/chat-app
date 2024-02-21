@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import styles from "./ListItem.module.css";
+import styles from "./UnreadMessage.module.css";
 
 import AuthContext from "@/lib/AuthContext";
 import MessageContext from "@/lib/MessageContext";
@@ -28,7 +28,7 @@ const UnreadMessages: React.FC<Props> = ({ roomID }) => {
   return (
     unreadMessagesCount > 0 &&
     !mutedRooms.includes(roomID) && (
-      <div className={styles.newMessage}>
+      <div className={styles.unread}>
         {unreadMessagesCount +
           (unreadMessagesCount > 1 ? " new messages" : " new message")}
       </div>

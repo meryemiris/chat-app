@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { IoChatbubbleEllipsesSharp, IoSettings } from "react-icons/io5";
 
 import styles from "./Navbar.module.css";
+import { AiFillNotification } from "react-icons/ai";
+import FriendRequests from "./FriendsRequests";
 
 type Props = {
   setShowProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,15 +21,14 @@ const Navbar: React.FC<Props> = ({ setShowProfile }) => {
 
   return (
     <div className={styles.container}>
+      <FriendRequests />
       <button onClick={handleShowChannels} className={styles.button}>
         <IoChatbubbleEllipsesSharp />
       </button>
 
-      <div>
-        <button onClick={handleShowProfile} className={styles.button}>
-          <IoSettings />
-        </button>
-      </div>
+      <button onClick={handleShowProfile} className={styles.button}>
+        <IoSettings />
+      </button>
     </div>
   );
 };

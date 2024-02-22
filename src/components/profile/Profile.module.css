@@ -67,8 +67,44 @@
     color: #ff9e00;
     font-size: 1.5rem;
     padding-left: 1rem;
+}
+
+.profileForm {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem;
 
 }
+
+.profileForm input::-webkit-file-upload-button {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+
+
+}
+
+.profileForm input::-webkit-file-upload-button:hover {
+    background-color: #ff9e00;
+    color: white;
+
+}
+
+.profileForm button {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.profileForm button:hover {
+    background-color: #ff9e00;
+    color: white;
+
+}
+
 
 
 

@@ -69,7 +69,13 @@ export default function Profile() {
         </button>
       </header>
 
-      <main>
+      <main
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Image
           src={profileImg ? profileImg : "/defaultPp.png"}
           alt="profile image"
@@ -80,16 +86,9 @@ export default function Profile() {
           style={{ borderRadius: "50%" }}
         />
         {isEdit && (
-          <form>
-            <input
-              className={styles.profileInput}
-              type="file"
-              name="profilePic"
-              onChange={handleImageChange}
-            />
-            <button className={styles.profileBtn} onClick={updateProfileImg}>
-              Update
-            </button>
+          <form className={styles.profileForm}>
+            <input type="file" name="profilePic" onChange={handleImageChange} />
+            <button onClick={updateProfileImg}>Update</button>
           </form>
         )}
         <form className={styles.username}>

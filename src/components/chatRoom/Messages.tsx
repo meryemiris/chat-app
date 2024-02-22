@@ -11,7 +11,7 @@ import MessageContext from "@/lib/MessageContext";
 
 import { Message } from "@/types";
 
-import Loading from "./Loading";
+import Loading from "../utils/Loading";
 
 type MessagesProps = {
   searchTerm: string;

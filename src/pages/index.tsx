@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { alertMessage } from "@/components/Alert";
-import Loading from "@/components/Loading";
-import Layout from "@/components/Layout";
-import ChatRoom from "@/components/ChatRoom";
+import { alertMessage } from "@/components/utils/Alert";
+import Loading from "@/components/utils/Loading";
+import Layout from "@/components/layout/Layout";
+import ChatRoom from "@/components/chatRoom/ChatRoom";
 
 import { supabase } from "@/lib/supabase";
 import AuthContext from "@/lib/AuthContext";

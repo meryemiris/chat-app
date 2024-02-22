@@ -1,9 +1,9 @@
 import { ReactNode, useContext, useState } from "react";
 
 import styles from "./Layout.module.css";
-import Sidebar from "./Sidebar";
+import RightSidebar from "./RightSidebar";
 
-import Navbar from "./Navbar";
+import Navbar from "../navbar/Navbar";
 import LeftSidebar from "./LeftSidebar";
 import RoomContext from "@/lib/RoomContext";
 
@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className={styles.container}>
       <Navbar setShowProfile={setShowProfile} />
       <div className={styles.chatContainer}>
-        <Sidebar showProfile={showProfile} />
+        <RightSidebar showProfile={showProfile} />
         {children}
       </div>
       {showRoomDetails && <LeftSidebar />}

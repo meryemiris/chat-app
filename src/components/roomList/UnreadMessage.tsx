@@ -27,7 +27,7 @@ const UnreadMessages: React.FC<Props> = ({ roomID }) => {
 
   return (
     unreadMessagesCount > 0 &&
-    !mutedRooms.includes(roomID) && (
+    !mutedRooms?.includes(roomID) && (
       <div className={styles.unread}>
         {unreadMessagesCount +
           (unreadMessagesCount > 1 ? " new messages" : " new message")}

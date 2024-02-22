@@ -1,4 +1,4 @@
-import RoomDetails from "@/components/RoomDetails";
+import RoomDetails from "@/components/chatRoom/RoomDetails";
 import RoomContext from "@/lib/RoomContext";
 import styles from "./LeftSidebar.module.css";
 import { useContext } from "react";

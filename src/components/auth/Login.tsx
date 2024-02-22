@@ -3,8 +3,8 @@ import styles from "./Login.module.css";
 import { useRouter } from "next/router";
 import { useState, useContext } from "react";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
-import Alert, { alertMessage } from "./Alert";
-import Loading from "./Loading";
+import Alert, { alertMessage } from "../utils/Alert";
+import Loading from "../utils/Loading";
 import FeedbackContext from "@/lib/FeedbackContext";
 
 export default function Login() {

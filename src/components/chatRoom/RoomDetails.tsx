@@ -5,7 +5,7 @@ import RoomContext from "@/lib/RoomContext";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { MdGroups2 } from "react-icons/md";
-import Loading from "./Loading";
+import Loading from "../utils/Loading";
 
 type MembersData =
   | {

@@ -1,4 +1,4 @@
-import Login from "@/components/Login";
+import Login from "@/components/auth/Login";
 import Image from "next/image";
 import styles from "@/styles/Login-SignupPages.module.css";
 

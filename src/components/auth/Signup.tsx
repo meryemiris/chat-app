@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 import styles from "./Login.module.css";
 import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
 
-import Alert, { alertMessage } from "./Alert";
+import Alert, { alertMessage } from "../utils/Alert";
 
 export default function Signup() {
   const [email, setEmail] = useState("");

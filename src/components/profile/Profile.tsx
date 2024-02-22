@@ -7,12 +7,13 @@ import { supabase } from "@/lib/supabase";
 import { IoLogOut } from "react-icons/io5";
 import { useRouter } from "next/router";
 import { MdEdit } from "react-icons/md";
+import UserContext from "@/lib/UserContext";
 
 export default function Profile() {
   const { userId } = useContext(AuthContext);
-  const [username, setUsername] = useState("");
 
-  const { profileImg, setProfileImg } = useContext(AuthContext);
+  const { profileImg, setProfileImg, username, setUsername } =
+    useContext(UserContext);
 
   const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
@@ -41,21 +42,6 @@ export default function Profile() {
 
     setIsEdit(false);
   };
-
-  useEffect(() => {
-    async function getUser() {
-      const { data: user, error: userError } = await supabase
-        .from("users")
-        .select("profile_img, username")
-        .eq("id", userId);
-
-      if (user) {
-        setProfileImg(user[0]?.profile_img);
-        setUsername(user[0]?.username);
-      }
-    }
-    getUser();
-  }, [userId, setProfileImg]);
 
   return (
     <div className={styles.profile}>

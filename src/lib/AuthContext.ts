@@ -6,9 +6,6 @@ const AuthContext = createContext({
 
   isLoggedIn: false,
   setIsLoggedIn: (isLoggedIn: boolean) => {},
-
-  profileImg: "",
-  setProfileImg: (profilePic: string) => {},
 });
 
 export default AuthContext;

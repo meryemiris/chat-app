@@ -15,6 +15,7 @@ import MessageContext from "@/lib/MessageContext";
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
+import UserContext from "@/lib/UserContext";
 
 export default function HomePage() {
   const router = useRouter();
@@ -37,8 +38,23 @@ export default function HomePage() {
 
   const [mutedRooms, setMutedRooms] = useState<number[]>([]);
   const [isRoomMuted, setIsRoomMuted] = useState<boolean>(false);
-
+  const [username, setUsername] = useState("");
   const [profileImg, setProfileImg] = useState("");
+
+  useEffect(() => {
+    async function getUser() {
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("profile_img, username")
+        .eq("id", userId);
+
+      if (user) {
+        setProfileImg(user[0]?.profile_img);
+        setUsername(user[0]?.username);
+      }
+    }
+    getUser();
+  }, [userId, setProfileImg]);
 
   useEffect(() => {
     async function checkUser() {
@@ -71,45 +87,47 @@ export default function HomePage() {
           setUserId,
           isLoggedIn,
           setIsLoggedIn,
-          profileImg,
-          setProfileImg,
         }}
       >
-        <RoomContext.Provider
-          value={{
-            activeChannelName,
-            setActiveChannelName,
-            activeChannelId,
-            setActiveChannelId,
-            mutedRooms,
-            setMutedRooms,
-            showRoomDetails,
-            setShowRoomDetails,
-            isRoomMuted,
-            setIsRoomMuted,
-          }}
+        <UserContext.Provider
+          value={{ username, setUsername, profileImg, setProfileImg }}
         >
-          <FeedbackContext.Provider
+          <RoomContext.Provider
             value={{
-              alert,
-              setAlert,
-              isLoading,
-              setIsLoading,
+              activeChannelName,
+              setActiveChannelName,
+              activeChannelId,
+              setActiveChannelId,
+              mutedRooms,
+              setMutedRooms,
+              showRoomDetails,
+              setShowRoomDetails,
+              isRoomMuted,
+              setIsRoomMuted,
             }}
           >
-            <MessageContext.Provider
+            <FeedbackContext.Provider
               value={{
-                unreadMessages,
-                setUnreadMessages,
-                roomIdsWithUnreadMessages,
-                setRoomIdsWithUnreadMessages,
+                alert,
+                setAlert,
+                isLoading,
+                setIsLoading,
               }}
             >
-              {isLoading && <Loading />}
-              {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
-            </MessageContext.Provider>
-          </FeedbackContext.Provider>
-        </RoomContext.Provider>
+              <MessageContext.Provider
+                value={{
+                  unreadMessages,
+                  setUnreadMessages,
+                  roomIdsWithUnreadMessages,
+                  setRoomIdsWithUnreadMessages,
+                }}
+              >
+                {isLoading && <Loading />}
+                {isLoggedIn && !isLoading && <Layout>{<ChatRoom />}</Layout>}
+              </MessageContext.Provider>
+            </FeedbackContext.Provider>
+          </RoomContext.Provider>
+        </UserContext.Provider>
       </AuthContext.Provider>
     </>
   );

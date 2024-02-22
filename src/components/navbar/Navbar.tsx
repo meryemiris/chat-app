@@ -5,13 +5,14 @@ import FriendRequests from "./FriendsRequests";
 import Image from "next/image";
 import { useContext } from "react";
 import AuthContext from "@/lib/AuthContext";
+import UserContext from "@/lib/UserContext";
 
 type Props = {
   setShowProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Navbar: React.FC<Props> = ({ setShowProfile }) => {
-  const { profileImg } = useContext(AuthContext);
+  const { profileImg } = useContext(UserContext);
 
   const handleShowProfile = () => {
     setShowProfile(true);

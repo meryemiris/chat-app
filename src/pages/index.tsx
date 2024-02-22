@@ -38,6 +38,8 @@ export default function HomePage() {
   const [mutedRooms, setMutedRooms] = useState<number[]>([]);
   const [isRoomMuted, setIsRoomMuted] = useState<boolean>(false);
 
+  const [profileImg, setProfileImg] = useState("");
+
   useEffect(() => {
     async function checkUser() {
       const { data } = await supabase.auth.getUser();
@@ -69,6 +71,8 @@ export default function HomePage() {
           setUserId,
           isLoggedIn,
           setIsLoggedIn,
+          profileImg,
+          setProfileImg,
         }}
       >
         <RoomContext.Provider

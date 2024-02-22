@@ -1,16 +1,18 @@
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/router";
 import { IoChatbubbleEllipsesSharp, IoSettings } from "react-icons/io5";
 
 import styles from "./Navbar.module.css";
-import { AiFillNotification } from "react-icons/ai";
 import FriendRequests from "./FriendsRequests";
+import Image from "next/image";
+import { useContext } from "react";
+import AuthContext from "@/lib/AuthContext";
 
 type Props = {
   setShowProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Navbar: React.FC<Props> = ({ setShowProfile }) => {
+  const { profileImg } = useContext(AuthContext);
+
   const handleShowProfile = () => {
     setShowProfile(true);
   };
@@ -27,7 +29,13 @@ const Navbar: React.FC<Props> = ({ setShowProfile }) => {
       </button>
 
       <button onClick={handleShowProfile} className={styles.button}>
-        <IoSettings />
+        <Image
+          src={profileImg ? profileImg : "/defaultPp.png"}
+          alt="go to profile"
+          width={40}
+          height={40}
+          style={{ borderRadius: "50%" }}
+        />
       </button>
     </div>
   );

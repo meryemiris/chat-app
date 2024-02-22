@@ -10,8 +10,9 @@ import { MdEdit } from "react-icons/md";
 
 export default function Profile() {
   const { userId } = useContext(AuthContext);
-  const [profileImg, setProfileImg] = useState("");
   const [username, setUsername] = useState("");
+
+  const { profileImg, setProfileImg } = useContext(AuthContext);
 
   const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function Profile() {
       }
     }
     getUser();
-  }, [userId]);
+  }, [userId, setProfileImg]);
 
   return (
     <div className={styles.profile}>

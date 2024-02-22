@@ -92,6 +92,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
           if (
             userId !== payload.new.user_id &&
+            activeChannelId &&
             !roomIdsWithUnreadMessages.includes(activeChannelId)
           ) {
             setUnreadMessages((prev) => [...prev, payload.new]);

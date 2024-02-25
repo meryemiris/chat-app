@@ -150,6 +150,12 @@ const ListItem: React.FC<RoomListItemProps> = ({
         )}
       </button>
 
+      {!isMember && activeChannelId !== roomID && (
+        <p className={styles.nonMember}>You are not a member of this room.</p>
+      )}
+      {activeChannelId !== roomID && !mutedRooms?.includes(roomID) && (
+        <UnreadMessages roomID={roomID} />
+      )}
       {activeChannelId === roomID && (
         <ActionButtons
           roomID={roomID}
@@ -158,12 +164,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
           isMember={isMember}
           setIsMember={setIsMember}
         />
-      )}
-      {!isMember && activeChannelId !== roomID && (
-        <p className={styles.nonMember}>You are not a member of this room.</p>
-      )}
-      {activeChannelId !== roomID && !mutedRooms?.includes(roomID) && (
-        <UnreadMessages roomID={roomID} />
       )}
     </>
   );

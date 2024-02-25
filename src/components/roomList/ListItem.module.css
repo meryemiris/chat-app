@@ -3,18 +3,18 @@
     grid-template-columns: 1fr 5fr 1fr;
     align-items: center;
     padding: 0.5rem 0.2rem 1.2rem 0.3rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 1rem;
     width: 200px;
     background-color: inherit;
     border: none;
     border-radius: 10px;
     border-bottom: #ebebeb 3px solid;
+
 }
 
 .active {
-
-
     color: #f56d44;
+    margin-bottom: 0;
 }
 
 .channelButton:not(.active):hover {

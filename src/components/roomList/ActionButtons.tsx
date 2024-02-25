@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import RoomContext from "@/lib/RoomContext";
 
 import {
+  AiOutlineClose,
   AiOutlineDelete,
   AiOutlineEdit,
   AiOutlineLogout,
@@ -14,7 +15,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoUnmute } from "react-icons/go";
 import { Channel } from "@/types";
 import AuthContext from "@/lib/AuthContext";
-import { tree } from "next/dist/build/templates/app-page";
+import { FaPaste } from "react-icons/fa";
 
 type Props = {
   roomID: number;
@@ -36,13 +37,12 @@ const ActionButtons: React.FC<Props> = ({
   const { setActiveChannelId, setMutedRooms, mutedRooms } =
     useContext(RoomContext);
 
-  console.log("mutedRooms", mutedRooms);
+  const [friendUserId, setFriendId] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { userId } = useContext(AuthContext);
 
-  const friendUserId = "e980c3ea-c38a-48ba-8fc3-a24b7ae9c91b";
-
-  //   const [isMuted, setIsMuted] = useState(false);
+  // const friendUserId = "e980c3ea-c38a-48ba-8fc3-a24b7ae9c91b";
 
   // TODO: add functionalityes to the action buttons
 
@@ -171,67 +171,110 @@ const ActionButtons: React.FC<Props> = ({
       // Handle unexpected errors, show user feedback, etc.
     } finally {
       setDropdownVisible(false);
+      setIsModalOpen(false);
     }
   };
 
   return (
-    <div className={`${styles.kebabMenu} ${styles.showLeft}`} ref={dropdownRef}>
-      <button
-        style={isMember ? {} : { color: "gray" }}
-        className={styles.threeDots}
-        onClick={handleToggleDropdown}
-      >
-        <SlOptionsVertical />
-      </button>
-      <div
-        id="dropdown"
-        className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
-      >
-        {isMember ? (
-          <>
-            {mutedRooms?.includes(roomID) ? (
-              <button
-                onClick={() => {
-                  handleUnmute(roomID);
-                }}
-              >
-                Unmute <GoUnmute />
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  handleMute(roomID);
-                }}
-              >
-                Mute <GoMute />
-              </button>
-            )}
+    <>
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <button
+              className={styles.closeModal}
+              onClick={() => setIsModalOpen(false)}
+            >
+              <AiOutlineClose />
+            </button>
 
-            <button onClick={() => handleAddFriend(roomID)}>
-              Add Friend <AiOutlineUserAdd />
+            <div className={styles.addFriend}>
+              <p>Enter the ID of your friend to add:</p>
+              <div className={styles.pasteId}>
+                <input
+                  className={styles.pasteIdInput}
+                  type="text"
+                  onChange={(e) => setFriendId(e.target.value)}
+                />
+                <button
+                  className={styles.addFriendButton}
+                  onClick={() => {
+                    handleAddFriend(roomID);
+                    setIsModalOpen(false);
+                  }}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div
+        className={`${styles.kebabMenu} ${styles.showLeft}`}
+        ref={dropdownRef}
+      >
+        <button
+          style={isMember ? {} : { color: "gray" }}
+          className={styles.threeDots}
+          onClick={handleToggleDropdown}
+        >
+          <SlOptionsVertical />
+        </button>
+        <div
+          id="dropdown"
+          className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
+        >
+          {isMember ? (
+            <>
+              {mutedRooms?.includes(roomID) ? (
+                <button
+                  onClick={() => {
+                    handleUnmute(roomID);
+                  }}
+                >
+                  Unmute <GoUnmute />
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    handleMute(roomID);
+                  }}
+                >
+                  Mute <GoMute />
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setDropdownVisible(false);
+                }}
+              >
+                Add Friend <AiOutlineUserAdd />
+              </button>
+              <button
+                onClick={() => {
+                  handleToggleDropdown();
+                  handleEditRoom(roomID);
+                }}
+              >
+                Edit Room <AiOutlineEdit />
+              </button>
+              <button
+                onClick={() => handleLeaveRoom(roomID)}
+                style={{ color: "red" }}
+              >
+                Leave Room <AiOutlineLogout />
+              </button>
+            </>
+          ) : (
+            <button onClick={() => handleDeleteRoom(roomID)}>
+              Delete Room <AiOutlineDelete />
             </button>
-            <button
-              onClick={() => {
-                handleToggleDropdown();
-                handleEditRoom(roomID);
-              }}
-            >
-              Edit Room <AiOutlineEdit />
-            </button>
-            <button
-              onClick={() => handleLeaveRoom(roomID)}
-              style={{ color: "red" }}
-            >
-              Leave Room <AiOutlineLogout />
-            </button>
-          </>
-        ) : (
-          <button onClick={() => handleDeleteRoom(roomID)}>
-            Delete Room <AiOutlineDelete />
-          </button>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

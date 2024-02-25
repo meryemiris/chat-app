@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem 0.5rem;
-    margin: 0.5rem;
+    margin: 0 0.5rem;
     border-radius: 20px;
     border-radius: 20px;
     box-shadow: 5px 5px 3px #f4f4f4,
@@ -61,8 +61,6 @@
     border: none;
     padding: 0.5rem;
     font-size: 0.8rem;
-
-
 }
 
 .roomSearch input:focus {
@@ -112,7 +110,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%;
-
     background-color: transparent;
     padding: 0.5rem 1rem 2rem 1rem;
 
@@ -150,16 +147,12 @@
     border: none;
     cursor: pointer;
 
-
 }
 
 .threeDots:hover {
     transform: scale(1.2);
     transition: 0.2s;
 }
-
-
-
 
 
 
@@ -193,7 +186,6 @@
 .dropdown button:hover {
     background-color: #f56d44;
     color: white;
-
 
 }
 

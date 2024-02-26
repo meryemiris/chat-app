@@ -41,6 +41,8 @@ export default function HomePage() {
   const [username, setUsername] = useState("");
   const [profileImg, setProfileImg] = useState("");
 
+  const [friendId, setFriendId] = useState("");
+
   useEffect(() => {
     async function getUser() {
       const { data: user, error: userError } = await supabase
@@ -90,7 +92,14 @@ export default function HomePage() {
         }}
       >
         <UserContext.Provider
-          value={{ username, setUsername, profileImg, setProfileImg }}
+          value={{
+            username,
+            setUsername,
+            profileImg,
+            setProfileImg,
+            friendId,
+            setFriendId,
+          }}
         >
           <RoomContext.Provider
             value={{

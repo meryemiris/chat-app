@@ -6,6 +6,9 @@ const UserContext = createContext({
 
   username: "",
   setUsername: (userName: string) => {},
+
+  friendId: "",
+  setFriendId: (friendUserId: string) => {},
 });
 
 export default UserContext;

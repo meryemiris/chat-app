@@ -1,8 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./ActionButtons.module.css";
+import { Channel } from "@/types";
 
 import { supabase } from "@/lib/supabase";
 import RoomContext from "@/lib/RoomContext";
+import AuthContext from "@/lib/AuthContext";
+import UserContext from "@/lib/UserContext";
 
 import {
   AiOutlineClose,
@@ -13,9 +16,6 @@ import {
 } from "react-icons/ai";
 import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoUnmute } from "react-icons/go";
-import { Channel } from "@/types";
-import AuthContext from "@/lib/AuthContext";
-import { FaPaste } from "react-icons/fa";
 
 type Props = {
   roomID: number;
@@ -37,10 +37,10 @@ const ActionButtons: React.FC<Props> = ({
   const { setActiveChannelId, setMutedRooms, mutedRooms } =
     useContext(RoomContext);
 
-  const [friendUserId, setFriendId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { userId } = useContext(AuthContext);
+  const { friendId, setFriendId } = useContext(UserContext);
 
   // const friendUserId = "e980c3ea-c38a-48ba-8fc3-a24b7ae9c91b";
 
@@ -151,27 +151,22 @@ const ActionButtons: React.FC<Props> = ({
     setDropdownVisible(false);
   };
 
-  const handleAddFriend = async (roomID: number) => {
+  const handleSendFriendRequest = async (roomID: number) => {
+    if (friendId === null) {
+      setIsModalOpen(true);
+      return;
+    }
     try {
-      // Assuming friendUserId is defined somewhere in your component
       const { data, error } = await supabase
-        .from("members")
-        .insert([{ room_id: roomID, user_id: friendUserId }])
+        .from("requests")
+        .insert([{ sender_id: userId, receiver_id: friendId, room_id: roomID }])
         .select();
-
-      if (error) {
-        console.error("Error adding friend:", error.message);
-        // Handle error, show user feedback, etc.
-      } else {
-        console.log("Friend added successfully:", data);
-        // Provide positive feedback to the user, update UI, etc.
-      }
     } catch (error) {
-      console.error("Unexpected error:", error);
-      // Handle unexpected errors, show user feedback, etc.
+      console.log(error);
     } finally {
       setDropdownVisible(false);
       setIsModalOpen(false);
+      // setFriendId(friendId)
     }
   };
 
@@ -197,12 +192,9 @@ const ActionButtons: React.FC<Props> = ({
                 />
                 <button
                   className={styles.addFriendButton}
-                  onClick={() => {
-                    handleAddFriend(roomID);
-                    setIsModalOpen(false);
-                  }}
+                  onClick={() => handleSendFriendRequest(roomID)}
                 >
-                  Add
+                  Send
                 </button>
               </div>
             </div>

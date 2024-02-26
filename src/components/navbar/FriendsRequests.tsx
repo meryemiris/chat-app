@@ -1,15 +1,28 @@
-import { AiFillNotification } from "react-icons/ai";
-import styles from "./FriendsRequests.module.css";
 import { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
+
+import styles from "./FriendsRequests.module.css";
+
 import AuthContext from "@/lib/AuthContext";
-import UserContext from "@/lib/UserContext";
-import { FaBell, FaRegBell } from "react-icons/fa";
+import { supabase } from "@/lib/supabase";
+
 import { alertMessage } from "../utils/Alert";
 
+import { FaBell } from "react-icons/fa";
+
+type Request = {
+  room_id: number;
+  users: {
+    username: string;
+    profile_img: string;
+  };
+  channels: {
+    name: string;
+  };
+} | null;
+
 const FriendRequests = () => {
-  // const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [alert, setAlert] = useState<alertMessage | null>(null);
 
@@ -22,17 +35,6 @@ const FriendRequests = () => {
   const handleToggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
-  type Request = {
-    room_id: number;
-    users: {
-      username: string;
-      profile_img: string;
-    };
-    channels: {
-      name: string;
-    };
-  } | null;
 
   useEffect(() => {
     const getRequests = async () => {
@@ -139,6 +141,27 @@ const FriendRequests = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutsideDropdown = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownVisible(false);
+      }
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      handleClickOutsideDropdown(e);
+    };
+
+    document.addEventListener("mousedown", handleClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+
   return (
     <div className={`${styles.kebabMenu} ${styles.showRight}`}>
       <button className={styles.notification} onClick={handleToggleDropdown}>
@@ -148,52 +171,58 @@ const FriendRequests = () => {
         )}
       </button>
       <div
+        ref={dropdownRef}
         id="dropdown"
-        className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
+        className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""} ${
+          requests.length === 0 ? styles.emptyDropdown : ""
+        }`}
       >
         <h6>Room Requests</h6>
-        {requests
-          ? requests.map((request) => (
-              <div className={styles.request} key={request?.room_id}>
-                <Image
-                  className={styles.profileImg}
-                  src={request ? request.users?.profile_img : "defaultPp.png"}
-                  alt="profile"
-                  width={40}
-                  height={40}
-                />
-                <p>
+
+        {requests.length > 0 ? (
+          requests.map((request) => (
+            <div className={styles.request} key={request?.room_id}>
+              <Image
+                className={styles.profileImg}
+                src={request ? request.users?.profile_img : "defaultPp.png"}
+                alt="profile"
+                width={40}
+                height={40}
+              />
+              <p>
+                {" "}
+                <span className={styles.senderName}>
+                  {request?.users?.username}{" "}
+                </span>
+                invited you to join
+                <span className={styles.roomName}>
                   {" "}
-                  <span className={styles.senderName}>
-                    {request?.users?.username}{" "}
-                  </span>
-                  invited you to join
-                  <span className={styles.roomName}>
-                    {" "}
-                    {request?.channels?.name}
-                  </span>{" "}
-                  room
-                </p>
-                <div className={styles.buttons}>
-                  {" "}
-                  <button
-                    onClick={() => handleJoinRoom(request?.room_id as number)}
-                    className={styles.acceptButton}
-                  >
-                    Accept
-                  </button>{" "}
-                  <button
-                    onClick={() =>
-                      handleDeclineRequest(request?.room_id as number)
-                    }
-                    className={styles.declineButton}
-                  >
-                    Decline
-                  </button>
-                </div>
+                  {request?.channels?.name}
+                </span>{" "}
+                room
+              </p>
+              <div className={styles.buttons}>
+                {" "}
+                <button
+                  onClick={() => handleJoinRoom(request?.room_id as number)}
+                  className={styles.acceptButton}
+                >
+                  Accept
+                </button>{" "}
+                <button
+                  onClick={() =>
+                    handleDeclineRequest(request?.room_id as number)
+                  }
+                  className={styles.declineButton}
+                >
+                  Decline
+                </button>
               </div>
-            ))
-          : null}
+            </div>
+          ))
+        ) : (
+          <p>No requests yet.</p>
+        )}
       </div>
     </div>
   );

@@ -51,9 +51,8 @@
     top: 0.8rem;
     display: none;
     width: 400px;
-
-    padding: 0.5rem 0 0 0.5rem;
     height: 200px;
+    padding: 0.5rem 0 0 0.5rem;
     margin-left: 1.2rem;
     border-radius: 10px;
     border-top-left-radius: 0;
@@ -147,4 +146,11 @@
 
 .show {
     display: block;
+}
+
+
+.emptyDropdown {
+
+    width: 150px;
+    height: 80px;
 }

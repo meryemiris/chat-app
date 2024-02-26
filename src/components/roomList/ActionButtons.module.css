@@ -142,7 +142,6 @@
 }
 
 .pasteIdInput {
-
     padding: 0.5rem;
     border: none;
     border-top-left-radius: 8px;
@@ -169,4 +168,69 @@
 .addFriendButton:hover {
     background-color: #f56d44;
     color: white;
+}
+
+
+.leaveRoom {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem 0 1rem
+}
+
+.leaveRoom p {
+    font-size: 0.8rem;
+
+}
+
+.leaveRoomButtons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+}
+
+
+.leaveButton {
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    background: #ffffff;
+    box-shadow: 2px 2px 6px #e0e0e0,
+        -2px -2px 6px #ffffff;
+}
+
+.stayButton {
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+
+    background: #e0e0e0;
+    box-shadow: 2px 2px 6px #e0e0e0,
+        -2px -2px 6px #ffffff;
+
+
+}
+
+.leaveButton:hover {
+    background-color: #f56d44;
+    color: white;
+}
+
+.stayButton:hover {
+    background-color: #f56d44;
+    color: white;
+}
+
+
+
+.questionIcon {
+    font-size: 2rem;
+    color: #f56d44;
+    align-self: center;
+    justify-self: center;
 }

@@ -6,13 +6,15 @@ import { supabase } from "@/lib/supabase";
 import AuthContext from "@/lib/AuthContext";
 import UserContext from "@/lib/UserContext";
 import { FaBell, FaRegBell } from "react-icons/fa";
+import { alertMessage } from "../utils/Alert";
 
 const FriendRequests = () => {
   // const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [alert, setAlert] = useState<alertMessage | null>(null);
+
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const { userId } = useContext(AuthContext);
-  const { friendId } = useContext(UserContext);
 
   const [requests, setRequests] = useState<Request[]>([]);
   console.log("requests", requests);
@@ -78,10 +80,9 @@ const FriendRequests = () => {
           ) {
             setRequests((prevRequests) => [
               ...prevRequests,
-              payload.new as unknown as Request,
+              payload.new as Request,
             ]);
           }
-          console.log("payload", payload);
         }
       )
       .subscribe();
@@ -133,7 +134,6 @@ const FriendRequests = () => {
       }
     } catch (error) {
       console.error("Unexpected error:", error);
-      // Handle unexpected errors, show user feedback, etc.
     } finally {
       setDropdownVisible(false);
     }
@@ -143,8 +143,9 @@ const FriendRequests = () => {
     <div className={`${styles.kebabMenu} ${styles.showRight}`}>
       <button className={styles.notification} onClick={handleToggleDropdown}>
         <FaBell />
-
-        <span className={styles.notificationCount}>{requests.length}</span>
+        {requests.length > 0 && (
+          <span className={styles.notificationCount}>{requests.length}</span>
+        )}
       </button>
       <div
         id="dropdown"

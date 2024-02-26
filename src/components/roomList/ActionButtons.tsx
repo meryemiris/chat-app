@@ -15,7 +15,8 @@ import {
   AiOutlineUserAdd,
 } from "react-icons/ai";
 import { SlOptionsVertical } from "react-icons/sl";
-import { GoMute, GoUnmute } from "react-icons/go";
+import { GoMute, GoQuestion, GoUnmute } from "react-icons/go";
+import Alert, { alertMessage } from "../utils/Alert";
 
 type Props = {
   roomID: number;
@@ -41,28 +42,9 @@ const ActionButtons: React.FC<Props> = ({
 
   const { userId } = useContext(AuthContext);
   const { friendId, setFriendId } = useContext(UserContext);
-
-  // const friendUserId = "e980c3ea-c38a-48ba-8fc3-a24b7ae9c91b";
-
-  // TODO: add functionalityes to the action buttons
-
-  // TODO: remove channels from supabase after add all functionalityes to the action buttons
-
-  const handleDeleteRoom = async (roomID: number) => {
-    const { data, error } = await supabase
-      .from("channels")
-      .delete()
-      .eq("id", roomID);
-
-    console.log(data, error);
-
-    setChannels((prev) => prev.filter((channel) => channel.id !== roomID));
-  };
-
-  //   TODO: add are you sure modal
-  // const handleDeleteRoom = (id: number) => {
-  //   setChannels((prev) => prev.filter((channel) => channel.id !== roomID));
-  // };
+  const [alert, setAlert] = useState<alertMessage | null>(null);
+  const [isLeaveRoom, setIsLeaveRoom] = useState(false);
+  const [isAddFriend, setIsAddFriend] = useState(false);
 
   const handleEditRoom = (id: number) => {
     setIsEditing(true);
@@ -107,7 +89,7 @@ const ActionButtons: React.FC<Props> = ({
     } catch (error) {
       console.log(error);
     } finally {
-      setDropdownVisible(false);
+      handleToggleDropdown();
     }
   };
 
@@ -141,63 +123,191 @@ const ActionButtons: React.FC<Props> = ({
   }, [setIsEditing]);
 
   const handleLeaveRoom = async (roomID: number) => {
-    const { error } = await supabase
-      .from("members")
-      .delete()
-      .eq("room_id", roomID)
-      .eq("user_id", userId);
+    try {
+      const { error } = await supabase
+        .from("members")
+        .delete()
+        .eq("room_id", roomID)
+        .eq("user_id", userId);
 
-    setIsMember(false);
-    setDropdownVisible(false);
+      // delete channel if no members left
+
+      setChannels((prev) => prev.filter((channel) => channel.id !== roomID));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsMember(false);
+      setDropdownVisible(false);
+      showAlert("success", "Success", "You have left the room");
+    }
+  };
+
+  const showAlert = (type: string, title: string, message: string) => {
+    setAlert({ title, message, type });
+    setTimeout(() => setAlert(null), 5000);
   };
 
   const handleSendFriendRequest = async (roomID: number) => {
-    if (friendId === null) {
+    if (friendId === "") {
       setIsModalOpen(true);
+      showAlert("error", "Oops!", "You forgot to enter your friend's ID");
       return;
     }
+
+    if (friendId === userId) {
+      setIsModalOpen(true);
+      showAlert(
+        "error",
+        "Oops!",
+        "You can't be friends with yourself, but you're awesome!"
+      );
+      return;
+    }
+
+    //check if friend exists
+    const { data: friendCheck, error: friendCheckError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", friendId);
+
+    if (friendCheckError) {
+      console.error("Error checking if friend exists:", friendCheckError);
+      showAlert(
+        "error",
+        "Oops!",
+        "No luck finding your friend. Please check the ID and try again!"
+      );
+      return;
+    }
+
+    // Check if friend request already sent
+    const { data: userCheck, error } = await supabase
+      .from("requests")
+      .select("id")
+      .eq("receiver_id", friendId)
+      .eq("sender_id", userId);
+
+    if (error) {
+      console.error("Error checking friend request:", error);
+      return;
+    }
+
+    if (userCheck?.length > 0) {
+      setIsModalOpen(true);
+      showAlert(
+        "error",
+        "Oops!",
+        "You've already sent a friend request to this user. Patience, friend!"
+      );
+      return;
+    }
+
+    // Check if friend is already in the room
+    const { data: roomCheck, error: roomCheckError } = await supabase
+      .from("members")
+      .select("id")
+      .eq("room_id", roomID)
+      .eq("user_id", friendId);
+
+    if (roomCheck && roomCheck.length > 0) {
+      setIsModalOpen(true);
+      showAlert("error", "Oops!", "Your friend is already here!");
+      return;
+    }
+
+    if (roomCheckError) {
+      console.error("Error checking if friend is in room:", roomCheckError);
+      return;
+    }
+
     try {
+      // Send friend request
       const { data, error } = await supabase
         .from("requests")
         .insert([{ sender_id: userId, receiver_id: friendId, room_id: roomID }])
         .select();
     } catch (error) {
-      console.log(error);
+      console.error("Error sending friend request:", error);
     } finally {
       setDropdownVisible(false);
       setIsModalOpen(false);
-      // setFriendId(friendId)
+      showAlert(
+        "success",
+        "Hooray!",
+        "Friend request sent successfully! Fingers crossed 🤞"
+      );
     }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsLeaveRoom(false);
+    setIsAddFriend(false);
   };
 
   return (
     <>
+      {alert && (
+        <Alert
+          title={alert.title}
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <button
               className={styles.closeModal}
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => handleCloseModal()}
             >
               <AiOutlineClose />
             </button>
 
-            <div className={styles.addFriend}>
-              <p>Enter the ID of your friend to add:</p>
-              <div className={styles.pasteId}>
-                <input
-                  className={styles.pasteIdInput}
-                  type="text"
-                  onChange={(e) => setFriendId(e.target.value)}
-                />
-                <button
-                  className={styles.addFriendButton}
-                  onClick={() => handleSendFriendRequest(roomID)}
-                >
-                  Send
-                </button>
+            {isLeaveRoom && (
+              <div className={styles.leaveRoom}>
+                <GoQuestion className={styles.questionIcon} />
+
+                <p>
+                  Keep in mind, leaving will remove it from your list of rooms.
+                </p>
+                <div className={styles.leaveRoomButtons}>
+                  <button
+                    className={styles.leaveButton}
+                    onClick={() => handleLeaveRoom(roomID)}
+                  >
+                    Leave
+                  </button>
+
+                  <button
+                    className={styles.stayButton}
+                    onClick={() => handleCloseModal()}
+                  >
+                    Keep chatting
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
+            {isAddFriend && (
+              <div className={styles.addFriend}>
+                <p>Enter the ID of your friend to add:</p>
+                <div className={styles.pasteId}>
+                  <input
+                    className={styles.pasteIdInput}
+                    type="text"
+                    onChange={(e) => setFriendId(e.target.value)}
+                  />
+                  <button
+                    className={styles.addFriendButton}
+                    onClick={() => handleSendFriendRequest(roomID)}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -216,54 +326,51 @@ const ActionButtons: React.FC<Props> = ({
           id="dropdown"
           className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
         >
-          {isMember ? (
-            <>
-              {mutedRooms?.includes(roomID) ? (
-                <button
-                  onClick={() => {
-                    handleUnmute(roomID);
-                  }}
-                >
-                  Unmute <GoUnmute />
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    handleMute(roomID);
-                  }}
-                >
-                  Mute <GoMute />
-                </button>
-              )}
-
-              <button
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setDropdownVisible(false);
-                }}
-              >
-                Add Friend <AiOutlineUserAdd />
-              </button>
-              <button
-                onClick={() => {
-                  handleToggleDropdown();
-                  handleEditRoom(roomID);
-                }}
-              >
-                Edit Room <AiOutlineEdit />
-              </button>
-              <button
-                onClick={() => handleLeaveRoom(roomID)}
-                style={{ color: "red" }}
-              >
-                Leave Room <AiOutlineLogout />
-              </button>
-            </>
+          {mutedRooms?.includes(roomID) ? (
+            <button
+              onClick={() => {
+                handleUnmute(roomID);
+              }}
+            >
+              Unmute <GoUnmute />
+            </button>
           ) : (
-            <button onClick={() => handleDeleteRoom(roomID)}>
-              Delete Room <AiOutlineDelete />
+            <button
+              onClick={() => {
+                handleMute(roomID);
+              }}
+            >
+              Mute <GoMute />
             </button>
           )}
+
+          <button
+            onClick={() => {
+              setIsModalOpen(true);
+              setDropdownVisible(false);
+              setIsAddFriend(true);
+            }}
+          >
+            Add Friend <AiOutlineUserAdd />
+          </button>
+          <button
+            onClick={() => {
+              handleToggleDropdown();
+              handleEditRoom(roomID);
+            }}
+          >
+            Edit Room <AiOutlineEdit />
+          </button>
+          <button
+            onClick={() => {
+              setIsModalOpen(true);
+              setDropdownVisible(false);
+              setIsLeaveRoom(true);
+            }}
+            style={{ color: "red" }}
+          >
+            Leave Room <AiOutlineLogout />
+          </button>
         </div>
       </div>
     </>

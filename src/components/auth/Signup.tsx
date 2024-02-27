@@ -87,7 +87,7 @@ export default function Signup() {
         options: {
           data: { username },
           // TODO:remove username from data bcs it can be changed by user
-          emailRedirectTo: "https://chat-app-eight-lilac.vercel.app/",
+          emailRedirectTo: "https://chat-app-eight-lilac.vercel.app",
         },
       });
 

@@ -86,6 +86,8 @@ export default function Signup() {
         password,
         options: {
           data: { username },
+          // // TODO:remove username from data bcs it can be changed by user
+          emailRedirectTo: "/",
         },
       });
 

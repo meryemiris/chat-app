@@ -1,13 +1,11 @@
 .channelButton {
     display: grid;
-    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-columns: 1fr 9fr 1fr;
     align-items: center;
-    padding: 0.5rem 0.2rem 1.2rem 0.3rem;
+    padding: 1rem;
     margin-bottom: 1rem;
-    width: 200px;
-    background-color: inherit;
+    width: 100%;
     border: none;
-    border-radius: 10px;
     border-bottom: #ebebeb 3px solid;
 
 }
@@ -76,13 +74,4 @@
     position: relative;
     top: 1rem;
     color: #9db4c0;
-}
-
-.nonMember {
-    position: relative;
-    bottom: 1.5rem;
-    left: 0.3rem;
-    color: #9db4c0;
-    font-size: 0.6rem;
-
 }

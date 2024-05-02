@@ -1,24 +1,30 @@
 .container {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     color: white;
     padding: 0 1rem;
     width: 250px;
+    height: 100vh;
+    width: 100%;
+    background-color: #f56d44;
+
 
 
 
 }
 
 .roomName {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     max-width: 200px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem;
     align-self: center;
-
+    font-weight: 600;
 
 }
 
@@ -34,12 +40,17 @@
 .members {
     display: flex;
     flex-direction: column;
+    text-align: center;
 }
 
 .member {
     display: flex;
     list-style: none;
     border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 0.3rem;
     background-color: white;
     box-shadow: inset 0 -2px 1px #b5b5b5,
@@ -60,19 +71,17 @@
 
 
 .member p {
-    position: relative;
-    right: 0.5rem;
+
     font-size: 1rem;
     font-weight: 600;
     color: #f56d44;
-    align-self: flex-start;
 }
 
 
 
 .profilePic {
     position: relative;
-    right: 0.6rem;
+    right: 0.5rem;
     border-radius: 50%;
 
 }

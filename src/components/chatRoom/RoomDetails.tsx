@@ -8,101 +8,101 @@ import { MdGroups2 } from "react-icons/md";
 import Loading from "../utils/Loading";
 
 type MembersData =
-  | {
-      users: {
-        username: string;
-        profile_img: string;
-      };
-    }[]
-  | null;
+	| {
+			users: {
+				username: string;
+				profile_img: string;
+			};
+	  }[]
+	| null;
 
 export default function RoomDetails() {
-  const { activeChannelName, activeChannelId } = useContext(RoomContext);
-  const [memberLoading, setMemberLoading] = useState<boolean>(false);
+	const { activeChannelName, activeChannelId } = useContext(RoomContext);
+	const [memberLoading, setMemberLoading] = useState<boolean>(false);
 
-  const [memberNames, setMemberNames] = useState<string[]>([]);
-  const [profilePics, setProfilePics] = useState<string[]>([]);
+	const [memberNames, setMemberNames] = useState<string[]>([]);
+	const [profilePics, setProfilePics] = useState<string[]>([]);
 
-  useEffect(() => {
-    const getMembers = async () => {
-      try {
-        setMemberLoading(true);
-        const { data, error } = await supabase
-          .from("members")
-          .select(
-            `
+	useEffect(() => {
+		const getMembers = async () => {
+			try {
+				setMemberLoading(true);
+				const { data, error } = await supabase
+					.from("members")
+					.select(
+						`
        users (
          username,
          profile_img
        )
      `
-          )
-          .eq("room_id", activeChannelId);
+					)
+					.eq("room_id", activeChannelId);
 
-        const membersData = data as MembersData;
+				const membersData = data as MembersData;
 
-        if (!membersData) return;
+				if (!membersData) return;
 
-        const memberNames = membersData?.map(
-          (member) => member.users.username as string
-        );
-        const membersProfilePics = membersData?.map(
-          (member) => member.users.profile_img as string
-        );
+				const memberNames = membersData?.map(
+					(member) => member.users.username as string
+				);
+				const membersProfilePics = membersData?.map(
+					(member) => member.users.profile_img as string
+				);
 
-        setMemberNames(memberNames as string[]);
-        setProfilePics(membersProfilePics as string[]);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setMemberLoading(false);
-      }
-    };
+				setMemberNames(memberNames as string[]);
+				setProfilePics(membersProfilePics as string[]);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setMemberLoading(false);
+			}
+		};
 
-    getMembers();
-  }, [activeChannelId]);
+		getMembers();
+	}, [activeChannelId]);
 
-  return (
-    <div className={styles.container}>
-      <h3 className={styles.roomName}>
-        <Image
-          src={"/activeRoomPic.png"}
-          width={25}
-          height={25}
-          alt="room pic"
-        />
-        {activeChannelName}
-      </h3>
-      {memberLoading ? (
-        <Loading />
-      ) : (
-        <section>
-          <h6 className={styles.membersTitle}>
-            Members
-            <MdGroups2 className={styles.membersIcon} size={28} color="white" />
-          </h6>
-          {memberNames.length === 0 ? (
-            <p className={styles.noMembers}>No members yet</p>
-          ) : (
-            <ul className={styles.members}>
-              {memberNames?.map((username: string, index: number) => (
-                <li className={styles.member} key={index}>
-                  <Image
-                    className={styles.profilePic}
-                    src={
-                      profilePics[index] ? profilePics[index] : "/defaultPp.png"
-                    }
-                    width={30}
-                    height={30}
-                    alt={`${username}'s profile picture`}
-                  />
-                  <p> {username}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
-    </div>
-  );
+	return (
+		<div className={styles.container}>
+			<h3 className={styles.roomName}>
+				<Image
+					src={"/activeRoomPic.png"}
+					width={25}
+					height={25}
+					alt="room pic"
+				/>
+				{activeChannelName ? activeChannelName : "Channel Name"}
+			</h3>
+			{memberLoading ? (
+				<Loading />
+			) : (
+				<section>
+					<h6 className={styles.membersTitle}>
+						Members
+						<MdGroups2 className={styles.membersIcon} size={28} color="white" />
+					</h6>
+					{memberNames.length === 0 ? (
+						<p className={styles.noMembers}>No members yet</p>
+					) : (
+						<ul className={styles.members}>
+							{memberNames?.map((username: string, index: number) => (
+								<li className={styles.member} key={index}>
+									<Image
+										className={styles.profilePic}
+										src={
+											profilePics[index] ? profilePics[index] : "/defaultPp.png"
+										}
+										width={30}
+										height={30}
+										alt={`${username}'s profile picture`}
+									/>
+									<p> {username}</p>
+								</li>
+							))}
+						</ul>
+					)}
+				</section>
+			)}
+		</div>
+	);
 }

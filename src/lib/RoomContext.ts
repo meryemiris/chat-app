@@ -1,37 +1,37 @@
-import { createContext, ReactNode, Dispatch, SetStateAction } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 interface RoomContextProps {
-  activeChannelName: string;
-  setActiveChannelName: Dispatch<SetStateAction<string>>;
+	activeChannelName: string;
+	setActiveChannelName: Dispatch<SetStateAction<string>>;
 
-  activeChannelId: number | null;
-  setActiveChannelId: Dispatch<SetStateAction<number | null>>;
+	activeChannelId: number | null;
+	setActiveChannelId: Dispatch<SetStateAction<number | null>>;
 
-  mutedRooms: number[] | null;
-  setMutedRooms: Dispatch<SetStateAction<number[]>>;
+	mutedRooms: number[] | null;
+	setMutedRooms: Dispatch<SetStateAction<number[]>>;
 
-  isRoomMuted: boolean;
-  setIsRoomMuted: Dispatch<SetStateAction<boolean>>;
+	isRoomMuted: boolean;
+	setIsRoomMuted: Dispatch<SetStateAction<boolean>>;
 
-  showRoomDetails: boolean;
-  setShowRoomDetails: Dispatch<SetStateAction<boolean>>;
+	showRoomDetails: boolean;
+	setShowRoomDetails: Dispatch<SetStateAction<boolean>>;
 }
 
 const RoomContext = createContext<RoomContextProps>({
-  activeChannelName: "",
-  setActiveChannelName: () => {},
+	activeChannelName: "",
+	setActiveChannelName: () => {},
 
-  activeChannelId: null,
-  setActiveChannelId: () => {},
+	activeChannelId: null,
+	setActiveChannelId: () => {},
 
-  mutedRooms: null,
-  setMutedRooms: () => {},
+	mutedRooms: null,
+	setMutedRooms: () => {},
 
-  isRoomMuted: false,
-  setIsRoomMuted: () => {},
+	isRoomMuted: false,
+	setIsRoomMuted: () => {},
 
-  showRoomDetails: false,
-  setShowRoomDetails: () => {},
+	showRoomDetails: false,
+	setShowRoomDetails: () => {},
 });
 
 export default RoomContext;

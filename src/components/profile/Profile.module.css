@@ -1,83 +1,79 @@
 .profile {
-    width: 250px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 1rem 0.5rem;
-    margin: 0 0.5rem;
-    border-radius: 20px;
-    box-shadow: 5px 5px 3px #f4f4f4,
-        -5px -2px 10px #f4f4f4;
+    justify-content: space-around;
+    padding: 1rem;
+    background-color: #eee;
+
 }
 
-.profileHeader {
+
+
+.infos {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: #9db4c0;
+    flex-direction: column;
     width: 100%;
-    padding: 0 .5rem;
-
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
+
 
 .editProfile {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
     border: none;
     cursor: pointer;
-    color: #9db4c0;
-    background-color: inherit;
+    color: #f56d44;
+    background-color: transparent;
 }
 
-
-.profileTitle {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 1rem;
-}
 
 
 .username {
-    display: flex;
-    align-items: center;
-}
-
-.usernameInput {
     border: none;
     color: #f56d44;
     font-family: monospace;
-    font-size: 1.5rem;
-    width: 100px;
-    align-self: center;
-
+    font-size: 1.2rem;
+    justify-self: flex-end;
+    background-color: transparent;
+    text-align: center;
 }
+
+
+
+
+
+
+
+
+.usernameInput:focus {
+    outline: none;
+}
+
 
 .usernameInput::placeholder {
     font-size: .7rem;
 
+
 }
 
 
-.editUsername {
-    background-color: inherit;
-    border: none;
-    color: #f56d44;
-    font-size: 1.5rem;
-    padding-left: 1rem;
-}
 
 .profileForm {
     display: grid;
     gap: 0.5rem;
+    grid-template-columns: 2fr 1fr;
+    justify-items: start;
     width: 100%;
-    padding: 0.5rem;
 
 }
+
 
 .profileForm input::-webkit-file-upload-button {
+    background-color: #f56d44;
+    color: white;
     border: none;
     padding: 0.5rem;
     border-radius: 10px;
@@ -85,26 +81,6 @@
 
 
 }
-
-.profileForm input::-webkit-file-upload-button:hover {
-    background-color: #f56d44;
-    color: white;
-
-}
-
-.profileForm button {
-    border: none;
-    padding: 0.5rem;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.profileForm button:hover {
-    background-color: #f56d44;
-    color: white;
-
-}
-
 
 .shareId {
     display: flex;
@@ -113,7 +89,7 @@
 }
 
 .shareId p {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #9db4c0;
     padding: 1rem 0.5rem 0.5rem 0;
 
@@ -124,7 +100,7 @@
     display: flex;
     border: #f56d44 2px solid;
     border-radius: 10px;
-    width: 150px;
+    width: 200px;
     justify-content: space-between;
 
 }
@@ -147,7 +123,6 @@
 
 .userId {
     font-size: 0.8rem;
-
     color: #9db4c0;
     max-width: 150px;
     overflow: hidden;
@@ -173,7 +148,6 @@
     position: relative;
     overflow: hidden;
     background-color: #f56d44;
-
     font-size: 1.5rem;
     color: white;
 }

@@ -9,26 +9,21 @@ import Layout from "@/components/layout/Layout";
 import ChatRoom from "@/components/chatRoom/ChatRoom";
 
 import { supabase } from "@/lib/supabase";
-import AuthContext from "@/lib/AuthContext";
 import FeedbackContext from "@/lib/FeedbackContext";
 import MessageContext from "@/lib/MessageContext";
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
 import UserContext from "@/lib/UserContext";
-import Profile from "@/components/profile/Profile";
 import RoomList from "@/components/roomList/RoomlList";
 import RoomDetails from "@/components/chatRoom/RoomDetails";
+import { useAuthContext } from "@/lib/AuthContext";
 
 export default function HomePage() {
 	const router = useRouter();
 
-	const [userId, setUserId] = useState("");
-
 	const [activeChannelId, setActiveChannelId] = useState<number | null>(null);
-	const [activeChannel, setActiveChannel] = useState([]);
 	const [activeChannelName, setActiveChannelName] = useState("");
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [alert, setAlert] = useState<alertMessage | null>(null);
@@ -47,6 +42,9 @@ export default function HomePage() {
 	const [friendId, setFriendId] = useState("");
 	const [showProfile, setShowProfile] = useState(false);
 
+	const { userId } = useAuthContext();
+	console.log(userId);
+
 	useEffect(() => {
 		async function getUser() {
 			const { data: user, error: userError } = await supabase
@@ -62,22 +60,6 @@ export default function HomePage() {
 		getUser();
 	}, [userId, setProfileImg]);
 
-	useEffect(() => {
-		async function checkUser() {
-			const { data } = await supabase.auth.getUser();
-
-			if (!data.user) {
-				router.push("/login");
-			} else {
-				setIsLoggedIn(true);
-
-				setUserId(data.user.id);
-			}
-		}
-
-		checkUser();
-	}, [router, userId]);
-
 	return (
 		<>
 			<Head>
@@ -87,74 +69,56 @@ export default function HomePage() {
 					content="Join the Fungal Fun, Chat with your friends"
 				/>
 			</Head>
-			<AuthContext.Provider
+
+			<UserContext.Provider
 				value={{
-					userId,
-					setUserId,
-					isLoggedIn,
-					setIsLoggedIn,
+					username,
+					setUsername,
+					profileImg,
+					setProfileImg,
+					friendId,
+					setFriendId,
+					showProfile,
+					setShowProfile,
 				}}
 			>
-				<UserContext.Provider
+				<RoomContext.Provider
 					value={{
-						username,
-						setUsername,
-						profileImg,
-						setProfileImg,
-						friendId,
-						setFriendId,
-						showProfile,
-						setShowProfile,
+						activeChannelName,
+						setActiveChannelName,
+						activeChannelId,
+						setActiveChannelId,
+						mutedRooms,
+						setMutedRooms,
+						showRoomDetails,
+						setShowRoomDetails,
+						isRoomMuted,
+						setIsRoomMuted,
 					}}
 				>
-					<RoomContext.Provider
+					<FeedbackContext.Provider
 						value={{
-							activeChannelName,
-							setActiveChannelName,
-							activeChannelId,
-							setActiveChannelId,
-							mutedRooms,
-							setMutedRooms,
-							showRoomDetails,
-							setShowRoomDetails,
-							isRoomMuted,
-							setIsRoomMuted,
+							alert,
+							setAlert,
+							isLoading,
+							setIsLoading,
 						}}
 					>
-						<FeedbackContext.Provider
+						<MessageContext.Provider
 							value={{
-								alert,
-								setAlert,
-								isLoading,
-								setIsLoading,
+								unreadMessages,
+								setUnreadMessages,
+								roomIdsWithUnreadMessages,
+								setRoomIdsWithUnreadMessages,
 							}}
 						>
-							<MessageContext.Provider
-								value={{
-									unreadMessages,
-									setUnreadMessages,
-									roomIdsWithUnreadMessages,
-									setRoomIdsWithUnreadMessages,
-								}}
-							>
-								{isLoading ? (
-									<Loading />
-								) : activeChannelName ? (
-									showRoomDetails ? (
-										<RoomDetails />
-									) : (
-										<ChatRoom />
-									)
-								) : (
-									<Layout>
-										<RoomList />
-									</Layout>
-								)}
-							</MessageContext.Provider>
-						</FeedbackContext.Provider>
-					</RoomContext.Provider>
-				</UserContext.Provider>
-			</AuthContext.Provider>
+							<Layout>
+								<RoomList />
+							</Layout>
+						</MessageContext.Provider>
+					</FeedbackContext.Provider>
+				</RoomContext.Provider>
+			</UserContext.Provider>
 		</>
 	);
 }

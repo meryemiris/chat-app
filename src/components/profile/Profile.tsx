@@ -1,8 +1,7 @@
 import Image from "next/image";
 import styles from "./Profile.module.css";
-import { TbUserEdit } from "react-icons/tb";
-import { FormEventHandler, useContext, useState } from "react";
-import AuthContext from "@/lib/AuthContext";
+import { useContext, useState } from "react";
+import { useAuthContext } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { IoLogOut } from "react-icons/io5";
 import { useRouter } from "next/router";
@@ -10,7 +9,7 @@ import UserContext from "@/lib/UserContext";
 import { AiOutlineCopy } from "react-icons/ai";
 
 export default function Profile() {
-	const { userId } = useContext(AuthContext);
+	const { userId } = useAuthContext();
 
 	const { profileImg, setProfileImg, username, setUsername } =
 		useContext(UserContext);

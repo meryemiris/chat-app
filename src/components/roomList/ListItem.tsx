@@ -10,11 +10,10 @@ import MessageContext from "@/lib/MessageContext";
 
 import UnreadMessages from "./UnreadMessage";
 
-import { MdCheckCircleOutline } from "react-icons/md";
 import { GoMute } from "react-icons/go";
 import Image from "next/image";
 import ActionButtons from "./ActionButtons";
-import AuthContext from "@/lib/AuthContext";
+import { useAuthContext } from "@/lib/AuthContext";
 
 type RoomListItemProps = {
 	roomID: number;
@@ -33,7 +32,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	const [channelName, setChannelName] = useState<string>("");
 	const [isEditing, setIsEditing] = useState(false);
 
-	const { userId } = useContext(AuthContext);
+	const { userId } = useAuthContext();
 
 	const {
 		activeChannelId,

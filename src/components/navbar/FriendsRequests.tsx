@@ -3,12 +3,12 @@ import Image from "next/image";
 
 import styles from "./FriendsRequests.module.css";
 
-import AuthContext from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 import { alertMessage } from "../utils/Alert";
 
 import { FaBell } from "react-icons/fa";
+import { useAuthContext } from "@/lib/AuthContext";
 
 type Request = {
 	room_id: number;
@@ -24,7 +24,7 @@ type Request = {
 const FriendRequests = () => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const [dropdownVisible, setDropdownVisible] = useState(false);
-	const { userId } = useContext(AuthContext);
+	const { userId } = useAuthContext();
 
 	const [requests, setRequests] = useState<Request[]>([]);
 

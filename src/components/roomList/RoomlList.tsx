@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./RoomList.module.css";
@@ -11,7 +11,7 @@ import {
 
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
 import ListItem from "./ListItem";
-import AuthContext from "@/lib/AuthContext";
+import { useAuthContext } from "@/lib/AuthContext";
 import { Channel } from "@/types";
 import RoomContext from "@/lib/RoomContext";
 import MessageContext from "@/lib/MessageContext";
@@ -23,7 +23,7 @@ const RoomList = () => {
 	const [channels, setChannels] = useState<Channel[]>([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
-	const { userId } = useContext(AuthContext);
+	const { userId } = useAuthContext();
 
 	const [showMuted, setShowMuted] = useState(false);
 	const [showUnread, setShowUnread] = useState(false);

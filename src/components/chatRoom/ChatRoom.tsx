@@ -7,12 +7,12 @@ import Messages from "./Messages";
 import styles from "./ChatRoom.module.css";
 
 import { IoSearch, IoSend } from "react-icons/io5";
-import AuthContext from "@/lib/AuthContext";
 import { RiEmojiStickerLine } from "react-icons/ri";
 import RoomContext from "@/lib/RoomContext";
 import { IoIosArrowBack } from "react-icons/io";
 
 import { FaInfoCircle } from "react-icons/fa";
+import { useAuthContext } from "@/lib/AuthContext";
 
 export default function ChatRoom() {
 	const {
@@ -21,7 +21,7 @@ export default function ChatRoom() {
 		setShowRoomDetails,
 		setActiveChannelName,
 	} = useContext(RoomContext);
-	const { userId } = useContext(AuthContext);
+	const { userId } = useAuthContext();
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const time = new Date().toLocaleTimeString([], {

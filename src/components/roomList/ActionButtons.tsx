@@ -5,11 +5,10 @@ import { Channel } from "@/types";
 import { supabase } from "@/lib/supabase";
 import RoomContext from "@/lib/RoomContext";
 import { useAuthContext } from "@/lib/AuthContext";
-import UserContext from "@/lib/UserContext";
+import { useUserContext } from "@/lib/UserContext";
 
 import {
 	AiOutlineClose,
-	AiOutlineDelete,
 	AiOutlineEdit,
 	AiOutlineLogout,
 	AiOutlineUserAdd,
@@ -41,7 +40,7 @@ const ActionButtons: React.FC<Props> = ({
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const { userId } = useAuthContext();
-	const { friendId, setFriendId } = useContext(UserContext);
+	const { friendId, setFriendId } = useUserContext();
 	const [alert, setAlert] = useState<alertMessage | null>(null);
 	const [isLeaveRoom, setIsLeaveRoom] = useState(false);
 	const [isAddFriend, setIsAddFriend] = useState(false);

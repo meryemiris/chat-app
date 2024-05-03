@@ -14,14 +14,10 @@ import MessageContext from "@/lib/MessageContext";
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
-import UserContext from "@/lib/UserContext";
 import RoomList from "@/components/roomList/RoomlList";
-import RoomDetails from "@/components/chatRoom/RoomDetails";
-import { useAuthContext } from "@/lib/AuthContext";
+import Profile from "@/components/profile/Profile";
 
 export default function HomePage() {
-	const router = useRouter();
-
 	const [activeChannelId, setActiveChannelId] = useState<number | null>(null);
 	const [activeChannelName, setActiveChannelName] = useState("");
 
@@ -36,29 +32,6 @@ export default function HomePage() {
 
 	const [mutedRooms, setMutedRooms] = useState<number[]>([]);
 	const [isRoomMuted, setIsRoomMuted] = useState<boolean>(false);
-	const [username, setUsername] = useState("");
-	const [profileImg, setProfileImg] = useState("");
-
-	const [friendId, setFriendId] = useState("");
-	const [showProfile, setShowProfile] = useState(false);
-
-	const { userId } = useAuthContext();
-	console.log(userId);
-
-	useEffect(() => {
-		async function getUser() {
-			const { data: user, error: userError } = await supabase
-				.from("users")
-				.select("profile_img, username")
-				.eq("id", userId);
-
-			if (user) {
-				setProfileImg(user[0]?.profile_img);
-				setUsername(user[0]?.username);
-			}
-		}
-		getUser();
-	}, [userId, setProfileImg]);
 
 	return (
 		<>
@@ -70,55 +43,42 @@ export default function HomePage() {
 				/>
 			</Head>
 
-			<UserContext.Provider
+			<RoomContext.Provider
 				value={{
-					username,
-					setUsername,
-					profileImg,
-					setProfileImg,
-					friendId,
-					setFriendId,
-					showProfile,
-					setShowProfile,
+					activeChannelName,
+					setActiveChannelName,
+					activeChannelId,
+					setActiveChannelId,
+					mutedRooms,
+					setMutedRooms,
+					showRoomDetails,
+					setShowRoomDetails,
+					isRoomMuted,
+					setIsRoomMuted,
 				}}
 			>
-				<RoomContext.Provider
+				<FeedbackContext.Provider
 					value={{
-						activeChannelName,
-						setActiveChannelName,
-						activeChannelId,
-						setActiveChannelId,
-						mutedRooms,
-						setMutedRooms,
-						showRoomDetails,
-						setShowRoomDetails,
-						isRoomMuted,
-						setIsRoomMuted,
+						alert,
+						setAlert,
+						isLoading,
+						setIsLoading,
 					}}
 				>
-					<FeedbackContext.Provider
+					<MessageContext.Provider
 						value={{
-							alert,
-							setAlert,
-							isLoading,
-							setIsLoading,
+							unreadMessages,
+							setUnreadMessages,
+							roomIdsWithUnreadMessages,
+							setRoomIdsWithUnreadMessages,
 						}}
 					>
-						<MessageContext.Provider
-							value={{
-								unreadMessages,
-								setUnreadMessages,
-								roomIdsWithUnreadMessages,
-								setRoomIdsWithUnreadMessages,
-							}}
-						>
-							<Layout>
-								<RoomList />
-							</Layout>
-						</MessageContext.Provider>
-					</FeedbackContext.Provider>
-				</RoomContext.Provider>
-			</UserContext.Provider>
+						<Layout>
+							<Profile />
+						</Layout>
+					</MessageContext.Provider>
+				</FeedbackContext.Provider>
+			</RoomContext.Provider>
 		</>
 	);
 }

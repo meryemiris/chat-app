@@ -12,6 +12,7 @@ import { Message } from "@/types";
 
 import Loading from "../utils/Loading";
 import { useAuthContext } from "@/lib/AuthContext";
+import { useUserContext } from "@/lib/UserContext";
 
 type MessagesProps = {
 	searchTerm: string;
@@ -20,6 +21,7 @@ type MessagesProps = {
 const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 	const { activeChannelId } = useContext(ChannelsContext);
 	const { userId } = useAuthContext();
+	const { profileImg } = useUserContext();
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [messageLoading, setMessageLoading] = useState(false);
@@ -156,10 +158,8 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 									{userId !== user_id && (
 										<Image
 											className={styles.avatar}
-											src={
-												users.profile_img ? users.profile_img : "/defaultPp.png"
-											}
-											alt=""
+											src={profileImg}
+											alt="sender image"
 											width={50}
 											height={50}
 										/>

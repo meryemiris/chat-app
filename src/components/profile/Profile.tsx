@@ -1,18 +1,17 @@
 import Image from "next/image";
 import styles from "./Profile.module.css";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useAuthContext } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { IoLogOut } from "react-icons/io5";
 import { useRouter } from "next/router";
-import UserContext from "@/lib/UserContext";
+import { useUserContext } from "@/lib/UserContext";
 import { AiOutlineCopy } from "react-icons/ai";
 
 export default function Profile() {
 	const { userId } = useAuthContext();
 
-	const { profileImg, setProfileImg, username, setUsername } =
-		useContext(UserContext);
+	const { profileImg, setProfileImg, username, setUsername } = useUserContext();
 
 	const [isEdit, setIsEdit] = useState(false);
 
@@ -69,13 +68,12 @@ export default function Profile() {
 		<div className={styles.profile}>
 			<div className={styles.infos}>
 				<Image
-					src={profileImg ? profileImg : "/defaultPp.png"}
+					src={profileImg}
 					alt="profile image"
 					width={100}
 					height={100}
-					layout="fixed"
-					loading="lazy"
 					style={{ borderRadius: "50%" }}
+					priority
 				/>
 				<button
 					onClick={() => setIsEdit(!isEdit)}

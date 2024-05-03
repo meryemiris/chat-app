@@ -184,7 +184,7 @@ const FriendRequests = () => {
 							<Image
 								className={styles.profileImg}
 								src={request ? request.users?.profile_img : "defaultPp.png"}
-								alt="profile"
+								alt="request sender profile img"
 								width={40}
 								height={40}
 							/>

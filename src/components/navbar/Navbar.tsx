@@ -4,11 +4,10 @@ import styles from "./Navbar.module.css";
 // import FriendRequests from "./FriendsRequests";
 import Image from "next/image";
 
-import { useContext } from "react";
-import UserContext from "@/lib/UserContext";
+import { useUserContext } from "@/lib/UserContext";
 
 const Navbar = () => {
-	const { setShowProfile, profileImg } = useContext(UserContext);
+	const { setShowProfile, profileImg } = useUserContext();
 
 	const handleShowProfile = () => {
 		setShowProfile(true);
@@ -27,7 +26,7 @@ const Navbar = () => {
 
 			<button onClick={handleShowProfile} className={styles.button}>
 				<Image
-					src={profileImg ? profileImg : "/defaultPp.png"}
+					src={profileImg}
 					alt="go to profile"
 					width={40}
 					height={40}

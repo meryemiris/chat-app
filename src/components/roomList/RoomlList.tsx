@@ -48,19 +48,16 @@ const RoomList = () => {
 				);
 			}
 
-			console.log("membership", membership);
-			const memberRoomIds = membership?.map(
-				(member) => member.room_id
-			) as number[];
+			const memberRoomIds = membership?.map((member) => member.room_id);
 
-			setMemberRooms(memberRoomIds);
+			setMemberRooms(memberRoomIds as number[]);
 
 			// Extract the room IDs from the memberRooms data
 
 			let { data, error } = await supabase
 				.from("channels")
-				.select("id, name")
-				.in("id", memberRoomIds);
+				.select("name")
+				.in("id", memberRooms as number[]);
 
 			if (data) {
 				setChannels(data as Channel[]);
@@ -92,14 +89,12 @@ const RoomList = () => {
 				);
 			}
 
-			const activeRoomId = activeRoom
-				? (activeRoom[0]?.room_id as number)
-				: null;
+			const activeRoomId = activeRoom ? activeRoom[0]?.room_id : null;
 			setActiveChannelId(activeRoomId);
 		}
 
 		getRoomList();
-	}, [setMutedRooms, userId, setActiveChannelId]);
+	}, [setMutedRooms, userId, setActiveChannelId, memberRooms]);
 
 	const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
 		try {

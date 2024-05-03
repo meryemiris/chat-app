@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { MdGroups2 } from "react-icons/md";
 import Loading from "../utils/Loading";
+import { IoCloseOutline } from "react-icons/io5";
 
 type MembersData =
 	| {
@@ -17,7 +18,8 @@ type MembersData =
 	| null;
 
 export default function RoomDetails() {
-	const { activeChannelName, activeChannelId } = useContext(RoomContext);
+	const { activeChannelName, activeChannelId, setShowRoomDetails } =
+		useContext(RoomContext);
 	const [memberLoading, setMemberLoading] = useState<boolean>(false);
 
 	const [memberNames, setMemberNames] = useState<string[]>([]);
@@ -64,6 +66,12 @@ export default function RoomDetails() {
 
 	return (
 		<div className={styles.container}>
+			<button
+				className={styles.closeBtn}
+				onClick={() => setShowRoomDetails(false)}
+			>
+				<IoCloseOutline className={styles.closeIcon} />
+			</button>
 			<h3 className={styles.roomName}>
 				<Image
 					src={"/activeRoomPic.png"}
@@ -71,7 +79,7 @@ export default function RoomDetails() {
 					height={25}
 					alt="room pic"
 				/>
-				{activeChannelName ? activeChannelName : "Channel Name"}
+				{activeChannelName}
 			</h3>
 			{memberLoading ? (
 				<Loading />

@@ -21,6 +21,14 @@
 
 }
 
+.backButton {
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+    color: white;
+    font-size: 1rem;
+}
+
 
 .welcome {
     display: flex;

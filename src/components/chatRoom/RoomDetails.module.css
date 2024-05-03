@@ -85,3 +85,13 @@
     border-radius: 50%;
 
 }
+
+.closeBtn {
+    background-color: inherit;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    align-self: flex-end;
+    cursor: pointer;
+}

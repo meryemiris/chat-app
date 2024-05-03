@@ -139,12 +139,16 @@ export default function HomePage() {
 							>
 								{isLoading ? (
 									<Loading />
-								) : (
-									isLoggedIn && (
-										<Layout>
-											<RoomList />
-										</Layout>
+								) : activeChannelName ? (
+									showRoomDetails ? (
+										<RoomDetails />
+									) : (
+										<ChatRoom />
 									)
+								) : (
+									<Layout>
+										<RoomList />
+									</Layout>
 								)}
 							</MessageContext.Provider>
 						</FeedbackContext.Provider>

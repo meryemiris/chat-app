@@ -2,7 +2,7 @@ import Login from "@/components/auth/Login";
 import Image from "next/image";
 import styles from "@/styles/Login-SignupPages.module.css";
 
-const lampImg = "/lamp.svg ";
+const lampImg = "/lamp.png ";
 
 export default function LoginPage() {
 	return (

@@ -5,8 +5,6 @@ import styles from "./FriendsRequests.module.css";
 
 import { supabase } from "@/lib/supabase";
 
-import { alertMessage } from "../utils/Alert";
-
 import { FaBell } from "react-icons/fa";
 import { useAuthContext } from "@/lib/AuthContext";
 

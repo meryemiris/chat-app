@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { alertMessage } from "@/components/utils/Alert";
 import Loading from "@/components/utils/Loading";
 import Layout from "@/components/layout/Layout";
 import ChatRoom from "@/components/chatRoom/ChatRoom";
@@ -22,7 +21,6 @@ export default function HomePage() {
 	const [activeChannelName, setActiveChannelName] = useState("");
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [alert, setAlert] = useState<alertMessage | null>(null);
 
 	const [unreadMessages, setUnreadMessages] = useState<Message[]>([]);
 	const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
@@ -59,8 +57,6 @@ export default function HomePage() {
 			>
 				<FeedbackContext.Provider
 					value={{
-						alert,
-						setAlert,
 						isLoading,
 						setIsLoading,
 					}}

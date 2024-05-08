@@ -15,7 +15,7 @@ import {
 } from "react-icons/ai";
 import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoQuestion, GoUnmute } from "react-icons/go";
-import Alert, { alertMessage } from "../utils/Alert";
+import { toast } from "sonner";
 
 type Props = {
 	roomID: number;
@@ -41,7 +41,6 @@ const ActionButtons: React.FC<Props> = ({
 
 	const { userId } = useAuthContext();
 	const { friendId, setFriendId } = useUserContext();
-	const [alert, setAlert] = useState<alertMessage | null>(null);
 	const [isLeaveRoom, setIsLeaveRoom] = useState(false);
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
@@ -137,29 +136,21 @@ const ActionButtons: React.FC<Props> = ({
 		} finally {
 			setIsMember(false);
 			setDropdownVisible(false);
-			showAlert("success", "Success", "You have left the room");
+			toast.success("You've left the room!");
 		}
-	};
-
-	const showAlert = (type: string, title: string, message: string) => {
-		setAlert({ title, message, type });
-		setTimeout(() => setAlert(null), 5000);
 	};
 
 	const handleSendFriendRequest = async (roomID: number) => {
 		if (friendId === "") {
 			setIsModalOpen(true);
-			showAlert("error", "Oops!", "You forgot to enter your friend's ID");
+			toast.warning("You forgot to enter your friend's ID");
 			return;
 		}
 
 		if (friendId === userId) {
 			setIsModalOpen(true);
-			showAlert(
-				"error",
-				"Oops!",
-				"You can't be friends with yourself, but you're awesome!"
-			);
+
+			toast.warning("You can't be friends with yourself, but you're awesome!");
 			return;
 		}
 
@@ -171,9 +162,8 @@ const ActionButtons: React.FC<Props> = ({
 
 		if (friendCheckError) {
 			console.error("Error checking if friend exists:", friendCheckError);
-			showAlert(
-				"error",
-				"Oops!",
+
+			toast.error(
 				"No luck finding your friend. Please check the ID and try again!"
 			);
 			return;
@@ -193,9 +183,7 @@ const ActionButtons: React.FC<Props> = ({
 
 		if (userCheck?.length > 0) {
 			setIsModalOpen(true);
-			showAlert(
-				"error",
-				"Oops!",
+			toast.warning(
 				"You've already sent a friend request to this user. Patience, friend!"
 			);
 			return;
@@ -210,7 +198,7 @@ const ActionButtons: React.FC<Props> = ({
 
 		if (roomCheck && roomCheck.length > 0) {
 			setIsModalOpen(true);
-			showAlert("error", "Oops!", "Your friend is already here!");
+			toast.warning("Your friend is already here!");
 			return;
 		}
 
@@ -230,11 +218,8 @@ const ActionButtons: React.FC<Props> = ({
 		} finally {
 			setDropdownVisible(false);
 			setIsModalOpen(false);
-			showAlert(
-				"success",
-				"Hooray!",
-				"Friend request sent successfully! Fingers crossed 🤞"
-			);
+
+			toast.success("Friend request sent successfully! Fingers crossed 🤞");
 		}
 	};
 
@@ -246,14 +231,6 @@ const ActionButtons: React.FC<Props> = ({
 
 	return (
 		<>
-			{alert && (
-				<Alert
-					title={alert.title}
-					message={alert.message}
-					type={alert.type}
-					onClose={() => setAlert(null)}
-				/>
-			)}
 			{isModalOpen && (
 				<div className={styles.modalOverlay}>
 					<div className={styles.modal}>

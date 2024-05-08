@@ -1,146 +1,100 @@
 import { supabase } from "@/lib/supabase";
-import styles from "./Login.module.css";
+
 import { useRouter } from "next/router";
-import { useState, useContext } from "react";
-import { IoLogoGithub, IoLogoGoogle } from "react-icons/io5";
-import Alert, { alertMessage } from "../utils/Alert";
+import { useState } from "react";
+
+import { toast } from "sonner";
+
+import styles from "./Login.module.css";
+
 import Loading from "../utils/Loading";
-import FeedbackContext from "@/lib/FeedbackContext";
 
 export default function Login() {
 	const router = useRouter();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const { setIsLoading } = useContext(FeedbackContext);
-	const [alert, setAlert] = useState<alertMessage | null>(null);
 
-	const showAlert = (type: string, title: string, message: string) => {
-		setAlert({ title, message, type });
-		setTimeout(() => setAlert(null), 5000);
-	};
+	const [isLoading, setIsLoading] = useState(false);
 
-	const handleLogin = async () => {
-		try {
-			setIsLoading(true);
-			if (!email || !password) {
-				showAlert(
-					"warning",
-					"Hey there!",
-					"Please fill in both email and password before signing in."
-				);
-				return;
-			}
-			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailPattern.test(email)) {
-				showAlert(
-					"warning",
-					"Hey there!",
-					"Please enter a valid email address."
-				);
-				return;
-			}
+	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 
-			if (password.length < 6) {
-				showAlert(
-					"warning",
-					"Hey there!",
-					"Please enter a valid password (at least 6 characters)."
-				);
-				return;
-			}
-
-			const { data, error } = await supabase.auth.signInWithPassword({
-				email,
-				password,
-			});
-
-			if (error) {
-				if (error.message === "Invalid login credentials") {
-					showAlert(
-						"error",
-						"Oops!",
-						"User not found or incorrect password. Please double-check your credentials."
-					);
-				} else {
-					showAlert(
-						"error",
-						"Uh-oh!",
-						"Something went wrong while signing in. Please try again later."
-					);
-				}
-			} else {
-				showAlert("success", "Welcome back!", "You've signed in successfully.");
-
-				router.push("/");
-			}
-		} catch (error) {
-			showAlert(
-				"error",
-				"Uh-oh!",
-				"Something unexpected happened. Please try again later."
+		if (!email || !password) {
+			toast.warning(
+				"Please fill in both email and password before signing in."
 			);
-		} finally {
-			setIsLoading(false);
+			return;
 		}
+
+		setIsLoading(true);
+
+		const { error } = await supabase.auth.signInWithPassword({
+			email,
+			password,
+		});
+
+		if (error) {
+			const errorMessage =
+				error.message === "Invalid login credentials"
+					? "User not found or incorrect password. Please double-check your credentials."
+					: "Something went wrong while signing in. Please try again later.";
+
+			toast.error(errorMessage);
+			setEmail("");
+			setPassword("");
+		} else {
+			toast.success("Welcome back! You've signed in successfully.");
+			router.push("/");
+		}
+		setIsLoading(false);
 	};
 
 	return (
-		<>
-			{alert && (
-				<Alert
-					title={alert.title}
-					message={alert.message}
-					type={alert.type}
-					onClose={() => setAlert(null)}
+		<form
+			className={styles.form}
+			onSubmit={(e) => {
+				handleLogin(e);
+			}}
+		>
+			<h1>Welcome!</h1>
+			<h2>Ready to Sign In?</h2>
+			<div className={styles.inputGroup}>
+				<input
+					id="email"
+					type="text"
+					name="email"
+					autoComplete="off"
+					className={styles.input}
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
 				/>
-			)}
-			<form
-				className={styles.form}
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleLogin();
-				}}
-			>
-				<h1>Welcome!</h1>
-				<h2>Ready to Sign In?</h2>
-				<div className={styles.inputGroup}>
-					<input
-						id="email"
-						type="text"
-						name="email"
-						autoComplete="off"
-						className={styles.input}
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-					/>
-					<label className={styles.userLabel} htmlFor="email">
-						Email
-					</label>
-				</div>
-				<div className={styles.inputGroup}>
-					<input
-						id="password"
-						type="password"
-						name="password"
-						autoComplete="off"
-						className={styles.input}
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-					<label className={styles.userLabel} htmlFor="password">
-						Password
-					</label>
-				</div>
-				<p className={styles.forgotPassword}>Forgot password?</p>
-				<button className={styles.button} type="submit">
-					Login
-				</button>
+				<label className={styles.userLabel} htmlFor="email">
+					Email
+				</label>
+			</div>
+			<div className={styles.inputGroup}>
+				<input
+					id="password"
+					type="password"
+					name="password"
+					autoComplete="off"
+					className={styles.input}
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+				<label className={styles.userLabel} htmlFor="password">
+					Password
+				</label>
+			</div>
+			<p className={styles.forgotPassword}>Forgot password?</p>
+			<button className={styles.button} type="submit">
+				{isLoading ? <Loading size="sm" /> : "Login"}
+			</button>
 
-				<div className={styles.link}>
-					<i>No account?</i>
-					<a href="signup">Signup</a>
-				</div>
-			</form>
-		</>
+			<div className={styles.link}>
+				<i>No account?</i>
+				<a href="signup">Signup</a>
+			</div>
+		</form>
 	);
 }

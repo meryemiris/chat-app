@@ -2,7 +2,7 @@ import Login from "@/components/auth/Login";
 import Image from "next/image";
 import styles from "@/styles/Login-SignupPages.module.css";
 
-const lampImg = "/lamp.png ";
+const lampImg = "/lamp.svg ";
 
 export default function LoginPage() {
 	return (
@@ -18,6 +18,7 @@ export default function LoginPage() {
 					width={290}
 					height={300}
 					className={styles.image}
+					loading="lazy"
 				/>
 				<div className={styles.triangle}></div>
 			</div>

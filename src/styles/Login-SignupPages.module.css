@@ -1,20 +1,47 @@
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    width: 100%;
+    height: 250px;
+    background-color: #E86100;
+    overflow: hidden;
 }
+
 
 .image {
-    width: 45%;
+    width: 20%;
     height: auto;
+    margin-left: 20px;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+    font-size: 18px;
+    padding: 30px;
+}
+
+.subheader {
+    font-weight: 300;
 
 }
 
+.triangle {
+    position: relative;
+    top: -15px;
+    right: 223px;
+    width: 0;
+    height: 0;
+    border-left: 280px solid transparent;
+    border-right: 880px solid transparent;
+    border-bottom: 200px solid #fff;
+    z-index: 0;
+}
 
-@media only screen and (max-width: 768px) {
-
-    .image {
-        display: none;
-    }
+.formContainer {
+    display: flex;
 }

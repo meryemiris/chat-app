@@ -2,19 +2,28 @@ import Signup from "@/components/auth/Signup";
 import Image from "next/image";
 import styles from "@/styles/Login-SignupPages.module.css";
 
-const signupImg = "/mushroom.svg";
+const lampImg = "/lamp.png";
 
 export default function SignupPage() {
 	return (
-		<div className={styles.container}>
-			<Image
-				src={signupImg}
-				className={styles.image}
-				width={50}
-				height={50}
-				alt="signup"
-			/>
-			<Signup />
-		</div>
+		<>
+			<div className={styles.container}>
+				<header className={styles.header}>
+					<h1>Start Now!</h1>
+					<h2 className={styles.subheader}>Join for Free.</h2>
+				</header>
+				<Image
+					src={lampImg}
+					alt="lamp image"
+					width={290}
+					height={300}
+					className={styles.image}
+				/>
+				<div className={styles.triangle}></div>
+			</div>
+			<div className={styles.formContainer}>
+				<Signup />
+			</div>
+		</>
 	);
 }

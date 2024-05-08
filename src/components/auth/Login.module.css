@@ -4,22 +4,7 @@
     flex-direction: column;
     border-radius: 2rem;
     padding: 1rem 3rem;
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
 }
-
-
-.form h1 {
-    font-weight: 600;
-    align-self: center;
-}
-
-.form h2 {
-    align-self: center;
-    font-weight: 400;
-    margin-bottom: 1rem;
-}
-
-
 
 .inputGroup {
     position: relative;
@@ -71,7 +56,7 @@
     cursor: pointer;
     transition-duration: .3s;
     margin: 0.6rem 0;
-    color: #410146;
+    color: black;
 
 
 
@@ -79,9 +64,6 @@
 
 .button:hover {
     transform: scale(1.05);
-    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 20px -10px;
-
-
 }
 
 .button:active {

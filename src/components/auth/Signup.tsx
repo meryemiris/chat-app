@@ -101,8 +101,6 @@ export default function Signup() {
 
 	return (
 		<form onSubmit={handleRegister} className={styles.form}>
-			<h1>Start Now!</h1>
-			<h2>Join for Free.</h2>
 			<div className={styles.inputGroup}>
 				<input
 					value={email}

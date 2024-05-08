@@ -56,8 +56,6 @@ export default function Login() {
 				handleLogin(e);
 			}}
 		>
-			<h1>Welcome!</h1>
-			<h2>Ready to Sign In?</h2>
 			<div className={styles.inputGroup}>
 				<input
 					id="email"

@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { useRouter } from "next/router";
 import Head from "next/head";
 
-import Loading from "@/components/utils/Loading";
 import Layout from "@/components/layout/Layout";
-import ChatRoom from "@/components/chatRoom/ChatRoom";
 
-import { supabase } from "@/lib/supabase";
-import FeedbackContext from "@/lib/FeedbackContext";
 import MessageContext from "@/lib/MessageContext";
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
-import RoomList from "@/components/roomList/RoomlList";
 import Profile from "@/components/profile/Profile";
 
 export default function HomePage() {
@@ -55,25 +49,18 @@ export default function HomePage() {
 					setIsRoomMuted,
 				}}
 			>
-				<FeedbackContext.Provider
+				<MessageContext.Provider
 					value={{
-						isLoading,
-						setIsLoading,
+						unreadMessages,
+						setUnreadMessages,
+						roomIdsWithUnreadMessages,
+						setRoomIdsWithUnreadMessages,
 					}}
 				>
-					<MessageContext.Provider
-						value={{
-							unreadMessages,
-							setUnreadMessages,
-							roomIdsWithUnreadMessages,
-							setRoomIdsWithUnreadMessages,
-						}}
-					>
-						<Layout>
-							<Profile />
-						</Layout>
-					</MessageContext.Provider>
-				</FeedbackContext.Provider>
+					<Layout>
+						<Profile />
+					</Layout>
+				</MessageContext.Provider>
 			</RoomContext.Provider>
 		</>
 	);

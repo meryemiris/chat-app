@@ -15,8 +15,9 @@ export default function SignupPage() {
 				<Image
 					src={lampImg}
 					alt="lamp image"
-					width={290}
-					height={300}
+					width={90}
+					height={90}
+					loading="lazy"
 					className={styles.image}
 				/>
 				<div className={styles.triangle}></div>

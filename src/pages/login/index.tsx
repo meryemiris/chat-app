@@ -15,8 +15,8 @@ export default function LoginPage() {
 				<Image
 					src={lampImg}
 					alt="lamp image"
-					width={290}
-					height={300}
+					width={90}
+					height={90}
 					className={styles.image}
 					loading="lazy"
 				/>

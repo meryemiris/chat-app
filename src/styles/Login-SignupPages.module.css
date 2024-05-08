@@ -1,14 +1,15 @@
 .container {
     width: 100%;
-    height: 269px;
+    height: 250px;
     background-color: #E86100;
     overflow: hidden;
 }
 
 
 .image {
+    width: 20%;
     height: auto;
-    margin-left: 25px;
+    margin-left: 20px;
 }
 
 .header {
@@ -30,16 +31,15 @@
 }
 
 .triangle {
-    position: absolute;
-    top: 140px;
-    right: 0;
+    position: relative;
+    top: -15px;
+    right: 225px;
     width: 0;
     height: 0;
-    border-left: 180px solid transparent;
-    border-right: 320px solid transparent;
-    border-bottom: 130px solid #fff;
+    border-left: 280px solid transparent;
+    border-right: 800px solid transparent;
+    border-bottom: 200px solid #fff;
     z-index: 0;
-
 }
 
 .formContainer {

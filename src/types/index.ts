@@ -1,17 +1,19 @@
-export type Channel = {
-  id: number;
-  name: string;
-  // member_id: string[];
+export type ChatRoom = {
+	channels: {
+		name: string;
+		id: number;
+	};
+	isMuted: boolean;
 };
 
 export type Message = {
-  id: number;
-  content: string;
-  created_at: string;
-  channel_id: number;
-  user_id: string;
-  users: {
-    username: string;
-    profile_img: string;
-  };
+	id: number;
+	content: string;
+	created_at: string;
+	chatroom_id: number;
+	user_id: string;
+	users: {
+		username: string;
+		profile_img: string;
+	};
 };

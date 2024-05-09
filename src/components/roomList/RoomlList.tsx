@@ -1,26 +1,25 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./RoomList.module.css";
+import { toast } from "sonner";
+
+import { useAuthContext } from "@/lib/AuthContext";
+import { useChatContext } from "@/lib/ChatContext";
+
+import ListItem from "./ListItem";
 
 import {
 	MdAddCircle,
 	MdOutlineMarkUnreadChatAlt,
 	MdSearch,
 } from "react-icons/md";
-
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
-import ListItem from "./ListItem";
-import { useAuthContext } from "@/lib/AuthContext";
-import { Channel } from "@/types";
-import RoomContext from "@/lib/RoomContext";
 import { GoArrowLeft } from "react-icons/go";
-import { useUnreadsContext } from "@/lib/UnreadsContext";
 
 const RoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
 
-	const [channels, setChannels] = useState<Channel[]>([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const { userId } = useAuthContext();
@@ -28,130 +27,75 @@ const RoomList = () => {
 	const [showMuted, setShowMuted] = useState(false);
 	const [showUnread, setShowUnread] = useState(false);
 
-	const { unreadsChatIds } = useUnreadsContext();
-
-	const { mutedRooms, setMutedRooms, setActiveChannelId } =
-		useContext(RoomContext);
-
-	const [memberRooms, setMemberRooms] = useState<number[]>([]);
-
-	useEffect(() => {
-		async function getRoomList() {
-			const { data: membership, error: memberRoomsError } = await supabase
-				.from("members")
-				.select("room_id")
-				.eq("user_id", userId);
-
-			if (memberRoomsError) {
-				throw new Error(
-					`Error getting member rooms: ${memberRoomsError.message}`
-				);
-			}
-
-			const memberRoomIds = membership?.map((member) => member.room_id);
-
-			setMemberRooms(memberRoomIds as number[]);
-
-			// Extract the room IDs from the memberRooms data
-
-			// TODO : rewrite this part
-			let { data, error } = await supabase
-				.from("channels")
-				.select("name")
-				.eq("id", memberRooms as number[]);
-
-			if (data) {
-				setChannels(data as Channel[]);
-			} else {
-				setChannels([]);
-			}
-
-			const { data: muteRooms, error: memberError } = await supabase
-				.from("members")
-				.select("room_id")
-				.eq("user_id", userId)
-				.eq("isMuted", true);
-
-			if (memberError) {
-				throw new Error(`Error getting muted rooms: ${memberError.message}`);
-			}
-			const mutedIds = muteRooms.map((member) => member.room_id) as number[];
-			setMutedRooms(mutedIds);
-
-			const { data: activeRoom, error: activeRoomError } = await supabase
-				.from("members")
-				.select("room_id")
-				.eq("user_id", userId)
-				.eq("isActive", true);
-
-			if (activeRoomError) {
-				throw new Error(
-					`Error getting active room: ${activeRoomError.message}`
-				);
-			}
-
-			const activeRoomId = activeRoom ? activeRoom[0]?.room_id : null;
-			setActiveChannelId(activeRoomId);
-		}
-
-		getRoomList();
-	}, [setMutedRooms, userId, setActiveChannelId, memberRooms]);
+	const { chatRoomList, setChatRoomList } = useChatContext();
 
 	const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
-		try {
-			e.preventDefault();
-			const channelName = new FormData(e.currentTarget).get("channelName");
+		e.preventDefault();
+		const chatRoomName = new FormData(e.currentTarget).get("channelName");
 
-			// Insert channel data into the 'channels' table
-			const { data: channelData, error: channelError } = await supabase
-				.from("channels")
-				.insert([{ name: channelName }])
-				.select();
+		if (chatRoomName === "") return;
 
-			if (channelData) {
-				setChannels([...channels, channelData?.[0]]);
-			}
+		// Check if the chat room already exists
+		const existingChatRoom = chatRoomList.find(
+			(room) => room.channels?.name === chatRoomName
+		);
 
-			if (channelError) {
-				throw new Error(`Error creating channel: ${channelError.message}`);
-			}
-
-			// Retrieve the channelId for the newly created channel
-			const { data: channelId, error: channelIdError } = await supabase
-				.from("channels")
-				.select("id")
-				.eq("name", channelName);
-
-			if (channelIdError) {
-				throw new Error(`Error getting channel ID: ${channelIdError.message}`);
-			}
-			const memberoomId = channelData[0].id;
-			// Insert member data into the 'members' table
-			const { data: members, error: memberError } = await supabase
-				.from("members")
-				.insert([{ user_id: userId, room_id: memberoomId }])
-				.select();
-
-			if (memberError) {
-				throw new Error(`Error inserting member: ${memberError.message}`);
-			}
-			setSearchTerm("");
-		} catch (error) {
-			console.error("Error in handleCreateChannel:", error);
-		} finally {
-			setSearchTerm("");
+		if (existingChatRoom) {
+			toast.error("Chat room already exists");
+			return;
 		}
+
+		// Create the new chat room, insert to channels table
+		const { data: newChatRoom, error: chatRoomCreateError } = await supabase
+			.from("channels")
+			.insert([{ name: chatRoomName }])
+			.select();
+
+		if (chatRoomCreateError) {
+			console.error(
+				"Sorry there was an error creating the new chat room, please try again later.",
+				chatRoomCreateError
+			);
+			toast.error(chatRoomCreateError.message);
+			return;
+		}
+
+		// Retrieve the channelId for the newly created channel
+		const { data: newChatRoomId, error: chatRoomIdError } = await supabase
+			.from("channels")
+			.select("id")
+			.eq("name", chatRoomName);
+
+		if (chatRoomIdError) {
+			console.error("Error retrieving channelId:", chatRoomIdError);
+			return;
+		}
+
+		// Insert the new chat room into the members table
+		const { data: memberInsert, error: memberInsertError } = await supabase
+			.from("members")
+			.insert([{ user_id: userId, room_id: newChatRoomId[0].id }])
+			.select();
+
+		if (memberInsertError) {
+			console.error("Error inserting member:", memberInsertError);
+			return;
+		}
+
+		if (memberInsert) {
+			setChatRoomList([...chatRoomList, newChatRoom[0]]);
+		}
+		setSearchTerm("");
 	};
 
 	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
 	};
 
-	const filteredChannels = channels.filter(
-		(channel) =>
-			channel.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-			(showMuted ? mutedRooms?.includes(channel.id) : true) &&
-			(showUnread ? !unreadsChatIds.includes(channel.id) : true)
+	const filteredChannels = chatRoomList?.filter(
+		(room) =>
+			room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+			(showMuted ? room.isMuted : true)
 	);
 
 	const filterRoomsRef = useRef<HTMLDivElement>(null);
@@ -181,10 +125,10 @@ const RoomList = () => {
 		setIsFilter(!isFilter);
 	};
 
-	const handleShowUnread = () => {
-		setIsFilter(false);
-		setShowUnread(true);
-	};
+	// const handleShowUnread = () => {
+	// 	setIsFilter(false);
+	// 	setShowUnread(true);
+	// };
 
 	const handleShowMuted = () => {
 		setIsFilter(false);
@@ -226,10 +170,9 @@ const RoomList = () => {
 								ref={filterRoomsRef}
 								className={`${styles.dropdown} ${isFilter ? styles.show : ""}`}
 							>
-								{/* TODO: add fiter functions */}
-								<button onClick={handleShowUnread}>
+								{/* <button onClick={handleShowUnread}>
 									Unread <MdOutlineMarkUnreadChatAlt />
-								</button>
+								</button> */}
 								<button onClick={handleShowMuted}>
 									Muted <IoVolumeMuteOutline />
 								</button>
@@ -254,13 +197,8 @@ const RoomList = () => {
 				</button>
 			</form>
 			<div className={styles.scrollable}>
-				{filteredChannels.map(({ id, name }) => (
-					<ListItem
-						key={id}
-						roomID={id}
-						roomName={name}
-						setChannels={setChannels}
-					/>
+				{filteredChannels?.map(({ channels: { id, name } }) => (
+					<ListItem key={id} roomID={id} roomName={name} />
 				))}
 			</div>
 		</div>

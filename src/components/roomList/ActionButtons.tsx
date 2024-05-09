@@ -1,9 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./ActionButtons.module.css";
-import { Channel } from "@/types";
 
 import { supabase } from "@/lib/supabase";
-import RoomContext from "@/lib/RoomContext";
 import { useAuthContext } from "@/lib/AuthContext";
 import { useUserContext } from "@/lib/UserContext";
 
@@ -20,75 +18,46 @@ import { toast } from "sonner";
 type Props = {
 	roomID: number;
 	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-	setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
-	isMember: boolean;
-	setIsMember: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ActionButtons: React.FC<Props> = ({
-	roomID,
-	setIsEditing,
-	setChannels,
-	isMember,
-	setIsMember,
-}) => {
+const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const [dropdownVisible, setDropdownVisible] = useState(false);
-	const { setActiveChannelId, setMutedRooms, mutedRooms } =
-		useContext(RoomContext);
-
+	const [isDeletingRoom, setIsDeletingRoom] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const { userId } = useAuthContext();
+
 	const { friendId, setFriendId } = useUserContext();
-	const [isLeaveRoom, setIsLeaveRoom] = useState(false);
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
 	const handleEditRoom = (id: number) => {
 		setIsEditing(true);
-		setActiveChannelId(id);
 	};
 
 	const handleToggleDropdown = () => {
 		setDropdownVisible(!dropdownVisible);
 	};
 
-	const handleMute = async (roomID: number) => {
-		try {
-			const { data, error } = await supabase
-				.from("members")
-				.update({ isMuted: true })
-				.eq("room_id", roomID)
-				.eq("user_id", userId)
-				.select();
+	const handleToggleMute = async (roomID: number) => {
+		const { data, error } = await supabase
+			.from("members")
+			.update({ isMuted: true })
+			.eq("room_id", roomID)
+			.eq("user_id", userId)
+			.select();
 
-			if (!mutedRooms?.includes(roomID)) {
-				setMutedRooms((prev: number[]) => [...prev, roomID]);
-			} else return;
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setDropdownVisible(false);
-		}
+		if (error) console.log(error.message);
+		setDropdownVisible(false);
 	};
 
 	const handleUnmute = async (roomID: number) => {
-		try {
-			const { data, error } = await supabase
-				.from("members")
-				.update({ isMuted: false })
-				.eq("room_id", roomID)
-				.eq("user_id", userId)
-				.select();
-
-			if (mutedRooms?.includes(roomID)) {
-				setMutedRooms((prev: number[]) => prev?.filter((id) => id !== roomID));
-			} else return;
-		} catch (error) {
-			console.log(error);
-		} finally {
-			handleToggleDropdown();
-		}
+		const { data, error } = await supabase
+			.from("members")
+			.update({ isMuted: false })
+			.eq("room_id", roomID)
+			.eq("user_id", userId)
+			.select();
 	};
 
 	useEffect(() => {
@@ -120,24 +89,14 @@ const ActionButtons: React.FC<Props> = ({
 		};
 	}, [setIsEditing]);
 
-	const handleLeaveRoom = async (roomID: number) => {
-		try {
-			const { error } = await supabase
-				.from("members")
-				.delete()
-				.eq("room_id", roomID)
-				.eq("user_id", userId);
+	const handleDeleteRoom = async (roomID: number) => {
+		const { error } = await supabase
+			.from("members")
+			.delete()
+			.eq("room_id", roomID)
+			.eq("user_id", userId);
 
-			// delete channel if no members left
-
-			setChannels((prev) => prev.filter((channel) => channel.id !== roomID));
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setIsMember(false);
-			setDropdownVisible(false);
-			toast.success("You've left the room!");
-		}
+		toast.success("You've left the room!");
 	};
 
 	const handleSendFriendRequest = async (roomID: number) => {
@@ -149,7 +108,6 @@ const ActionButtons: React.FC<Props> = ({
 
 		if (friendId === userId) {
 			setIsModalOpen(true);
-
 			toast.warning("You can't be friends with yourself, but you're awesome!");
 			return;
 		}
@@ -225,10 +183,8 @@ const ActionButtons: React.FC<Props> = ({
 
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
-		setIsLeaveRoom(false);
 		setIsAddFriend(false);
 	};
-
 	return (
 		<>
 			{isModalOpen && (
@@ -241,7 +197,7 @@ const ActionButtons: React.FC<Props> = ({
 							<AiOutlineClose />
 						</button>
 
-						{isLeaveRoom && (
+						{isDeletingRoom && (
 							<div className={styles.leaveRoom}>
 								<GoQuestion className={styles.questionIcon} />
 
@@ -251,7 +207,7 @@ const ActionButtons: React.FC<Props> = ({
 								<div className={styles.leaveRoomButtons}>
 									<button
 										className={styles.leaveButton}
-										onClick={() => handleLeaveRoom(roomID)}
+										onClick={() => handleDeleteRoom(roomID)}
 									>
 										Leave
 									</button>
@@ -291,34 +247,15 @@ const ActionButtons: React.FC<Props> = ({
 				className={`${styles.kebabMenu} ${styles.showLeft}`}
 				ref={dropdownRef}
 			>
-				<button
-					style={isMember ? {} : { color: "gray" }}
-					className={styles.threeDots}
-					onClick={handleToggleDropdown}
-				>
+				<button className={styles.threeDots} onClick={handleToggleDropdown}>
 					<SlOptionsVertical />
 				</button>
 				<div
 					id="dropdown"
 					className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
 				>
-					{mutedRooms?.includes(roomID) ? (
-						<button
-							onClick={() => {
-								handleUnmute(roomID);
-							}}
-						>
-							Unmute <GoUnmute />
-						</button>
-					) : (
-						<button
-							onClick={() => {
-								handleMute(roomID);
-							}}
-						>
-							Mute <GoMute />
-						</button>
-					)}
+					{/* todo: add mute unmute buttons */}
+					<p>mute bottons</p>
 
 					<button
 						onClick={() => {
@@ -341,7 +278,6 @@ const ActionButtons: React.FC<Props> = ({
 						onClick={() => {
 							setIsModalOpen(true);
 							setDropdownVisible(false);
-							setIsLeaveRoom(true);
 						}}
 						style={{ color: "red" }}
 					>

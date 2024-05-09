@@ -1,30 +1,14 @@
-import { useState } from "react";
-
 import Head from "next/head";
-
 import Layout from "@/components/layout/Layout";
 
-import RoomContext from "@/lib/RoomContext";
+import { useChatContext } from "@/lib/ChatContext";
 
-import { Message } from "@/types";
-import Profile from "@/components/profile/Profile";
 import ChatRoom from "@/components/chatRoom/ChatRoom";
 import RoomList from "@/components/roomList/RoomlList";
+import Loading from "@/components/utils/Loading";
 
 export default function HomePage() {
-	const [activeChannelId, setActiveChannelId] = useState<number | null>(null);
-	const [activeChannelName, setActiveChannelName] = useState("");
-
-	const [isLoading, setIsLoading] = useState(false);
-
-	const [unreadMessages, setUnreadMessages] = useState<Message[]>([]);
-	const [roomIdsWithUnreadMessages, setRoomIdsWithUnreadMessages] = useState<
-		number[]
-	>([]);
-	const [showRoomDetails, setShowRoomDetails] = useState<boolean>(false);
-
-	const [mutedRooms, setMutedRooms] = useState<number[]>([]);
-	const [isRoomMuted, setIsRoomMuted] = useState<boolean>(false);
+	const { activeChatId } = useChatContext();
 
 	return (
 		<>
@@ -36,24 +20,13 @@ export default function HomePage() {
 				/>
 			</Head>
 
-			<RoomContext.Provider
-				value={{
-					activeChannelName,
-					setActiveChannelName,
-					activeChannelId,
-					setActiveChannelId,
-					mutedRooms,
-					setMutedRooms,
-					showRoomDetails,
-					setShowRoomDetails,
-					isRoomMuted,
-					setIsRoomMuted,
-				}}
-			>
+			{activeChatId ? (
+				<ChatRoom />
+			) : (
 				<Layout>
-					<ChatRoom />
+					<RoomList />
 				</Layout>
-			</RoomContext.Provider>
+			)}
 		</>
 	);
 }

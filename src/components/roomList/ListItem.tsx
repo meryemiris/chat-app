@@ -1,46 +1,31 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 import styles from "./ListItem.module.css";
 
-import { Channel } from "@/types";
-
-import { supabase } from "@/lib/supabase";
-import RoomContext from "@/lib/RoomContext";
+import { useAuthContext } from "@/lib/AuthContext";
 
 import UnreadMessages from "./UnreadMessage";
 
-import { GoMute } from "react-icons/go";
-import Image from "next/image";
 import ActionButtons from "./ActionButtons";
-import { useAuthContext } from "@/lib/AuthContext";
-import { useUnreadsContext } from "@/lib/UnreadsContext";
+
+import { GoMute } from "react-icons/go";
+import { useChatContext } from "@/lib/ChatContext";
 
 type RoomListItemProps = {
 	roomID: number;
 	roomName: string;
-	setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
 };
 
-const ListItem: React.FC<RoomListItemProps> = ({
-	roomID,
-	roomName,
-	setChannels,
-}) => {
-	const { setUnreads, setUnreadsChatIds } = useUnreadsContext();
-
-	const [channelName, setChannelName] = useState<string>("");
-	const [isEditing, setIsEditing] = useState(false);
-
+const ListItem: React.FC<RoomListItemProps> = ({ roomID, roomName }) => {
 	const { userId } = useAuthContext();
 
-	const {
-		activeChannelId,
-		setActiveChannelId,
-		setActiveChannelName,
-		mutedRooms,
-	} = useContext(RoomContext);
+	const [newRoomName, setNewRoomName] = useState<string>("");
+	const [isEditing, setIsEditing] = useState(false);
 
-	const [isMember, setIsMember] = useState(true);
+	const { setUnreadMsgsChatIds, setUnreadMsgs, activeChatId, setActiveChatId } =
+		useChatContext();
 
 	const handleSaveRoom = async (
 		id: number,
@@ -49,77 +34,40 @@ const ListItem: React.FC<RoomListItemProps> = ({
 		e.preventDefault();
 		const { data, error } = await supabase
 			.from("channels")
-			.update({ name: channelName })
-			.eq("id", activeChannelId);
-		if (data) {
-			setChannels((prevChannels) =>
-				prevChannels.map((channel) =>
-					activeChannelId === id ? { ...channel, name: channelName } : channel
-				)
-			);
-		}
+			.update({ name: newRoomName })
+			.eq("id", activeChatId);
+
 		setIsEditing(false);
 	};
 
 	const handleReadMessages = (roomID: number, roomName: string) => {
-		setUnreadsChatIds((prev) => prev.filter((id) => id !== roomID));
-		setUnreads((prev) =>
-			prev.filter((message) => message.channel_id !== roomID)
+		setUnreadMsgsChatIds((prev) => prev.filter((id) => id !== roomID));
+		setUnreadMsgs((prev) =>
+			prev.filter((message) => message.chatroom_id !== roomID)
 		);
-		setActiveChannelId(roomID);
-		setActiveChannelName(roomName);
-	};
-
-	const handleActiveChannel = async (roomID: number) => {
-		try {
-			await Promise.all([
-				supabase
-					.from("members")
-					.update({ isActive: false })
-					.eq("user_id", userId)
-					.neq("room_id", roomID)
-					.select(),
-
-				supabase
-					.from("members")
-					.update({ isActive: true })
-					.eq("user_id", userId)
-					.eq("room_id", roomID)
-					.select(),
-			]);
-
-			setActiveChannelId(roomID);
-		} catch (error) {
-			console.log(error);
-		}
 	};
 
 	return (
 		<>
 			<button
 				onClick={() => {
-					handleActiveChannel(roomID);
-					setActiveChannelName(roomName);
+					setActiveChatId(roomID);
 					handleReadMessages(roomID, roomName);
 				}}
 				className={
-					activeChannelId === roomID && isMember
+					activeChatId === roomID
 						? `${styles.channelButton} ${styles.active}`
 						: styles.channelButton
 				}
 			>
 				<Image
-					src={
-						activeChannelId === roomID && isMember
-							? "/activeRoomPic.png"
-							: "/inactiveRoomPic.png"
-					}
-					alt="room"
+					src={"/activeRoomPic.png"}
+					alt=" chat room icon"
 					width={30}
 					height={30}
 				/>
 
-				{isEditing && activeChannelId === roomID ? (
+				{isEditing && activeChatId === roomID ? (
 					<form
 						className={styles.channelNameForm}
 						onSubmit={(e) => handleSaveRoom(roomID, e)}
@@ -129,7 +77,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 							type="text"
 							defaultValue={roomName}
 							maxLength={35}
-							onChange={(e) => setChannelName(e.target.value)}
+							onChange={(e) => setNewRoomName(e.target.value)}
 							autoFocus
 						/>
 					</form>
@@ -137,27 +85,17 @@ const ListItem: React.FC<RoomListItemProps> = ({
 					<p className={styles.channelName}>{roomName}</p>
 				)}
 
-				{mutedRooms?.includes(roomID) && (
-					<div className={styles.muted}>
+				{/* <div className={styles.muted}>
 						<GoMute />
-					</div>
-				)}
+					</div> */}
 			</button>
 
-			{!isMember && activeChannelId !== roomID && (
-				<p className={styles.nonMember}>You are not a member of this room.</p>
-			)}
-			{activeChannelId !== roomID && !mutedRooms?.includes(roomID) && (
+			{/* {activeChatId !== roomID &&  (
 				<UnreadMessages roomID={roomID} />
-			)}
-			{activeChannelId === roomID && (
-				<ActionButtons
-					roomID={roomID}
-					setChannels={setChannels}
-					setIsEditing={setIsEditing}
-					isMember={isMember}
-					setIsMember={setIsMember}
-				/>
+			)} */}
+
+			{activeChatId === roomID && (
+				<ActionButtons roomID={roomID} setIsEditing={setIsEditing} />
 			)}
 		</>
 	);

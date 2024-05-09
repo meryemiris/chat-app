@@ -1,5 +1,5 @@
 import { AuthProvider } from "@/lib/AuthContext";
-import { UnreadsProvider } from "@/lib/UnreadsContext";
+import { ChatProvider } from "@/lib/ChatContext";
 import { UserProvider } from "@/lib/UserContext";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<AuthProvider>
 			<UserProvider>
-				<UnreadsProvider>
+				<ChatProvider>
 					<Toaster
 						expand
 						position="top-right"
@@ -17,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
 						pauseWhenPageIsHidden
 					/>
 					<Component {...pageProps} />
-				</UnreadsProvider>
+				</ChatProvider>
 			</UserProvider>
 		</AuthProvider>
 	);

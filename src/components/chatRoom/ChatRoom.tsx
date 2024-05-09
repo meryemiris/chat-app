@@ -8,21 +8,18 @@ import styles from "./ChatRoom.module.css";
 
 import { IoSearch, IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
-import RoomContext from "@/lib/RoomContext";
 import { IoIosArrowBack } from "react-icons/io";
 
 import { FaInfoCircle } from "react-icons/fa";
 import { useAuthContext } from "@/lib/AuthContext";
+import { useChatContext } from "@/lib/ChatContext";
+import RoomDetails from "./RoomDetails";
 
 export default function ChatRoom() {
-	const {
-		activeChannelId,
-		activeChannelName,
-		setShowRoomDetails,
-		setActiveChannelName,
-	} = useContext(RoomContext);
+	const { activeChatId, setActiveChatId } = useChatContext();
 	const { userId } = useAuthContext();
 	const [searchTerm, setSearchTerm] = useState("");
+	const [showRoomDetails, setShowRoomDetails] = useState(false);
 
 	const time = new Date().toLocaleTimeString([], {
 		hour: "2-digit",
@@ -43,7 +40,7 @@ export default function ChatRoom() {
 					{
 						content: message,
 						created_at: time,
-						channel_id: activeChannelId,
+						chatroom_id: activeChatId,
 						user_id: userId,
 					},
 				])
@@ -62,69 +59,66 @@ export default function ChatRoom() {
 	};
 
 	return (
-		<div className={styles.container}>
-			{activeChannelId ? (
-				<>
-					<header className={styles.header}>
+		<>
+			{" "}
+			<div className={styles.container}>
+				<header className={styles.header}>
+					<button
+						className={styles.backButton}
+						onClick={() => setActiveChatId(null)}
+					>
+						<IoIosArrowBack />
+					</button>
+					<div className={styles.titleWrapper}>
+						<p className={styles.title}>{activeChatId}</p>
 						<button
-							className={styles.backButton}
-							onClick={() => setActiveChannelName("")}
+							className={styles.infoButton}
+							onClick={() => setShowRoomDetails(true)}
 						>
-							<IoIosArrowBack />
+							<FaInfoCircle />
 						</button>
-						<div className={styles.titleWrapper}>
-							<p className={styles.title}>{activeChannelName}</p>
-							<button
-								className={styles.infoButton}
-								onClick={() => setShowRoomDetails(true)}
-							>
-								<FaInfoCircle />
+					</div>
+
+					<>
+						<div className={styles.inputWrapper}>
+							<button className={styles.icon}>
+								<IoSearch />
 							</button>
-						</div>
-
-						<>
-							<div className={styles.inputWrapper}>
-								<button className={styles.icon}>
-									<IoSearch />
-								</button>
-								<input
-									type="text"
-									name="text"
-									className={styles.searchInput}
-									placeholder="search.."
-									value={searchTerm}
-									onChange={handleSearch}
-								/>
-							</div>
-						</>
-					</header>
-					<Messages searchTerm={searchTerm} />
-					<footer className={styles.footer}>
-						<button className={styles.emojiButton}>
-							<RiEmojiStickerLine />
-						</button>
-
-						<form onSubmit={handleSendMessage} className={styles.sendBox}>
 							<input
 								type="text"
-								placeholder={"Type something..."}
-								name="message"
-								autoComplete="off"
+								name="text"
+								className={styles.searchInput}
+								placeholder="search.."
+								value={searchTerm}
+								onChange={handleSearch}
 							/>
-							<button type="submit">
-								<IoSend />
-							</button>
-						</form>
-					</footer>
-				</>
-			) : (
-				<div className={styles.welcome}>
-					<p className={styles.welcomeMessage}>
-						🍄 Explore mushroom magic! Join existing rooms or create your own.
-						Your journey starts here!
-					</p>
+						</div>
+					</>
+				</header>
+				<Messages searchTerm={searchTerm} />
+				<footer className={styles.footer}>
+					<button className={styles.emojiButton}>
+						<RiEmojiStickerLine />
+					</button>
+
+					<form onSubmit={handleSendMessage} className={styles.sendBox}>
+						<input
+							type="text"
+							placeholder={"Type something..."}
+							name="message"
+							autoComplete="off"
+						/>
+						<button type="submit">
+							<IoSend />
+						</button>
+					</form>
+				</footer>
+			</div>
+			{showRoomDetails && (
+				<div className={styles.roomDetails}>
+					<RoomDetails setShowRoomDetails={setShowRoomDetails} />
 				</div>
 			)}
-		</div>
+		</>
 	);
 }

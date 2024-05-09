@@ -1,35 +1,35 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./Messages.module.css";
 import Image from "next/image";
 
-import ChannelsContext from "@/lib/RoomContext";
 import { useAuthContext } from "@/lib/AuthContext";
 import { useUserContext } from "@/lib/UserContext";
-import { useUnreadsContext } from "@/lib/UnreadsContext";
 
 import { Message } from "@/types";
 
 import Loading from "../utils/Loading";
+import { useChatContext } from "@/lib/ChatContext";
 
 type MessagesProps = {
 	searchTerm: string;
 };
 
 const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
-	const { activeChannelId } = useContext(ChannelsContext);
-
 	const { userId } = useAuthContext();
 	const { profileImg } = useUserContext();
-
-	const [messages, setMessages] = useState<Message[]>([]);
+	const {
+		messages,
+		setMessages,
+		activeChatId,
+		setUnreadMsgs,
+		setUnreadMsgsChatIds,
+	} = useChatContext();
 
 	const [loading, setLoading] = useState(false);
 
 	const messageEndRef = useRef<HTMLDivElement>(null);
-
-	const { setUnreads, unreadsChatIds, setUnreadsChatIds } = useUnreadsContext();
 
 	useEffect(() => {
 		async function getMessages() {
@@ -40,7 +40,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 					.select(
 						"users(username, profile_img), id, content, created_at, user_id"
 					)
-					.eq("channel_id", activeChannelId);
+					.eq("chatroom_id", activeChatId);
 
 				if (error) {
 					throw error;
@@ -58,7 +58,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 		}
 
 		getMessages();
-	}, [activeChannelId, setMessages, setLoading]);
+	}, [activeChatId, setMessages, setLoading]);
 
 	useEffect(() => {
 		const channel = supabase
@@ -82,22 +82,18 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 						users: userData.data,
 					};
 
-					if (payload.new.channel_id === activeChannelId) {
+					if (payload.new.chatroom_id === activeChatId) {
 						setMessages(
 							(prev: Message[]) => [...prev, newMessage] as Message[]
 						);
 					} else {
 					}
 
-					if (
-						userId !== payload.new.user_id &&
-						activeChannelId &&
-						!unreadsChatIds.includes(activeChannelId)
-					) {
-						setUnreads((prev) => [...prev, payload.new]);
-						setUnreadsChatIds((prev: number[]) => [
+					if (userId !== payload.new.user_id && activeChatId) {
+						setUnreadMsgs((prev) => [...prev, payload.new]);
+						setUnreadMsgsChatIds((prev: number[]) => [
 							...prev,
-							payload.new.channel_id,
+							payload.new.chatroom_id,
 						]);
 					}
 				}
@@ -108,7 +104,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 		return () => {
 			supabase.removeChannel(channel);
 		};
-	}, [activeChannelId, setUnreads, unreadsChatIds, setUnreadsChatIds, userId]);
+	}, [activeChatId, setMessages, userId, setUnreadMsgs, setUnreadMsgsChatIds]);
 
 	const filteredMessages = messages.filter((message) =>
 		message.content.toLowerCase().includes(searchTerm.toLowerCase())

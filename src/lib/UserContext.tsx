@@ -23,6 +23,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		async function getUser() {
+			if (!userId) return;
 			const { data: user, error: userError } = await supabase
 				.from("users")
 				.select("profile_img, username")

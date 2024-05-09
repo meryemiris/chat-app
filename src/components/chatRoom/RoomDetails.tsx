@@ -1,12 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import styles from "./RoomDetails.module.css";
-import RoomContext from "@/lib/RoomContext";
-
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+
 import Image from "next/image";
-import { MdGroups2 } from "react-icons/md";
+
+import styles from "./RoomDetails.module.css";
+
 import Loading from "../utils/Loading";
+
+import { MdGroups2 } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
+import { useChatContext } from "@/lib/ChatContext";
 
 type MembersData =
 	| {
@@ -17,13 +20,17 @@ type MembersData =
 	  }[]
 	| null;
 
-export default function RoomDetails() {
-	const { activeChannelName, activeChannelId, setShowRoomDetails } =
-		useContext(RoomContext);
+type RoomDetailsProps = {
+	setShowRoomDetails: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const RoomDetails: React.FC<RoomDetailsProps> = ({ setShowRoomDetails }) => {
 	const [memberLoading, setMemberLoading] = useState<boolean>(false);
 
 	const [memberNames, setMemberNames] = useState<string[]>([]);
 	const [profilePics, setProfilePics] = useState<string[]>([]);
+
+	const { activeChatId } = useChatContext();
 
 	useEffect(() => {
 		const getMembers = async () => {
@@ -39,7 +46,7 @@ export default function RoomDetails() {
        )
      `
 					)
-					.eq("room_id", activeChannelId);
+					.eq("room_id", activeChatId);
 
 				const membersData = data as MembersData;
 
@@ -62,7 +69,7 @@ export default function RoomDetails() {
 		};
 
 		getMembers();
-	}, [activeChannelId]);
+	}, [activeChatId]);
 
 	return (
 		<div className={styles.container}>
@@ -79,7 +86,7 @@ export default function RoomDetails() {
 					height={25}
 					alt="room pic"
 				/>
-				{activeChannelName}
+				{activeChatId}
 			</h3>
 			{memberLoading ? (
 				<Loading />
@@ -113,4 +120,6 @@ export default function RoomDetails() {
 			)}
 		</div>
 	);
-}
+};
+
+export default RoomDetails;

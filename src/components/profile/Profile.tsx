@@ -1,11 +1,16 @@
-import Image from "next/image";
-import styles from "./Profile.module.css";
 import { useState } from "react";
-import { useAuthContext } from "@/lib/AuthContext";
-import { supabase } from "@/lib/supabase";
-import { IoLogOut } from "react-icons/io5";
 import { useRouter } from "next/router";
+import Image from "next/image";
+
+import { toast } from "sonner";
+
+import { useAuthContext } from "@/lib/AuthContext";
 import { useUserContext } from "@/lib/UserContext";
+import { supabase } from "@/lib/supabase";
+
+import styles from "./Profile.module.css";
+
+import { IoLogOut } from "react-icons/io5";
 import { AiOutlineCopy } from "react-icons/ai";
 
 export default function Profile() {
@@ -55,13 +60,9 @@ export default function Profile() {
 		setIsEdit(false);
 	};
 
-	const [copied, setCopied] = useState(false);
-
 	const handleCopyToClipboard = () => {
-		navigator.clipboard.writeText(userId).then(() => setCopied(true));
-		setTimeout(() => {
-			setCopied(false);
-		}, 3000);
+		navigator.clipboard.writeText(userId);
+		toast.success("ID copied to clipboard!");
 	};
 
 	return (
@@ -104,14 +105,10 @@ export default function Profile() {
 					<button
 						className={styles.copyIdButton}
 						onClick={handleCopyToClipboard}
-						disabled={copied}
 					>
 						<AiOutlineCopy />
 					</button>
 				</div>
-				{copied && (
-					<p className={styles.copySuccess}>ID copied to clipboard! 🎉</p>
-				)}
 			</div>
 
 			<button

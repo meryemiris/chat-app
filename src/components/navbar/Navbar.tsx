@@ -1,30 +1,24 @@
-import { IoChatbubbleEllipsesSharp, IoSettings } from "react-icons/io5";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 import styles from "./Navbar.module.css";
 // import FriendRequests from "./FriendsRequests";
 import Image from "next/image";
 
 import { useUserContext } from "@/lib/UserContext";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
-	const { setShowProfile, profileImg } = useUserContext();
-
-	const handleShowProfile = () => {
-		setShowProfile(true);
-	};
-
-	const handleShowChannels = () => {
-		setShowProfile(false);
-	};
+	const router = useRouter();
+	const { profileImg } = useUserContext();
 
 	return (
 		<div className={styles.container}>
 			{/* <FriendRequests /> */}
-			<button onClick={handleShowChannels} className={styles.button}>
+			<button onClick={() => router.push("/")} className={styles.button}>
 				<IoChatbubbleEllipsesSharp />
 			</button>
 
-			<button onClick={handleShowProfile} className={styles.button}>
+			<button onClick={() => router.push("/profile")} className={styles.button}>
 				<Image
 					src={profileImg}
 					alt="go to profile"

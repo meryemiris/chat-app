@@ -6,11 +6,9 @@ export type UserContextType = {
 	profileImg: string;
 	username: string;
 	friendId: string;
-	showProfile: boolean;
 	setProfileImg: React.Dispatch<React.SetStateAction<string>>;
 	setUsername: React.Dispatch<React.SetStateAction<string>>;
 	setFriendId: React.Dispatch<React.SetStateAction<string>>;
-	setShowProfile: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
@@ -22,7 +20,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [profileImg, setProfileImg] = useState(defaultPp);
 	const [username, setUsername] = useState("");
 	const [friendId, setFriendId] = useState("");
-	const [showProfile, setShowProfile] = useState(false);
 
 	useEffect(() => {
 		async function getUser() {
@@ -49,8 +46,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 		setUsername,
 		friendId,
 		setFriendId,
-		showProfile,
-		setShowProfile,
 	};
 
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -53,6 +53,7 @@ const RoomList = () => {
 			setMemberRooms(memberRoomIds as number[]);
 
 			// Extract the room IDs from the memberRooms data
+
 			// TODO : rewrite this part
 			let { data, error } = await supabase
 				.from("channels")

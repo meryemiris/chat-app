@@ -51,7 +51,7 @@ export default function HomePage() {
 				}}
 			>
 				<Layout>
-					<RoomList />
+					<ChatRoom />
 				</Layout>
 			</RoomContext.Provider>
 		</>

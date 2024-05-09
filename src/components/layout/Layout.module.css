@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background-image: linear-gradient(150deg, #f56d44, #410146, #18b0bb, #f56d44);
 

@@ -27,6 +27,9 @@ export type ChatContextType = {
 
 	activeChatId: number | null;
 	setActiveChatId: Dispatch<SetStateAction<number | null>>;
+
+	selectedChatId: number | null;
+	setSelectedChatId: Dispatch<SetStateAction<number | null>>;
 };
 
 const ChatContext = createContext<ChatContextType>({} as ChatContextType);
@@ -43,6 +46,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [unreadMsgs, setUnreadMsgs] = useState<Message[]>([]);
 	const [unreadMsgsChatIds, setUnreadMsgsChatIds] = useState<number[]>([]);
 	const [activeChatId, setActiveChatId] = useState<number | null>(null);
+
+	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
 
 	useEffect(() => {
 		async function getChatRoomList() {
@@ -101,6 +106,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	const value = {
 		chatRoomList,
 		setChatRoomList,
+
+		selectedChatId,
+		setSelectedChatId,
+
 		messages,
 		setMessages,
 		unreadMsgs,

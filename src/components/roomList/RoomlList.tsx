@@ -197,8 +197,8 @@ const RoomList = () => {
 				</button>
 			</form>
 			<div className={styles.scrollable}>
-				{filteredChannels?.map(({ channels: { id, name } }) => (
-					<ListItem key={id} roomID={id} roomName={name} />
+				{filteredChannels?.map(({ isMuted, channels: { id, name } }) => (
+					<ListItem key={id} roomID={id} roomName={name} isMuted={isMuted} />
 				))}
 			</div>
 		</div>

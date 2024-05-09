@@ -14,16 +14,19 @@ import {
 import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoQuestion, GoUnmute } from "react-icons/go";
 import { toast } from "sonner";
+import { useChatContext } from "@/lib/ChatContext";
 
 type Props = {
 	roomID: number;
-	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+	isMuted: boolean;
 };
 
-const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
+const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const [dropdownVisible, setDropdownVisible] = useState(false);
-	const [isDeletingRoom, setIsDeletingRoom] = useState(false);
+
+	const [isDeleteRoom, setIsDeleteRoom] = useState(false);
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const { userId } = useAuthContext();
@@ -31,15 +34,13 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 	const { friendId, setFriendId } = useUserContext();
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
-	const handleEditRoom = (id: number) => {
-		setIsEditing(true);
-	};
+	const { selectedChatId, setSelectedChatId } = useChatContext();
 
 	const handleToggleDropdown = () => {
 		setDropdownVisible(!dropdownVisible);
 	};
 
-	const handleToggleMute = async (roomID: number) => {
+	const handleMute = async (roomID: number) => {
 		const { data, error } = await supabase
 			.from("members")
 			.update({ isMuted: true })
@@ -73,7 +74,6 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 		const handleClickOnChannelButton = (e: MouseEvent) => {
 			const target = e.target as HTMLElement;
 			if (!target.classList.contains(styles.channelName)) {
-				setIsEditing(false);
 			}
 		};
 
@@ -87,7 +87,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 		return () => {
 			document.removeEventListener("mousedown", handleClick);
 		};
-	}, [setIsEditing]);
+	}, []);
 
 	const handleDeleteRoom = async (roomID: number) => {
 		const { error } = await supabase
@@ -197,7 +197,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 							<AiOutlineClose />
 						</button>
 
-						{isDeletingRoom && (
+						{isDeleteRoom && (
 							<div className={styles.leaveRoom}>
 								<GoQuestion className={styles.questionIcon} />
 
@@ -254,8 +254,15 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 					id="dropdown"
 					className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
 				>
-					{/* todo: add mute unmute buttons */}
-					<p>mute bottons</p>
+					<button
+						onClick={() => {
+							handleToggleDropdown();
+							isMuted ? handleUnmute(roomID) : handleMute(roomID);
+						}}
+					>
+						{isMuted ? "Unmute" : "Mute"}
+						{isMuted ? <GoUnmute /> : <GoMute />}
+					</button>
 
 					<button
 						onClick={() => {
@@ -268,8 +275,8 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 					</button>
 					<button
 						onClick={() => {
+							setSelectedChatId(roomID);
 							handleToggleDropdown();
-							handleEditRoom(roomID);
 						}}
 					>
 						Edit Room <AiOutlineEdit />
@@ -278,6 +285,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, setIsEditing }) => {
 						onClick={() => {
 							setIsModalOpen(true);
 							setDropdownVisible(false);
+							setIsDeleteRoom(true);
 						}}
 						style={{ color: "red" }}
 					>

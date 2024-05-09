@@ -4,8 +4,6 @@ import Image from "next/image";
 
 import styles from "./ListItem.module.css";
 
-import { useAuthContext } from "@/lib/AuthContext";
-
 import UnreadMessages from "./UnreadMessage";
 
 import ActionButtons from "./ActionButtons";
@@ -16,15 +14,17 @@ import { useChatContext } from "@/lib/ChatContext";
 type RoomListItemProps = {
 	roomID: number;
 	roomName: string;
+	isMuted: boolean;
 };
 
-const ListItem: React.FC<RoomListItemProps> = ({ roomID, roomName }) => {
-	const { userId } = useAuthContext();
-
+const ListItem: React.FC<RoomListItemProps> = ({
+	roomID,
+	roomName,
+	isMuted,
+}) => {
 	const [newRoomName, setNewRoomName] = useState<string>("");
-	const [isEditing, setIsEditing] = useState(false);
 
-	const { setUnreadMsgsChatIds, setUnreadMsgs, activeChatId, setActiveChatId } =
+	const { setUnreadMsgsChatIds, setUnreadMsgs, activeChatId, selectedChatId } =
 		useChatContext();
 
 	const handleSaveRoom = async (
@@ -35,12 +35,10 @@ const ListItem: React.FC<RoomListItemProps> = ({ roomID, roomName }) => {
 		const { data, error } = await supabase
 			.from("channels")
 			.update({ name: newRoomName })
-			.eq("id", activeChatId);
-
-		setIsEditing(false);
+			.eq("id", selectedChatId);
 	};
 
-	const handleReadMessages = (roomID: number, roomName: string) => {
+	const handleReadMessages = (roomID: number) => {
 		setUnreadMsgsChatIds((prev) => prev.filter((id) => id !== roomID));
 		setUnreadMsgs((prev) =>
 			prev.filter((message) => message.chatroom_id !== roomID)
@@ -51,23 +49,18 @@ const ListItem: React.FC<RoomListItemProps> = ({ roomID, roomName }) => {
 		<>
 			<button
 				onClick={() => {
-					setActiveChatId(roomID);
-					handleReadMessages(roomID, roomName);
+					handleReadMessages(roomID);
 				}}
-				className={
-					activeChatId === roomID
-						? `${styles.channelButton} ${styles.active}`
-						: styles.channelButton
-				}
+				className={styles.channelButton}
 			>
 				<Image
 					src={"/activeRoomPic.png"}
-					alt=" chat room icon"
+					alt="chat room icon"
 					width={30}
 					height={30}
 				/>
 
-				{isEditing && activeChatId === roomID ? (
+				{selectedChatId === roomID ? (
 					<form
 						className={styles.channelNameForm}
 						onSubmit={(e) => handleSaveRoom(roomID, e)}
@@ -85,18 +78,15 @@ const ListItem: React.FC<RoomListItemProps> = ({ roomID, roomName }) => {
 					<p className={styles.channelName}>{roomName}</p>
 				)}
 
-				{/* <div className={styles.muted}>
+				{isMuted && (
+					<div className={styles.muted}>
 						<GoMute />
-					</div> */}
+					</div>
+				)}
 			</button>
 
-			{/* {activeChatId !== roomID &&  (
-				<UnreadMessages roomID={roomID} />
-			)} */}
-
-			{activeChatId === roomID && (
-				<ActionButtons roomID={roomID} setIsEditing={setIsEditing} />
-			)}
+			{activeChatId !== roomID && <UnreadMessages roomID={roomID} />}
+			<ActionButtons roomID={roomID} isMuted={isMuted} />
 		</>
 	);
 };

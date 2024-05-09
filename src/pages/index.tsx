@@ -4,11 +4,12 @@ import Head from "next/head";
 
 import Layout from "@/components/layout/Layout";
 
-import MessageContext from "@/lib/MessageContext";
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
 import Profile from "@/components/profile/Profile";
+import ChatRoom from "@/components/chatRoom/ChatRoom";
+import RoomList from "@/components/roomList/RoomlList";
 
 export default function HomePage() {
 	const [activeChannelId, setActiveChannelId] = useState<number | null>(null);
@@ -49,18 +50,9 @@ export default function HomePage() {
 					setIsRoomMuted,
 				}}
 			>
-				<MessageContext.Provider
-					value={{
-						unreadMessages,
-						setUnreadMessages,
-						roomIdsWithUnreadMessages,
-						setRoomIdsWithUnreadMessages,
-					}}
-				>
-					<Layout>
-						<Profile />
-					</Layout>
-				</MessageContext.Provider>
+				<Layout>
+					<RoomList />
+				</Layout>
 			</RoomContext.Provider>
 		</>
 	);

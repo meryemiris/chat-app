@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./UnreadMessage.module.css";
 
 import { useAuthContext } from "@/lib/AuthContext";
-import MessageContext from "@/lib/MessageContext";
+import { useUnreadsContext } from "@/lib/UnreadsContext";
+
 import RoomContext from "@/lib/RoomContext";
 
 import { Message } from "@/types";
@@ -14,16 +15,16 @@ type Props = {
 const UnreadMessages: React.FC<Props> = ({ roomID }) => {
 	const { userId } = useAuthContext();
 	const { mutedRooms } = useContext(RoomContext);
-	const { unreadMessages } = useContext(MessageContext);
+	const { unreads } = useUnreadsContext();
 
 	const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
 	useEffect(() => {
-		const roomUnreads = unreadMessages.filter(
+		const roomUnreads = unreads.filter(
 			(message: Message) => message.channel_id === roomID
 		);
 		setUnreadMessagesCount(roomUnreads.length);
-	}, [unreadMessages, roomID, userId]);
+	}, [unreads, roomID, userId]);
 
 	return (
 		unreadMessagesCount > 0 &&

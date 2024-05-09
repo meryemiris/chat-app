@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 
 import styles from "./ListItem.module.css";
 
@@ -6,7 +6,6 @@ import { Channel } from "@/types";
 
 import { supabase } from "@/lib/supabase";
 import RoomContext from "@/lib/RoomContext";
-import MessageContext from "@/lib/MessageContext";
 
 import UnreadMessages from "./UnreadMessage";
 
@@ -14,6 +13,7 @@ import { GoMute } from "react-icons/go";
 import Image from "next/image";
 import ActionButtons from "./ActionButtons";
 import { useAuthContext } from "@/lib/AuthContext";
+import { useUnreadsContext } from "@/lib/UnreadsContext";
 
 type RoomListItemProps = {
 	roomID: number;
@@ -26,8 +26,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	roomName,
 	setChannels,
 }) => {
-	const { setRoomIdsWithUnreadMessages, setUnreadMessages } =
-		useContext(MessageContext);
+	const { setUnreads, setUnreadsChatIds } = useUnreadsContext();
 
 	const [channelName, setChannelName] = useState<string>("");
 	const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +41,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	} = useContext(RoomContext);
 
 	const [isMember, setIsMember] = useState(true);
-	const { isRoomMuted } = useContext(RoomContext);
 
 	const handleSaveRoom = async (
 		id: number,
@@ -64,8 +62,8 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	};
 
 	const handleReadMessages = (roomID: number, roomName: string) => {
-		setRoomIdsWithUnreadMessages((prev) => prev.filter((id) => id !== roomID));
-		setUnreadMessages((prev) =>
+		setUnreadsChatIds((prev) => prev.filter((id) => id !== roomID));
+		setUnreads((prev) =>
 			prev.filter((message) => message.channel_id !== roomID)
 		);
 		setActiveChannelId(roomID);

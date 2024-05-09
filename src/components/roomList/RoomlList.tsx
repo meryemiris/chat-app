@@ -14,8 +14,8 @@ import ListItem from "./ListItem";
 import { useAuthContext } from "@/lib/AuthContext";
 import { Channel } from "@/types";
 import RoomContext from "@/lib/RoomContext";
-import MessageContext from "@/lib/MessageContext";
 import { GoArrowLeft } from "react-icons/go";
+import { useUnreadsContext } from "@/lib/UnreadsContext";
 
 const RoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
@@ -28,7 +28,7 @@ const RoomList = () => {
 	const [showMuted, setShowMuted] = useState(false);
 	const [showUnread, setShowUnread] = useState(false);
 
-	const { roomIdsWithUnreadMessages } = useContext(MessageContext);
+	const { unreadsChatIds } = useUnreadsContext();
 
 	const { mutedRooms, setMutedRooms, setActiveChannelId } =
 		useContext(RoomContext);
@@ -53,11 +53,11 @@ const RoomList = () => {
 			setMemberRooms(memberRoomIds as number[]);
 
 			// Extract the room IDs from the memberRooms data
-
+			// TODO : rewrite this part
 			let { data, error } = await supabase
 				.from("channels")
 				.select("name")
-				.in("id", memberRooms as number[]);
+				.eq("id", memberRooms as number[]);
 
 			if (data) {
 				setChannels(data as Channel[]);
@@ -150,7 +150,7 @@ const RoomList = () => {
 		(channel) =>
 			channel.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
 			(showMuted ? mutedRooms?.includes(channel.id) : true) &&
-			(showUnread ? roomIdsWithUnreadMessages.includes(channel.id) : true)
+			(showUnread ? !unreadsChatIds.includes(channel.id) : true)
 	);
 
 	const filterRoomsRef = useRef<HTMLDivElement>(null);

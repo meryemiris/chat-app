@@ -16,6 +16,7 @@ import {
 } from "react-icons/md";
 import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
 import { GoArrowLeft } from "react-icons/go";
+import ChatSettings from "./ChatSettings";
 
 const RoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
@@ -27,7 +28,7 @@ const RoomList = () => {
 	const [showMuted, setShowMuted] = useState(false);
 	const [showUnread, setShowUnread] = useState(false);
 
-	const { chatRoomList, setChatRoomList } = useChatContext();
+	const { chatRoomList, setChatRoomList, selectedChat } = useChatContext();
 
 	const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -196,11 +197,13 @@ const RoomList = () => {
 					{searchTerm ? <MdAddCircle /> : <MdSearch />}
 				</button>
 			</form>
+
 			<div className={styles.scrollable}>
 				{filteredChannels?.map(({ isMuted, channels: { id, name } }) => (
 					<ListItem key={id} roomID={id} roomName={name} isMuted={isMuted} />
 				))}
 			</div>
+			{selectedChat && <ChatSettings />}
 		</div>
 	);
 };

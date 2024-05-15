@@ -22,14 +22,21 @@ export type ChatContextType = {
 
 	unreadMsgs: Message[];
 	setUnreadMsgs: Dispatch<SetStateAction<Message[]>>;
+
 	unreadMsgsChatIds: number[];
 	setUnreadMsgsChatIds: Dispatch<SetStateAction<number[]>>;
 
 	activeChatId: number | null;
 	setActiveChatId: Dispatch<SetStateAction<number | null>>;
 
-	selectedChatId: number | null;
-	setSelectedChatId: Dispatch<SetStateAction<number | null>>;
+	selectedChat: number | null;
+	setSelectedChat: Dispatch<SetStateAction<number | null>>;
+
+	mutedChat: boolean;
+	setMutedChat: Dispatch<SetStateAction<boolean>>;
+
+	editChat: number | null;
+	setEditChat: Dispatch<SetStateAction<number | null>>;
 };
 
 const ChatContext = createContext<ChatContextType>({} as ChatContextType);
@@ -39,15 +46,17 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	const { userId } = useAuthContext();
 
 	const [chatRoomList, setChatRoomList] = useState<ChatRoom[]>([]);
-
 	const [messages, setMessages] = useState<Message[]>([]);
-	console.log("messages", messages);
 
 	const [unreadMsgs, setUnreadMsgs] = useState<Message[]>([]);
 	const [unreadMsgsChatIds, setUnreadMsgsChatIds] = useState<number[]>([]);
 	const [activeChatId, setActiveChatId] = useState<number | null>(null);
 
-	const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
+	const [selectedChat, setSelectedChat] = useState<number | null>(null);
+
+	const [mutedChat, setMutedChat] = useState<boolean>(false);
+
+	const [editChat, setEditChat] = useState<number | null>(null);
 
 	useEffect(() => {
 		async function getChatRoomList() {
@@ -79,6 +88,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [userId]);
 
 	useEffect(() => {
+		chatRoomList.forEach((chatRoom) => {
+			if (chatRoom.isMuted === true && chatRoom.channels?.id === selectedChat) {
+				setMutedChat(true);
+			}
+		});
+	}, [chatRoomList, selectedChat]);
+
+	useEffect(() => {
 		async function getChatMsgs() {
 			if (activeChatId === null) return;
 
@@ -107,17 +124,25 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 		chatRoomList,
 		setChatRoomList,
 
-		selectedChatId,
-		setSelectedChatId,
+		activeChatId,
+		setActiveChatId,
 
 		messages,
 		setMessages,
+
 		unreadMsgs,
 		setUnreadMsgs,
 		unreadMsgsChatIds,
 		setUnreadMsgsChatIds,
-		activeChatId,
-		setActiveChatId,
+
+		selectedChat,
+		setSelectedChat,
+
+		mutedChat,
+		setMutedChat,
+
+		editChat,
+		setEditChat,
 	};
 
 	return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

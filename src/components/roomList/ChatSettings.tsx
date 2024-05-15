@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import styles from "./ActionButtons.module.css";
+import { useEffect, useRef, useState } from "react";
+import styles from "./ChatSettings.module.css";
 
 import { supabase } from "@/lib/supabase";
 import { useAuthContext } from "@/lib/AuthContext";
@@ -11,19 +11,12 @@ import {
 	AiOutlineLogout,
 	AiOutlineUserAdd,
 } from "react-icons/ai";
-import { SlOptionsVertical } from "react-icons/sl";
 import { GoMute, GoQuestion, GoUnmute } from "react-icons/go";
 import { toast } from "sonner";
 import { useChatContext } from "@/lib/ChatContext";
 
-type Props = {
-	roomID: number;
-	isMuted: boolean;
-};
-
-const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
+const ChatSettings = () => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const [dropdownVisible, setDropdownVisible] = useState(false);
 
 	const [isDeleteRoom, setIsDeleteRoom] = useState(false);
 
@@ -34,13 +27,10 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 	const { friendId, setFriendId } = useUserContext();
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
-	const { selectedChatId, setSelectedChatId } = useChatContext();
+	const { activeChatId, selectedChat, mutedChat, setEditChat } =
+		useChatContext();
 
-	const handleToggleDropdown = () => {
-		setDropdownVisible(!dropdownVisible);
-	};
-
-	const handleMute = async (roomID: number) => {
+	const handleMute = async (roomID: number | null) => {
 		const { data, error } = await supabase
 			.from("members")
 			.update({ isMuted: true })
@@ -49,7 +39,6 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 			.select();
 
 		if (error) console.log(error.message);
-		setDropdownVisible(false);
 	};
 
 	const handleUnmute = async (roomID: number) => {
@@ -67,7 +56,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 				dropdownRef.current &&
 				!dropdownRef.current.contains(e.target as Node)
 			) {
-				setDropdownVisible(false);
+				setIsModalOpen(false);
 			}
 		};
 
@@ -89,7 +78,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 		};
 	}, []);
 
-	const handleDeleteRoom = async (roomID: number) => {
+	const handleDeleteRoom = async (roomID: number | null) => {
 		const { error } = await supabase
 			.from("members")
 			.delete()
@@ -97,12 +86,15 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 			.eq("user_id", userId);
 
 		toast.success("You've left the room!");
+		setIsModalOpen(false);
 	};
 
-	const handleSendFriendRequest = async (roomID: number) => {
+	const handleSendFriendRequest = async (roomID: number | null) => {
 		if (friendId === "") {
 			setIsModalOpen(true);
 			toast.warning("You forgot to enter your friend's ID");
+			setIsModalOpen(false);
+
 			return;
 		}
 
@@ -174,9 +166,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 		} catch (error) {
 			console.error("Error sending friend request:", error);
 		} finally {
-			setDropdownVisible(false);
 			setIsModalOpen(false);
-
 			toast.success("Friend request sent successfully! Fingers crossed 🤞");
 		}
 	};
@@ -207,7 +197,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 								<div className={styles.leaveRoomButtons}>
 									<button
 										className={styles.leaveButton}
-										onClick={() => handleDeleteRoom(roomID)}
+										onClick={() => handleDeleteRoom(selectedChat)}
 									>
 										Leave
 									</button>
@@ -233,7 +223,7 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 									/>
 									<button
 										className={styles.addFriendButton}
-										onClick={() => handleSendFriendRequest(roomID)}
+										onClick={() => handleSendFriendRequest(activeChatId)}
 									>
 										Send
 									</button>
@@ -243,58 +233,42 @@ const ActionButtons: React.FC<Props> = ({ roomID, isMuted }) => {
 					</div>
 				</div>
 			)}
-			<div
-				className={`${styles.kebabMenu} ${styles.showLeft}`}
-				ref={dropdownRef}
-			>
-				<button className={styles.threeDots} onClick={handleToggleDropdown}>
-					<SlOptionsVertical />
-				</button>
-				<div
-					id="dropdown"
-					className={`${styles.dropdown} ${dropdownVisible ? styles.show : ""}`}
-				>
-					<button
-						onClick={() => {
-							handleToggleDropdown();
-							isMuted ? handleUnmute(roomID) : handleMute(roomID);
-						}}
-					>
-						{isMuted ? "Unmute" : "Mute"}
-						{isMuted ? <GoUnmute /> : <GoMute />}
-					</button>
 
-					<button
-						onClick={() => {
-							setIsModalOpen(true);
-							setDropdownVisible(false);
-							setIsAddFriend(true);
-						}}
-					>
-						Add Friend <AiOutlineUserAdd />
-					</button>
-					<button
-						onClick={() => {
-							setSelectedChatId(roomID);
-							handleToggleDropdown();
-						}}
-					>
-						Edit Room <AiOutlineEdit />
-					</button>
-					<button
-						onClick={() => {
-							setIsModalOpen(true);
-							setDropdownVisible(false);
-							setIsDeleteRoom(true);
-						}}
-						style={{ color: "red" }}
-					>
-						Leave Room <AiOutlineLogout />
-					</button>
-				</div>
+			<div id="dropdown">
+				<button
+					onClick={() => {
+						mutedChat && selectedChat
+							? handleUnmute(selectedChat)
+							: handleMute(selectedChat);
+					}}
+				>
+					{mutedChat ? "Unmute" : "Mute"}
+					{mutedChat ? <GoUnmute /> : <GoMute />}
+				</button>
+
+				<button
+					onClick={() => {
+						setIsModalOpen(true);
+						setIsAddFriend(true);
+					}}
+				>
+					Add Friend <AiOutlineUserAdd />
+				</button>
+				<button onClick={() => setEditChat(selectedChat)}>
+					Edit Room <AiOutlineEdit />
+				</button>
+				<button
+					onClick={() => {
+						setIsModalOpen(true);
+						setIsDeleteRoom(true);
+					}}
+					style={{ color: "red" }}
+				>
+					Leave Room <AiOutlineLogout />
+				</button>
 			</div>
 		</>
 	);
 };
 
-export default ActionButtons;
+export default ChatSettings;

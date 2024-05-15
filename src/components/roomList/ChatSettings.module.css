@@ -1,35 +1,55 @@
-.dropdown button:hover {
-    background-color: #f56d44;
-    color: white;
-    z-index: 1;
-}
-
-.dropdown button:active {
-    transform: scale(1.05);
-    transition: 0.2s;
-}
-
-
-
-
-.modalOverlay {
+.overlay {
     position: fixed;
-    display: flex;
+    display: grid;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+}
+
+
+.container {
+    display: grid;
+    padding: 1rem;
+    gap: 1rem;
+    background-color: #ebebeb;
+    align-self: flex-end;
+    height: 40dvh;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
 
 }
+
+.container button {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: large;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0px 5px 5px 0px #e0e0e0;
+
+}
+
+.container button:first-child {
+    background-color: #f56d44;
+    color: white;
+}
+
+
 
 .modal {
     width: 20rem;
     height: 10rem;
+    justify-self: center;
+    align-self: center;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 1px #ebebeb,

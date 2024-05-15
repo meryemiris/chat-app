@@ -161,9 +161,12 @@ const RoomList = () => {
 					</>
 				) : (
 					<>
-						<h2 className={styles.title}>mushRooms</h2>
+						<h2 className={styles.title}>Chats</h2>
 						<div className={`${styles.kebabMenu} ${styles.showLeft}`}>
-							<button className={styles.threeDots} onClick={handleToggleFilter}>
+							<button
+								className={styles.filterButton}
+								onClick={handleToggleFilter}
+							>
 								<IoFilter />
 							</button>
 							<div

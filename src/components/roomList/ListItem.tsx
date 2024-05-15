@@ -26,7 +26,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	const {
 		setUnreadMsgsChatIds,
 		setUnreadMsgs,
-		activeChatId,
 		setActiveChatId,
 		setSelectedChat,
 		editChat,
@@ -54,54 +53,67 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	};
 
 	return (
-		<>
+		<div className={styles.container}>
 			<button
 				onClick={() => {
 					handleReadMessages(roomID);
 					setActiveChatId(roomID);
 				}}
-				className={styles.channelButton}
+				className={styles.chatContent}
 			>
-				<Image
-					src={"/activeRoomPic.png"}
-					alt="chat room icon"
-					width={30}
-					height={30}
-				/>
-
 				{editChat === roomID ? (
 					<form
-						className={styles.channelNameForm}
+						className={styles.chatNameForm}
 						onSubmit={(e) => handleSaveRoom(roomID, e)}
 					>
 						<input
-							className={styles.channelName}
+							className={styles.chatName}
 							type="text"
 							defaultValue={roomName}
-							maxLength={35}
+							maxLength={45}
 							onChange={(e) => setNewRoomName(e.target.value)}
 							autoFocus
 						/>
 					</form>
 				) : (
-					<p className={styles.channelName}>{roomName}</p>
+					<p className={styles.chatName}>{roomName}</p>
 				)}
 
-				{isMuted && (
-					<div className={styles.muted}>
-						<GoMute />
-					</div>
-				)}
+				<div className={styles.members}>
+					<Image
+						src={"/defaultPP.png"}
+						alt="members profile pic"
+						width={20}
+						height={20}
+					/>
+					<Image
+						src={"/defaultPP.png"}
+						alt="members profile pic"
+						width={20}
+						height={20}
+					/>
+					<Image
+						src={"/defaultPP.png"}
+						alt="members profile pic"
+						width={20}
+						height={20}
+					/>
+				</div>
 			</button>
 
-			{activeChatId !== roomID && <UnreadMessages roomID={roomID} />}
-			<button
-				className={styles.threeDots}
-				onClick={() => setSelectedChat(roomID)}
-			>
-				<SlOptionsVertical />
-			</button>
-		</>
+			<div className={styles.chatActions}>
+				<div className={styles.muted}>{isMuted && <GoMute />}</div>
+
+				<button
+					className={styles.threeDots}
+					onClick={() => setSelectedChat(roomID)}
+				>
+					<SlOptionsVertical />
+				</button>
+			</div>
+
+			{/* {activeChatId !== roomID && <UnreadMessages roomID={roomID} />} */}
+		</div>
 	);
 };
 

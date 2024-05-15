@@ -17,6 +17,7 @@ import { useChatContext } from "@/lib/ChatContext";
 
 const ChatSettings = () => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	console.log(dropdownRef);
 
 	const [isDeleteRoom, setIsDeleteRoom] = useState(false);
 
@@ -27,7 +28,7 @@ const ChatSettings = () => {
 	const { friendId, setFriendId } = useUserContext();
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
-	const { activeChatId, selectedChat, mutedChat, setEditChat } =
+	const { selectedChat, mutedChat, setEditChat, setSelectedChat } =
 		useChatContext();
 
 	const handleMute = async (roomID: number | null) => {
@@ -57,12 +58,15 @@ const ChatSettings = () => {
 				!dropdownRef.current.contains(e.target as Node)
 			) {
 				setIsModalOpen(false);
+				setIsAddFriend(false);
+				setIsDeleteRoom(false);
+				setSelectedChat(null);
 			}
 		};
 
 		const handleClickOnChannelButton = (e: MouseEvent) => {
 			const target = e.target as HTMLElement;
-			if (!target.classList.contains(styles.channelName)) {
+			if (!target.classList.contains(styles.chatName)) {
 			}
 		};
 
@@ -76,7 +80,7 @@ const ChatSettings = () => {
 		return () => {
 			document.removeEventListener("mousedown", handleClick);
 		};
-	}, []);
+	}, [setSelectedChat]);
 
 	const handleDeleteRoom = async (roomID: number | null) => {
 		const { error } = await supabase
@@ -87,19 +91,20 @@ const ChatSettings = () => {
 
 		toast.success("You've left the room!");
 		setIsModalOpen(false);
+		setSelectedChat(null);
 	};
 
 	const handleSendFriendRequest = async (roomID: number | null) => {
-		if (friendId === "") {
-			setIsModalOpen(true);
-			toast.warning("You forgot to enter your friend's ID");
-			setIsModalOpen(false);
+		//  close the settings bar if modal is open
+		setIsModalOpen(true);
+		setSelectedChat(null);
 
+		if (friendId === "") {
+			toast.warning("You forgot to enter your friend's ID");
 			return;
 		}
 
 		if (friendId === userId) {
-			setIsModalOpen(true);
 			toast.warning("You can't be friends with yourself, but you're awesome!");
 			return;
 		}
@@ -120,19 +125,18 @@ const ChatSettings = () => {
 		}
 
 		// Check if friend request already sent
-		const { data: userCheck, error } = await supabase
+		const { data: userCheck, error: userCheckError } = await supabase
 			.from("requests")
 			.select("id")
 			.eq("receiver_id", friendId)
 			.eq("sender_id", userId);
 
-		if (error) {
-			console.error("Error checking friend request:", error);
+		if (userCheckError) {
+			console.error("Error checking friend request:", userCheckError);
 			return;
 		}
 
 		if (userCheck?.length > 0) {
-			setIsModalOpen(true);
 			toast.warning(
 				"You've already sent a friend request to this user. Patience, friend!"
 			);
@@ -147,7 +151,6 @@ const ChatSettings = () => {
 			.eq("user_id", friendId);
 
 		if (roomCheck && roomCheck.length > 0) {
-			setIsModalOpen(true);
 			toast.warning("Your friend is already here!");
 			return;
 		}
@@ -157,28 +160,33 @@ const ChatSettings = () => {
 			return;
 		}
 
-		try {
-			// Send friend request
-			const { data, error } = await supabase
-				.from("requests")
-				.insert([{ sender_id: userId, receiver_id: friendId, room_id: roomID }])
-				.select();
-		} catch (error) {
+		// Send friend request
+		const { data, error } = await supabase
+			.from("requests")
+			.insert([{ sender_id: userId, receiver_id: friendId, room_id: roomID }])
+			.select();
+
+		if (error) {
+			toast.error(
+				"Something went wrong when sending your friend request, Please try again later."
+			);
 			console.error("Error sending friend request:", error);
-		} finally {
-			setIsModalOpen(false);
-			toast.success("Friend request sent successfully! Fingers crossed 🤞");
+			return;
 		}
+
+		setIsModalOpen(false);
+		toast.success("Friend request sent successfully! Fingers crossed 🤞");
 	};
 
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 		setIsAddFriend(false);
+		setSelectedChat(null);
 	};
 	return (
 		<>
 			{isModalOpen && (
-				<div className={styles.modalOverlay}>
+				<div className={styles.overlay}>
 					<div className={styles.modal}>
 						<button
 							className={styles.closeModal}
@@ -223,7 +231,7 @@ const ChatSettings = () => {
 									/>
 									<button
 										className={styles.addFriendButton}
-										onClick={() => handleSendFriendRequest(activeChatId)}
+										onClick={() => handleSendFriendRequest(selectedChat)}
 									>
 										Send
 									</button>
@@ -234,38 +242,40 @@ const ChatSettings = () => {
 				</div>
 			)}
 
-			<div id="dropdown">
-				<button
-					onClick={() => {
-						mutedChat && selectedChat
-							? handleUnmute(selectedChat)
-							: handleMute(selectedChat);
-					}}
-				>
-					{mutedChat ? "Unmute" : "Mute"}
-					{mutedChat ? <GoUnmute /> : <GoMute />}
-				</button>
+			<div className={styles.overlay}>
+				<div ref={dropdownRef} className={styles.container}>
+					<button
+						onClick={() => {
+							setIsModalOpen(true);
+							setIsAddFriend(true);
+						}}
+					>
+						Add Friend <AiOutlineUserAdd />
+					</button>
+					<button
+						onClick={() => {
+							mutedChat && selectedChat
+								? handleUnmute(selectedChat)
+								: handleMute(selectedChat);
+						}}
+					>
+						{mutedChat ? "Unmute" : "Mute"}
+						{mutedChat ? <GoUnmute /> : <GoMute />}
+					</button>
 
-				<button
-					onClick={() => {
-						setIsModalOpen(true);
-						setIsAddFriend(true);
-					}}
-				>
-					Add Friend <AiOutlineUserAdd />
-				</button>
-				<button onClick={() => setEditChat(selectedChat)}>
-					Edit Room <AiOutlineEdit />
-				</button>
-				<button
-					onClick={() => {
-						setIsModalOpen(true);
-						setIsDeleteRoom(true);
-					}}
-					style={{ color: "red" }}
-				>
-					Leave Room <AiOutlineLogout />
-				</button>
+					<button onClick={() => setEditChat(selectedChat)}>
+						Edit Room <AiOutlineEdit />
+					</button>
+					<button
+						onClick={() => {
+							setIsModalOpen(true);
+							setIsDeleteRoom(true);
+						}}
+						style={{ color: "red" }}
+					>
+						Leave Room <AiOutlineLogout />
+					</button>
+				</div>
 			</div>
 		</>
 	);

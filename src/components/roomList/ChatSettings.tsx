@@ -28,7 +28,7 @@ const ChatSettings = () => {
 	const { friendId, setFriendId } = useUserContext();
 	const [isAddFriend, setIsAddFriend] = useState(false);
 
-	const { selectedChat, mutedChat, setEditChat, setSelectedChat } =
+	const { selectedChat, mutedChat, setEditChat, setIsChatControlOpen } =
 		useChatContext();
 
 	const handleMute = async (roomID: number | null) => {
@@ -57,30 +57,16 @@ const ChatSettings = () => {
 				dropdownRef.current &&
 				!dropdownRef.current.contains(e.target as Node)
 			) {
-				setIsModalOpen(false);
-				setIsAddFriend(false);
-				setIsDeleteRoom(false);
-				setSelectedChat(null);
+				setIsChatControlOpen(false);
 			}
 		};
 
-		const handleClickOnChannelButton = (e: MouseEvent) => {
-			const target = e.target as HTMLElement;
-			if (!target.classList.contains(styles.chatName)) {
-			}
-		};
-
-		const handleClick = (e: MouseEvent) => {
-			handleClickOutsideDropdown(e);
-			handleClickOnChannelButton(e);
-		};
-
-		document.addEventListener("mousedown", handleClick);
+		document.addEventListener("mousedown", handleClickOutsideDropdown);
 
 		return () => {
-			document.removeEventListener("mousedown", handleClick);
+			document.removeEventListener("mousedown", handleClickOutsideDropdown);
 		};
-	}, [setSelectedChat]);
+	}, [setIsChatControlOpen]);
 
 	const handleDeleteRoom = async (roomID: number | null) => {
 		const { error } = await supabase
@@ -90,14 +76,10 @@ const ChatSettings = () => {
 			.eq("user_id", userId);
 
 		toast.success("You've left the room!");
-		setIsModalOpen(false);
-		setSelectedChat(null);
 	};
 
 	const handleSendFriendRequest = async (roomID: number | null) => {
-		//  close the settings bar if modal is open
 		setIsModalOpen(true);
-		setSelectedChat(null);
 
 		if (friendId === "") {
 			toast.warning("You forgot to enter your friend's ID");
@@ -178,71 +160,71 @@ const ChatSettings = () => {
 		toast.success("Friend request sent successfully! Fingers crossed 🤞");
 	};
 
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
-		setIsAddFriend(false);
-		setSelectedChat(null);
-	};
 	return (
-		<>
-			{isModalOpen && (
-				<div className={styles.overlay}>
-					<div className={styles.modal}>
-						<button
-							className={styles.closeModal}
-							onClick={() => handleCloseModal()}
-						>
-							<AiOutlineClose />
-						</button>
+		<div className={styles.overlay}>
+			{isModalOpen ? (
+				<div className={styles.modal}>
+					<button
+						className={styles.closeModal}
+						onClick={() => setIsChatControlOpen(false)}
+					>
+						<AiOutlineClose />
+					</button>
 
-						{isDeleteRoom && (
-							<div className={styles.leaveRoom}>
-								<GoQuestion className={styles.questionIcon} />
+					{isDeleteRoom && (
+						<div className={styles.leaveRoom}>
+							<GoQuestion className={styles.questionIcon} />
 
-								<p>
-									Keep in mind, leaving will remove it from your list of rooms.
-								</p>
-								<div className={styles.leaveRoomButtons}>
-									<button
-										className={styles.leaveButton}
-										onClick={() => handleDeleteRoom(selectedChat)}
-									>
-										Leave
-									</button>
-
-									<button
-										className={styles.stayButton}
-										onClick={() => handleCloseModal()}
-									>
-										Keep chatting
-									</button>
-								</div>
+							<p>
+								Leaving will permanently remove this chat. Are you sure you want
+								to leave?
+							</p>
+							<div className={styles.leaveRoomButtons}>
+								<button
+									className={styles.stayButton}
+									onClick={() => setIsChatControlOpen(false)}
+								>
+									No, Stay
+								</button>
+								<button
+									className={styles.leaveButton}
+									onClick={() => {
+										handleDeleteRoom(selectedChat);
+										setIsChatControlOpen(false);
+									}}
+								>
+									Yes, Leave
+								</button>
 							</div>
-						)}
+						</div>
+					)}
 
-						{isAddFriend && (
-							<div className={styles.addFriend}>
-								<p>Enter the ID of your friend to add:</p>
-								<div className={styles.pasteId}>
-									<input
-										className={styles.pasteIdInput}
-										type="text"
-										onChange={(e) => setFriendId(e.target.value)}
-									/>
-									<button
-										className={styles.addFriendButton}
-										onClick={() => handleSendFriendRequest(selectedChat)}
-									>
-										Send
-									</button>
-								</div>
+					{isAddFriend && (
+						<div className={styles.addFriend}>
+							<p>Enter the ID of your friend to add:</p>
+							<div className={styles.pasteId}>
+								<input
+									className={styles.pasteIdInput}
+									type="text"
+									onChange={(e) => {
+										setFriendId(e.target.value);
+										setIsChatControlOpen(false);
+									}}
+								/>
+								<button
+									className={styles.addFriendButton}
+									onClick={() => {
+										handleSendFriendRequest(selectedChat);
+										setIsChatControlOpen(false);
+									}}
+								>
+									Send
+								</button>
 							</div>
-						)}
-					</div>
+						</div>
+					)}
 				</div>
-			)}
-
-			<div className={styles.overlay}>
+			) : (
 				<div ref={dropdownRef} className={styles.container}>
 					<button
 						onClick={() => {
@@ -254,16 +236,24 @@ const ChatSettings = () => {
 					</button>
 					<button
 						onClick={() => {
-							mutedChat && selectedChat
-								? handleUnmute(selectedChat)
-								: handleMute(selectedChat);
+							{
+								mutedChat && selectedChat
+									? handleUnmute(selectedChat)
+									: handleMute(selectedChat);
+								setIsChatControlOpen(false);
+							}
 						}}
 					>
 						{mutedChat ? "Unmute" : "Mute"}
 						{mutedChat ? <GoUnmute /> : <GoMute />}
 					</button>
 
-					<button onClick={() => setEditChat(selectedChat)}>
+					<button
+						onClick={() => {
+							setIsChatControlOpen(false);
+							setEditChat(selectedChat);
+						}}
+					>
 						Edit Room <AiOutlineEdit />
 					</button>
 					<button
@@ -276,8 +266,8 @@ const ChatSettings = () => {
 						Leave Room <AiOutlineLogout />
 					</button>
 				</div>
-			</div>
-		</>
+			)}
+		</div>
 	);
 };
 

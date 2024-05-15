@@ -47,26 +47,26 @@
 
 .modal {
     width: 20rem;
-    height: 10rem;
+    height: 12rem;
     justify-self: center;
     align-self: center;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 0.5rem;
     box-shadow: 0 2px 1px #ebebeb,
         0 2px 2px #ebebeb;
 }
 
 .closeModal {
     position: relative;
-    left: 18.6rem;
-    bottom: -0.4rem;
+    left: 18rem;
+    bottom: -0.5rem;
     font-size: 1rem;
-    color: white;
     cursor: pointer;
     z-index: 2;
     border: none;
     background-color: transparent;
     color: #f56d44;
+    font-size: large;
 }
 
 .closeModal:hover {
@@ -128,43 +128,47 @@
 .leaveRoom {
     display: flex;
     flex-direction: column;
-    padding: 0 1rem 0 1rem
+    padding: 0 1rem;
 }
 
 .leaveRoom p {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    text-align: center;
 
 }
 
 .leaveRoomButtons {
+    width: 100%;
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    justify-content: space-around;
     margin-top: 1rem;
 
 }
 
 
 .leaveButton {
+    width: 6rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 1rem;
     padding: 0.5rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 1rem;
     background: #ffffff;
-    box-shadow: 2px 2px 6px #e0e0e0,
-        -2px -2px 6px #ffffff;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
+
 }
 
 .stayButton {
+    width: 6rem;
     border: none;
-    border-radius: 10px;
-    padding: 0.5rem;
+    border-radius: 1rem;
+    padding: 1rem;
     cursor: pointer;
-    font-size: 0.8rem;
-    background: #e0e0e0;
-    box-shadow: 2px 2px 6px #e0e0e0,
-        -2px -2px 6px #ffffff;
+    font-size: 1rem;
+    color: #ffffff;
+    background: #f56d44;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
+
 
 
 }
@@ -182,6 +186,8 @@
 
 
 .questionIcon {
+    position: relative;
+    top: -1rem;
     font-size: 2rem;
     color: #f56d44;
     align-self: center;

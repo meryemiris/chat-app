@@ -28,7 +28,7 @@ const RoomList = () => {
 	const [showMuted, setShowMuted] = useState(false);
 	const [showUnread, setShowUnread] = useState(false);
 
-	const { chatRoomList, setChatRoomList, selectedChat } = useChatContext();
+	const { chatRoomList, setChatRoomList, isChatControlOpen } = useChatContext();
 
 	const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -186,7 +186,7 @@ const RoomList = () => {
 				)}
 			</header>
 
-			<form className={styles.roomSearch} onSubmit={handleCreateChannel}>
+			<form className={styles.chatSearch} onSubmit={handleCreateChannel}>
 				<input
 					name="channelName"
 					placeholder="Search or create a room"
@@ -196,7 +196,7 @@ const RoomList = () => {
 					autoComplete="off"
 					maxLength={35}
 				/>
-				<button type="submit" className={styles.roomSearchButton}>
+				<button type="submit" className={styles.chatSearchButton}>
 					{searchTerm ? <MdAddCircle /> : <MdSearch />}
 				</button>
 			</form>
@@ -206,7 +206,7 @@ const RoomList = () => {
 					<ListItem key={id} roomID={id} roomName={name} isMuted={isMuted} />
 				))}
 			</div>
-			{selectedChat && <ChatSettings />}
+			{isChatControlOpen && <ChatSettings />}
 		</div>
 	);
 };

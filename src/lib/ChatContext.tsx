@@ -35,6 +35,9 @@ export type ChatContextType = {
 	mutedChat: boolean;
 	setMutedChat: Dispatch<SetStateAction<boolean>>;
 
+	isChatControlOpen: boolean;
+	setIsChatControlOpen: Dispatch<SetStateAction<boolean>>;
+
 	editChat: number | null;
 	setEditChat: Dispatch<SetStateAction<number | null>>;
 };
@@ -55,6 +58,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [selectedChat, setSelectedChat] = useState<number | null>(null);
 
 	const [mutedChat, setMutedChat] = useState<boolean>(false);
+
+	const [isChatControlOpen, setIsChatControlOpen] = useState<boolean>(false);
 
 	const [editChat, setEditChat] = useState<number | null>(null);
 
@@ -140,6 +145,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		mutedChat,
 		setMutedChat,
+
+		isChatControlOpen,
+		setIsChatControlOpen,
 
 		editChat,
 		setEditChat,

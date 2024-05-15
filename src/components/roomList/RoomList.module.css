@@ -38,74 +38,49 @@
     transform: scale(0.9);
 }
 
-.searchContainer {
-    display: flex;
-    gap: 1rem;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    padding: 0 1rem;
-}
 
-.roomSearch {
+
+.chatSearch {
     display: flex;
     flex-direction: row;
-    align-self: center;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    border-bottom: #9db4c0 solid 2px;
+    width: 100vw;
 }
 
-.roomSearch input {
+.chatSearch input {
+    width: 100%;
     background-color: inherit;
-    border: none;
-    padding: 0.5rem;
-    margin-left: 0.5rem;
-    font-size: 1rem;
-}
-
-.roomSearch input:focus {
-    outline: none;
+    border: 1px solid #ebebeb;
+    box-shadow: 1px 1px 1px #ebebeb;
     border-radius: 10px;
-
+    padding: .7rem;
+    font-size: 1rem;
+    margin-left: 1rem;
 }
 
-.roomSearch input::placeholder {
+.chatSearch input:focus {
+    outline: #f56d44 solid 2px;
+}
+
+.chatSearch input::placeholder {
     word-wrap: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.roomSearchButton {
+.chatSearchButton {
     position: relative;
-    background-color: inherit;
     color: #f56d44;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 0 0.2rem;
-    right: 1.5rem;
+    font-size: 1.2rem;
+    left: -2rem;
     background-color: transparent;
 
 }
 
-.roomSearchButton:hover {
-    transform: scale(1.2);
-    transition: 0.2s;
-
-}
 
 
-.roomSearch::placeholder {
-    font-size: .7rem;
-    align-self: center;
 
-}
-
-.roomSearch:focus {
-    outline: #f56d44 solid 2px;
-}
 
 
 .scrollable {
@@ -145,29 +120,23 @@
     position: relative;
 }
 
+
 .filterButton {
     background-color: inherit;
     color: #f56d44;
     font-size: 2rem;
     border: none;
     cursor: pointer;
-
 }
-
-.threeDots:hover {
-    transform: scale(1.2);
-    transition: 0.2s;
-}
-
 
 
 .dropdown {
     background-color: white;
     position: absolute;
     display: none;
-    width: 130px;
-    margin: 0.5rem;
-    border-radius: 10px;
+    width: 10rem;
+    margin: 1rem;
+    border-radius: .5rem;
     border-top-right-radius: 0;
     overflow: auto;
     box-shadow: 0 2px 1px #b5b5b5,
@@ -180,10 +149,10 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 0.75rem;
+    font-size: 1rem;
     border: none;
     background-color: inherit;
-    padding: 0.5rem;
+    padding: .7rem;
     cursor: pointer;
 
 }

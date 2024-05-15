@@ -16,6 +16,8 @@ type RoomListItemProps = {
 	isMuted: boolean;
 };
 
+const memberImg = "/defaultPp.png";
+
 const ListItem: React.FC<RoomListItemProps> = ({
 	roomID,
 	roomName,
@@ -30,6 +32,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 		setSelectedChat,
 		editChat,
 		setEditChat,
+		setIsChatControlOpen,
 	} = useChatContext();
 
 	const handleSaveRoom = async (
@@ -81,19 +84,19 @@ const ListItem: React.FC<RoomListItemProps> = ({
 
 				<div className={styles.members}>
 					<Image
-						src={"/defaultPP.png"}
+						src={memberImg}
 						alt="members profile pic"
 						width={20}
 						height={20}
 					/>
 					<Image
-						src={"/defaultPP.png"}
+						src={memberImg}
 						alt="members profile pic"
 						width={20}
 						height={20}
 					/>
 					<Image
-						src={"/defaultPP.png"}
+						src={memberImg}
 						alt="members profile pic"
 						width={20}
 						height={20}
@@ -106,7 +109,10 @@ const ListItem: React.FC<RoomListItemProps> = ({
 
 				<button
 					className={styles.threeDots}
-					onClick={() => setSelectedChat(roomID)}
+					onClick={() => {
+						setSelectedChat(roomID);
+						setIsChatControlOpen(true);
+					}}
 				>
 					<SlOptionsVertical />
 				</button>

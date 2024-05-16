@@ -49,12 +49,17 @@ export default function Profile() {
 			.select();
 	};
 
-	const updateProfileImg = async () => {
+	const updateProfileImg = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
 		const { data, error } = await supabase
 			.from("users")
 			.update({ profile_img: profileImg })
 			.eq("id", userId)
 			.select();
+
+		if (error) toast.error(error.message);
+		else toast.success("Profile image updated!");
 
 		console.log("Response from Supabase:", data, error);
 		setIsEdit(false);
@@ -85,8 +90,10 @@ export default function Profile() {
 				{isEdit && (
 					<form className={styles.profileForm} onSubmit={updateProfileImg}>
 						<input type="file" name="profilePic" onChange={handleImageChange} />
+						<button type="submit">Update</button>
 					</form>
 				)}
+
 				<form onSubmit={updateUsername}>
 					<input
 						className={styles.username}

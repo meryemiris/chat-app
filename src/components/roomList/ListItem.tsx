@@ -9,22 +9,23 @@ import UnreadMessages from "./UnreadMessage";
 import { GoMute } from "react-icons/go";
 import { useChatContext } from "@/lib/ChatContext";
 import { SlOptionsVertical } from "react-icons/sl";
+import { useAuthContext } from "@/lib/AuthContext";
 
 type RoomListItemProps = {
 	roomID: number;
 	roomName: string;
 	isMuted: boolean;
+	members: { username: string; profile_img: string; id: string }[];
 };
-
-const memberImg = "/defaultPp.png";
 
 const ListItem: React.FC<RoomListItemProps> = ({
 	roomID,
 	roomName,
 	isMuted,
+	members,
 }) => {
+	const { userId } = useAuthContext();
 	const [newRoomName, setNewRoomName] = useState<string>("");
-
 	const {
 		setUnreadMsgsChatIds,
 		setUnreadMsgs,
@@ -81,26 +82,20 @@ const ListItem: React.FC<RoomListItemProps> = ({
 				) : (
 					<p className={styles.chatName}>{roomName}</p>
 				)}
-
 				<div className={styles.members}>
-					<Image
-						src={memberImg}
-						alt="members profile pic"
-						width={20}
-						height={20}
-					/>
-					<Image
-						src={memberImg}
-						alt="members profile pic"
-						width={20}
-						height={20}
-					/>
-					<Image
-						src={memberImg}
-						alt="members profile pic"
-						width={20}
-						height={20}
-					/>
+					{members.map((member, index) => (
+						<Image
+							src={member.profile_img ? member.profile_img : "/defaultPP.png"}
+							alt="member image"
+							width={30}
+							height={30}
+							key={index}
+							className={
+								members.length >= 2 ? styles.groupImage : styles.singleImage
+							}
+							style={member.id === userId ? { display: "none" } : {}}
+						/>
+					))}
 				</div>
 			</button>
 

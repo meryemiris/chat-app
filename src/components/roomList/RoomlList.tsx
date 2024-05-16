@@ -202,8 +202,14 @@ const RoomList = () => {
 			</form>
 
 			<div className={styles.scrollable}>
-				{filteredChannels?.map(({ isMuted, channels: { id, name } }) => (
-					<ListItem key={id} roomID={id} roomName={name} isMuted={isMuted} />
+				{filteredChannels?.map(({ isMuted, channels: { id, name }, users }) => (
+					<ListItem
+						key={id}
+						roomID={id}
+						roomName={name}
+						isMuted={isMuted}
+						members={users}
+					/>
 				))}
 			</div>
 			{isChatControlOpen && <ChatSettings />}

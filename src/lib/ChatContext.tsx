@@ -63,6 +63,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const [editChat, setEditChat] = useState<number | null>(null);
 
+	type RoomListType = {
+		isMuted: boolean;
+		channels: {
+			name: string;
+			id: string;
+		};
+	};
+
 	useEffect(() => {
 		async function getChatRoomList() {
 			if (!userId) return;
@@ -85,9 +93,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				toast.error(memberRoomsError.message);
 				return;
 			}
+			const roomListwithType = roomList as unknown as RoomListType[];
 
 			const chatRoomsWithMembers = await Promise.all(
-				roomList.map(async (room) => {
+				roomListwithType.map(async (room) => {
 					const { data: members, error: memberError } = await supabase
 						.from("members")
 						.select(

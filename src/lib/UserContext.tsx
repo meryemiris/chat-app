@@ -30,7 +30,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 				.eq("id", userId);
 
 			if (user) {
-				console.log(user);
 				setProfileImg(user[0].profile_img);
 				setUsername(user[0].username);
 			} else {

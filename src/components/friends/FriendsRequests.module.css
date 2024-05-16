@@ -1,0 +1,112 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+
+.container header {
+    color: #9db4c0;
+    padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.title {
+    font-size: 1rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.request {
+    display: flex;
+    flex-direction: column;
+    border-bottom: #ebebeb 1px solid;
+    box-shadow: 0px 1px 0px 0px #ebebeb;
+
+}
+
+
+.requestInfo {
+    display: flex;
+    align-items: center;
+    padding: 1rem .5rem;
+
+}
+
+
+.profileImg {
+    border-radius: 50%;
+
+}
+
+.senderName {
+    color: #f56d44;
+}
+
+
+.roomName {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #f56d44;
+}
+
+
+.buttons {
+    display: flex;
+    align-self: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+
+}
+
+.acceptButton {
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: white;
+    background: #f56d44;
+
+
+
+}
+
+.declineButton {
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    background: #ffffff;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
+    color: black;
+
+
+}
+
+
+.dropdown button:hover {
+    transform: scale(1.2);
+    color: white;
+    background-color: #f56d44;
+
+}
+
+.dropdown button:active {
+    transform: scale(1.05);
+    transition: 0.2s;
+}
+
+.show {
+    display: block;
+}
+
+
+.emptyDropdown {
+
+    width: 150px;
+    height: 80px;
+}

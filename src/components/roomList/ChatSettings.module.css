@@ -79,7 +79,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 1rem
 }
 
 .pasteId {
@@ -96,10 +96,10 @@
 }
 
 .pasteIdInput {
-    padding: 0.5rem;
+    padding: 1rem;
     border: none;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
 
 }
 
@@ -110,13 +110,15 @@
 
 
 .addFriendButton {
-    padding: 0.5rem;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border: none;
+    padding: 1rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border: 1px solid #f56d44;
     background-color: inherit;
     cursor: pointer;
-    color: #f56d44;
+    color: #ffffff;
+    background-color: #f56d44;
+    font-size: 1rem;
 }
 
 .addFriendButton:hover {

@@ -106,12 +106,13 @@ const ChatSettings = () => {
 			return;
 		}
 
-		// Check if friend request already sent
+		// Check if friend request already sent for this room
 		const { data: userCheck, error: userCheckError } = await supabase
 			.from("requests")
 			.select("id")
 			.eq("receiver_id", friendId)
-			.eq("sender_id", userId);
+			.eq("sender_id", userId)
+			.eq("room_id", roomID);
 
 		if (userCheckError) {
 			console.error("Error checking friend request:", userCheckError);
@@ -208,7 +209,6 @@ const ChatSettings = () => {
 									type="text"
 									onChange={(e) => {
 										setFriendId(e.target.value);
-										setIsChatControlOpen(false);
 									}}
 								/>
 								<button

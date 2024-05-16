@@ -161,7 +161,7 @@ const RoomList = () => {
 					</>
 				) : (
 					<>
-						<h2 className={styles.title}>Chats</h2>
+						<h1 className={styles.title}>Chats</h1>
 						<div className={`${styles.kebabMenu} ${styles.showLeft}`}>
 							<button
 								className={styles.filterButton}

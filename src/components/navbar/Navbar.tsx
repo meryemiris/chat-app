@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { useUserContext } from "@/lib/UserContext";
 import { useRouter } from "next/router";
+import { FaBell } from "react-icons/fa";
 
 const Navbar = () => {
 	const router = useRouter();
@@ -13,7 +14,10 @@ const Navbar = () => {
 
 	return (
 		<div className={styles.container}>
-			{/* <FriendRequests /> */}
+			<span className={styles.badge}>{"1"}</span>
+			<button onClick={() => router.push("/friends")} className={styles.button}>
+				<FaBell />
+			</button>
 			<button onClick={() => router.push("/")} className={styles.button}>
 				<IoChatbubbleEllipsesSharp />
 			</button>

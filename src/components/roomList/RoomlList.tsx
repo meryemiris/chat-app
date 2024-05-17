@@ -8,15 +8,10 @@ import { useAuthContext } from "@/lib/AuthContext";
 import { useChatContext } from "@/lib/ChatContext";
 
 import ListItem from "./ListItem";
-
-import {
-	MdAddCircle,
-	MdOutlineMarkUnreadChatAlt,
-	MdSearch,
-} from "react-icons/md";
-import { IoFilter, IoVolumeMuteOutline } from "react-icons/io5";
-import { GoArrowLeft } from "react-icons/go";
 import ChatSettings from "./ChatSettings";
+
+import { MdAddCircle, MdSearch } from "react-icons/md";
+import { RiFilter3Fill } from "react-icons/ri";
 
 const RoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
@@ -24,9 +19,6 @@ const RoomList = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const { userId } = useAuthContext();
-
-	const [showMuted, setShowMuted] = useState(false);
-	const [showUnread, setShowUnread] = useState(false);
 
 	const { chatRoomList, setChatRoomList, isChatControlOpen } = useChatContext();
 
@@ -93,112 +85,34 @@ const RoomList = () => {
 		setSearchTerm(e.target.value);
 	};
 
-	const filteredChannels = chatRoomList?.filter(
-		(room) =>
-			room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-			(showMuted ? room.isMuted : true)
+	const filteredChannels = chatRoomList?.filter((room) =>
+		room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-
-	const filterRoomsRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		const handleClickOutsideFilterRooms = (e: MouseEvent) => {
-			if (
-				filterRoomsRef.current &&
-				!filterRoomsRef.current.contains(e.target as Node)
-			) {
-				setIsFilter(false);
-			}
-		};
-
-		const handleClick = (e: MouseEvent) => {
-			handleClickOutsideFilterRooms(e);
-		};
-
-		document.addEventListener("mousedown", handleClick);
-
-		return () => {
-			document.removeEventListener("mousedown", handleClick);
-		};
-	}, [filterRoomsRef]);
-
-	const handleToggleFilter = () => {
-		setIsFilter(!isFilter);
-	};
-
-	// const handleShowUnread = () => {
-	// 	setIsFilter(false);
-	// 	setShowUnread(true);
-	// };
-
-	const handleShowMuted = () => {
-		setIsFilter(false);
-		setShowMuted(true);
-	};
 
 	return (
 		<div className={styles.container}>
-			<header>
-				{showMuted ? (
-					<>
-						<button
-							className={styles.backButton}
-							onClick={() => setShowMuted(false)}
-						>
-							<GoArrowLeft />
-						</button>
-						<h2 className={styles.title}>Muted</h2>
-					</>
-				) : showUnread ? (
-					<>
-						<button
-							className={styles.backButton}
-							onClick={() => setShowUnread(false)}
-						>
-							<GoArrowLeft />
-						</button>
-						<h2 className={styles.title}>Unread</h2>
-					</>
-				) : (
-					<>
-						<h1 className={styles.title}>Chats</h1>
-						<div className={`${styles.kebabMenu} ${styles.showLeft}`}>
-							<button
-								className={styles.filterButton}
-								onClick={handleToggleFilter}
-							>
-								<IoFilter />
-							</button>
-							<div
-								id="filterRooms"
-								ref={filterRoomsRef}
-								className={`${styles.dropdown} ${isFilter ? styles.show : ""}`}
-							>
-								{/* <button onClick={handleShowUnread}>
-									Unread <MdOutlineMarkUnreadChatAlt />
-								</button> */}
-								<button onClick={handleShowMuted}>
-									Muted <IoVolumeMuteOutline />
-								</button>
-							</div>
-						</div>
-					</>
-				)}
-			</header>
-
-			<form className={styles.chatSearch} onSubmit={handleCreateChannel}>
-				<input
-					name="channelName"
-					placeholder="Search or create a room"
-					value={searchTerm}
-					onChange={handleSearch}
-					autoComplete="off"
-					maxLength={35}
-				/>
-				<button type="submit" className={styles.chatSearchButton}>
-					{searchTerm ? <MdAddCircle /> : <MdSearch />}
+			<h1 className={styles.title}>Chats</h1>
+			<div className={styles.searchAndFilter}>
+				<form className={styles.chatSearch} onSubmit={handleCreateChannel}>
+					<input
+						name="channelName"
+						placeholder="Search or create a room"
+						value={searchTerm}
+						onChange={handleSearch}
+						autoComplete="off"
+						maxLength={35}
+					/>
+					<button type="submit" className={styles.chatSearchButton}>
+						{searchTerm ? <MdAddCircle /> : <MdSearch />}
+					</button>
+				</form>
+				<button
+					className={isFilter ? styles.filterButtonActive : styles.filterButton}
+					onClick={() => setIsFilter(!isFilter)}
+				>
+					<RiFilter3Fill />
 				</button>
-			</form>
+			</div>
 
 			<div className={styles.scrollable}>
 				{filteredChannels?.map(({ isMuted, channels: { id, name }, users }) => (

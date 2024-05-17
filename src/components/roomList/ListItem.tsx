@@ -10,6 +10,7 @@ import { GoMute } from "react-icons/go";
 import { useChatContext } from "@/lib/ChatContext";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useAuthContext } from "@/lib/AuthContext";
+import { RiMore2Line } from "react-icons/ri";
 
 type RoomListItemProps = {
 	roomID: number;
@@ -107,7 +108,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 						setIsChatControlOpen(true);
 					}}
 				>
-					<SlOptionsVertical />
+					<RiMore2Line />
 				</button>
 			</div>
 

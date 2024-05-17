@@ -1,25 +1,29 @@
-import { useContext, useState } from "react";
+import { useRef, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
-
-import Messages from "./Messages";
-
-import styles from "./ChatRoom.module.css";
-
-import { IoSearch, IoSend } from "react-icons/io5";
-import { RiEmojiStickerLine } from "react-icons/ri";
-import { IoIosArrowBack } from "react-icons/io";
-
-import { FaInfoCircle } from "react-icons/fa";
 import { useAuthContext } from "@/lib/AuthContext";
 import { useChatContext } from "@/lib/ChatContext";
+
+import Messages from "./Messages";
+import styles from "./ChatRoom.module.css";
 import RoomDetails from "./RoomDetails";
+import { toast } from "sonner";
+
+import {
+	RiArrowLeftSLine,
+	RiEmojiStickerLine,
+	RiInformationLine,
+	RiSearchLine,
+	RiSendPlaneLine,
+} from "react-icons/ri";
 
 export default function ChatRoom() {
 	const { activeChatId, setActiveChatId } = useChatContext();
 	const { userId } = useAuthContext();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [showRoomDetails, setShowRoomDetails] = useState(false);
+
+	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	const time = new Date().toLocaleTimeString([], {
 		hour: "2-digit",
@@ -33,41 +37,43 @@ export default function ChatRoom() {
 
 		if (!message) return;
 
-		try {
-			const { data, error } = await supabase
-				.from("messages")
-				.insert([
-					{
-						content: message,
-						created_at: time,
-						chatroom_id: activeChatId,
-						user_id: userId,
-					},
-				])
-				.select();
-		} catch (error) {
-			console.log(error);
-		}
+		const { data, error } = await supabase
+			.from("messages")
+			.insert([
+				{
+					content: message,
+					created_at: time,
+					chatroom_id: activeChatId,
+					user_id: userId,
+				},
+			])
+			.select();
+		if (error) toast.error(error.message);
+
 		if (e.target instanceof HTMLFormElement) {
 			e.target.reset();
 		}
-		console.log("subscribe");
 	};
 
 	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
 	};
 
+	const handleFocusSearch = () => {
+		if (searchInputRef.current) {
+			searchInputRef.current.focus();
+		}
+	};
+
 	return (
 		<>
-			{" "}
 			<div className={styles.container}>
 				<header className={styles.header}>
 					<button
 						className={styles.backButton}
 						onClick={() => setActiveChatId(null)}
 					>
-						<IoIosArrowBack />
+						<RiArrowLeftSLine />
 					</button>
 					<div className={styles.titleWrapper}>
 						<p className={styles.title}>{activeChatId}</p>
@@ -75,18 +81,19 @@ export default function ChatRoom() {
 							className={styles.infoButton}
 							onClick={() => setShowRoomDetails(true)}
 						>
-							<FaInfoCircle />
+							<RiInformationLine />
 						</button>
 					</div>
 
 					<>
 						<div className={styles.inputWrapper}>
-							<button className={styles.icon}>
-								<IoSearch />
+							<button className={styles.searchIcon} onClick={handleFocusSearch}>
+								<RiSearchLine />
 							</button>
 							<input
 								type="text"
 								name="text"
+								ref={searchInputRef}
 								className={styles.searchInput}
 								placeholder="search.."
 								value={searchTerm}
@@ -109,7 +116,7 @@ export default function ChatRoom() {
 							autoComplete="off"
 						/>
 						<button type="submit">
-							<IoSend />
+							<RiSendPlaneLine />
 						</button>
 					</form>
 				</footer>

@@ -27,38 +27,7 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 		setUnreadMsgsChatIds,
 	} = useChatContext();
 
-	const [loading, setLoading] = useState(false);
-
 	const messageEndRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		async function getMessages() {
-			try {
-				setLoading(true);
-				const { data, error } = await supabase
-					.from("messages")
-					.select(
-						"users(username, profile_img), id, content, created_at, user_id"
-					)
-					.eq("chatroom_id", activeChatId);
-
-				if (error) {
-					throw error;
-				}
-
-				if (data) {
-					setMessages(data as []);
-				} else {
-					console.log(error);
-				}
-			} catch (error) {
-			} finally {
-				setLoading(false);
-			}
-		}
-
-		getMessages();
-	}, [activeChatId, setMessages, setLoading]);
 
 	useEffect(() => {
 		const channel = supabase
@@ -125,49 +94,41 @@ const Messages: React.FC<MessagesProps> = ({ searchTerm }) => {
 
 	return (
 		<main ref={messageEndRef} className={styles.scrollable}>
-			{loading ? (
-				<Loading />
-			) : (
-				<>
-					{messages.length === 0 && (
-						<p className={styles.noMessages}>
-							No messages? Time to break the silence! 🤐💬
-						</p>
-					)}
-					{filteredMessages.length === 0 && (
-						<p className={styles.noMessages}>No messages match your search.</p>
-					)}
-					{filteredMessages?.map(({ content, id, created_at, users }) => (
-						<div
-							key={id}
-							className={
-								isReceiver ? styles.myMessageContainer : styles.messageContainer
-							}
-						>
-							<div>
-								{isSender && (
-									<Image
-										className={styles.avatar}
-										src={profileImg}
-										alt="sender image"
-										width={50}
-										height={50}
-									/>
-								)}
-							</div>
-							<div className={isReceiver ? styles.myMessage : styles.message}>
-								{isSender && (
-									<p className={styles.username}>{users?.username}</p>
-								)}
-								<p className={styles.content}>{content}</p>
-								<p className={styles.createdAt}>
-									{created_at.split(":").slice(0, 2).join(":")}
-								</p>
-							</div>
-						</div>
-					))}
-				</>
+			{messages.length === 0 && (
+				<p className={styles.noMessages}>
+					No messages? Time to break the silence! 🤐💬
+				</p>
 			)}
+			{filteredMessages.length === 0 && (
+				<p className={styles.noMessages}>No messages match your search.</p>
+			)}
+			{filteredMessages?.map(({ content, id, created_at, users }) => (
+				<div
+					key={id}
+					className={
+						isReceiver ? styles.myMessageContainer : styles.messageContainer
+					}
+				>
+					<div>
+						{isSender && (
+							<Image
+								className={styles.avatar}
+								src={profileImg}
+								alt="sender image"
+								width={50}
+								height={50}
+							/>
+						)}
+					</div>
+					<div className={isReceiver ? styles.myMessage : styles.message}>
+						{isSender && <p className={styles.username}>{users?.username}</p>}
+						<p className={styles.content}>{content}</p>
+						<p className={styles.createdAt}>
+							{created_at.split(":").slice(0, 2).join(":")}
+						</p>
+					</div>
+				</div>
+			))}
 		</main>
 	);
 };

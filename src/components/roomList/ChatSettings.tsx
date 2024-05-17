@@ -4,20 +4,21 @@ import styles from "./ChatSettings.module.css";
 import { supabase } from "@/lib/supabase";
 import { useAuthContext } from "@/lib/AuthContext";
 import { useUserContext } from "@/lib/UserContext";
-
-import {
-	AiOutlineClose,
-	AiOutlineEdit,
-	AiOutlineLogout,
-	AiOutlineUserAdd,
-} from "react-icons/ai";
-import { GoMute, GoQuestion, GoUnmute } from "react-icons/go";
-import { toast } from "sonner";
 import { useChatContext } from "@/lib/ChatContext";
 
+import { toast } from "sonner";
+import {
+	RiEditLine,
+	RiLogoutCircleRLine,
+	RiUserAddLine,
+	RiVolumeMuteLine,
+	RiVolumeUpLine,
+	RiCloseFill,
+	RiQuestionMark,
+} from "react-icons/ri";
+
 const ChatSettings = () => {
-	const dropdownRef = useRef<HTMLDivElement>(null);
-	console.log(dropdownRef);
+	const bottomSheetRef = useRef<HTMLDivElement>(null);
 
 	const [isDeleteRoom, setIsDeleteRoom] = useState(false);
 
@@ -54,8 +55,8 @@ const ChatSettings = () => {
 	useEffect(() => {
 		const handleClickOutsideDropdown = (e: MouseEvent) => {
 			if (
-				dropdownRef.current &&
-				!dropdownRef.current.contains(e.target as Node)
+				bottomSheetRef.current &&
+				!bottomSheetRef.current.contains(e.target as Node)
 			) {
 				setIsChatControlOpen(false);
 			}
@@ -169,12 +170,12 @@ const ChatSettings = () => {
 						className={styles.closeModal}
 						onClick={() => setIsChatControlOpen(false)}
 					>
-						<AiOutlineClose />
+						<RiCloseFill />
 					</button>
 
 					{isDeleteRoom && (
 						<div className={styles.leaveRoom}>
-							<GoQuestion className={styles.questionIcon} />
+							<RiQuestionMark className={styles.questionIcon} />
 
 							<p>
 								Leaving will permanently remove this chat. Are you sure you want
@@ -225,14 +226,14 @@ const ChatSettings = () => {
 					)}
 				</div>
 			) : (
-				<div ref={dropdownRef} className={styles.bottomSheet}>
+				<div ref={bottomSheetRef} className={styles.bottomSheet}>
 					<button
 						onClick={() => {
 							setIsModalOpen(true);
 							setIsAddFriend(true);
 						}}
 					>
-						Add Friend <AiOutlineUserAdd />
+						Add Friend <RiUserAddLine />
 					</button>
 					<button
 						onClick={() => {
@@ -245,7 +246,7 @@ const ChatSettings = () => {
 						}}
 					>
 						{mutedChat ? "Unmute" : "Mute"}
-						{mutedChat ? <GoUnmute /> : <GoMute />}
+						{mutedChat ? <RiVolumeUpLine /> : <RiVolumeMuteLine />}
 					</button>
 
 					<button
@@ -254,16 +255,16 @@ const ChatSettings = () => {
 							setEditChat(selectedChat);
 						}}
 					>
-						Edit Room <AiOutlineEdit />
+						Edit Room <RiEditLine />
 					</button>
 					<button
 						onClick={() => {
 							setIsModalOpen(true);
 							setIsDeleteRoom(true);
 						}}
-						style={{ color: "red" }}
+						className={styles.leave}
 					>
-						Leave Room <AiOutlineLogout />
+						Leave Room <RiLogoutCircleRLine />
 					</button>
 				</div>
 			)}

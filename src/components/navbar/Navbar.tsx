@@ -1,12 +1,10 @@
-import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-
 import styles from "./Navbar.module.css";
-// import FriendRequests from "./FriendsRequests";
 import Image from "next/image";
 
 import { useUserContext } from "@/lib/UserContext";
 import { useRouter } from "next/router";
-import { FaBell } from "react-icons/fa";
+
+import { RiChat3Line, RiUserHeartLine } from "react-icons/ri";
 
 const Navbar = () => {
 	const router = useRouter();
@@ -14,15 +12,36 @@ const Navbar = () => {
 
 	return (
 		<div className={styles.container}>
-			<span className={styles.badge}>{"1"}</span>
-			<button onClick={() => router.push("/friends")} className={styles.button}>
-				<FaBell />
-			</button>
-			<button onClick={() => router.push("/")} className={styles.button}>
-				<IoChatbubbleEllipsesSharp />
+			<button
+				onClick={() => router.push("/friends")}
+				className={
+					router.pathname === "/friends" ? styles.buttonActive : styles.button
+				}
+			>
+				{router.pathname !== "/friends" && (
+					<span className={styles.friendBadge}>{"1"}</span>
+				)}
+				<RiUserHeartLine />
 			</button>
 
-			<button onClick={() => router.push("/profile")} className={styles.button}>
+			<button
+				onClick={() => router.push("/")}
+				className={
+					router.pathname === "/" ? styles.buttonActive : styles.button
+				}
+			>
+				{router.pathname !== "/" && (
+					<span className={styles.chatBadge}>{"1"}</span>
+				)}
+				<RiChat3Line />
+			</button>
+
+			<button
+				onClick={() => router.push("/profile")}
+				className={
+					router.pathname === "/profile" ? styles.buttonActive : styles.button
+				}
+			>
 				<Image
 					src={profileImg}
 					alt="go to profile"

@@ -43,7 +43,6 @@ const FriendRequests = () => {
 				.eq("receiver_id", userId);
 
 			const requestsInfo = data as unknown as Request[];
-			console.log("requestsInfo", requestsInfo);
 			setRequests(requestsInfo);
 
 			if (error) {
@@ -124,31 +123,10 @@ const FriendRequests = () => {
 		}
 	};
 
-	const greetingsList = [
-		"Come and say hi!",
-		"Join the fun!",
-		"We'd love to see you there!",
-		"Don't miss out!",
-		"Hop in and chat!",
-		"Let's catch up!",
-		"Join us now!",
-		"Excited to have you!",
-		"Looking forward to seeing you!",
-		"Your presence is requested!",
-	];
-
-	function getRandomGreeting() {
-		const randomIndex = Math.floor(Math.random() * greetingsList.length);
-		return greetingsList[randomIndex];
-	}
-
-	const greetings = getRandomGreeting();
-
 	return (
 		<div className={styles.container}>
-			<header>
-				<h1 className={styles.title}>Chat Requests</h1>
-			</header>
+			<h1 className={styles.title}>Chat Requests</h1>
+
 			{requests && requests.length > 0 ? (
 				requests.map((request) => (
 					<div className={styles.request} key={request?.room_id}>

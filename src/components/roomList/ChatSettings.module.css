@@ -11,7 +11,7 @@
 }
 
 
-.container {
+.bottomSheet {
     display: grid;
     padding: 1rem;
     gap: 1rem;
@@ -20,10 +20,9 @@
     height: 40dvh;
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
-
 }
 
-.container button {
+.bottomSheet button {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -38,7 +37,7 @@
 
 }
 
-.container button:first-child {
+.bottomSheet button:first-child {
     background-color: #f56d44;
     color: white;
 }

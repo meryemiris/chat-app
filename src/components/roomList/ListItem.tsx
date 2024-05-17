@@ -87,12 +87,10 @@ const ListItem: React.FC<RoomListItemProps> = ({
 						<Image
 							src={member.profile_img ? member.profile_img : "/defaultPP.png"}
 							alt="member image"
-							width={30}
-							height={30}
+							width={25}
+							height={25}
 							key={index}
-							className={
-								members.length >= 2 ? styles.groupImage : styles.singleImage
-							}
+							className={styles.memberImage}
 							style={member.id === userId ? { display: "none" } : {}}
 						/>
 					))}

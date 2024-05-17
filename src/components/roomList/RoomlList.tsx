@@ -192,7 +192,6 @@ const RoomList = () => {
 					placeholder="Search or create a room"
 					value={searchTerm}
 					onChange={handleSearch}
-					autoFocus
 					autoComplete="off"
 					maxLength={35}
 				/>

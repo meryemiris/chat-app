@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
@@ -15,6 +15,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 
 export default function Profile() {
 	const { userId } = useAuthContext();
+	const bottomSheetRef = useRef<HTMLDivElement>(null);
 
 	const { profileImg, setProfileImg, username, setUsername } = useUserContext();
 
@@ -32,13 +33,11 @@ export default function Profile() {
 			};
 			reader.readAsDataURL(file);
 		}
-		setIsEdit(false);
 	};
 
 	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 		setUsername(e.target.value);
-		setIsEdit(false);
 	};
 
 	const updateUsername = async () => {
@@ -47,10 +46,12 @@ export default function Profile() {
 			.update({ username: username })
 			.eq("id", userId)
 			.select();
+		setIsEdit(false);
 	};
 
 	const updateProfileImg = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setIsEdit(false);
 
 		const { data, error } = await supabase
 			.from("users")
@@ -62,13 +63,29 @@ export default function Profile() {
 		else toast.success("Profile image updated!");
 
 		console.log("Response from Supabase:", data, error);
-		setIsEdit(false);
 	};
 
 	const handleCopyToClipboard = () => {
 		navigator.clipboard.writeText(userId);
 		toast.success("ID copied to clipboard!");
 	};
+
+	useEffect(() => {
+		const handleClickOutsideBottomsheet = (e: MouseEvent) => {
+			if (
+				bottomSheetRef.current &&
+				!bottomSheetRef.current.contains(e.target as Node)
+			) {
+				setIsEdit(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutsideBottomsheet);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutsideBottomsheet);
+		};
+	}, [bottomSheetRef]);
 
 	return (
 		<div className={styles.profile}>
@@ -85,14 +102,8 @@ export default function Profile() {
 					onClick={() => setIsEdit(!isEdit)}
 					className={styles.editProfile}
 				>
-					{!isEdit ? "Edit" : "Cancel"}
+					edit
 				</button>
-				{isEdit && (
-					<form className={styles.profileForm} onSubmit={updateProfileImg}>
-						<input type="file" name="profilePic" onChange={handleImageChange} />
-						<button type="submit">Update</button>
-					</form>
-				)}
 
 				<form onSubmit={updateUsername}>
 					<input
@@ -130,6 +141,29 @@ export default function Profile() {
 				</div>
 				<div className={styles.text}>Logout</div>
 			</button>
+			{isEdit && (
+				<div className={styles.overlay}>
+					<div className={styles.bottomSheet} ref={bottomSheetRef}>
+						<header>
+							<Image
+								src={profileImg}
+								alt="edit profile img"
+								width={40}
+								height={40}
+							/>
+							<h3>Edit Profile Picture</h3>
+						</header>
+						<form className={styles.profileForm} onSubmit={updateProfileImg}>
+							<input
+								type="file"
+								name="profilePic"
+								onChange={handleImageChange}
+							/>
+							<button type="submit">Update</button>
+						</form>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

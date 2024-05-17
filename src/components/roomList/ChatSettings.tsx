@@ -225,7 +225,7 @@ const ChatSettings = () => {
 					)}
 				</div>
 			) : (
-				<div ref={dropdownRef} className={styles.container}>
+				<div ref={dropdownRef} className={styles.bottomSheet}>
 					<button
 						onClick={() => {
 							setIsModalOpen(true);

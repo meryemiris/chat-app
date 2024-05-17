@@ -5,27 +5,24 @@
     height: 100dvh;
     background-color: inherit;
     justify-content: space-between;
-    background-color: #f4f4f4;
+
 }
 
 
 .header {
-    background-image: linear-gradient(60deg, #f56d44, #410146, #18b0bb);
-    color: #f4f4f4;
+    background-color: #fffcf2;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    height: 3rem;
-
 }
 
 .backButton {
     border: none;
     background-color: inherit;
     cursor: pointer;
-    color: white;
+    color: #403d39;
     font-size: 1rem;
 }
 
@@ -37,7 +34,7 @@
 }
 
 .welcomeMessage {
-    color: #9db4c0;
+    color: #403d39;
     font-family: monospace;
     font-size: 1rem;
     margin: 0.5rem 0;
@@ -58,6 +55,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: #403d39;
+
 
 }
 
@@ -76,6 +75,7 @@
     padding: 10px;
     border-radius: 50%;
     background-color: transparent;
+    color: #403d39;
     padding-right: 40px;
 
 }
@@ -102,7 +102,7 @@
     justify-content: center;
     background-color: inherit;
     border: none;
-    color: white;
+    color: #403d39;
     margin-left: 1rem;
 }
 
@@ -121,9 +121,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-image: linear-gradient(60deg, #18b0bb, #410146, #f56d44);
-    padding: 0.5rem 0 0.5rem 1rem;
-    height: 4rem;
+    background-color: #fffcf2;
+    padding: 1rem;
 }
 
 .sendBox {
@@ -180,7 +179,7 @@
     align-items: center;
     justify-content: center;
     background-color: inherit;
-    color: #f56d44;
+    color: #eb5e28;
 }
 
 .sendBox button,
@@ -194,55 +193,35 @@
 }
 
 
-.icon {
+.searchIcon {
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
     right: 0px;
     cursor: pointer;
-    width: 50px;
-    height: 50px;
     outline: none;
     border-style: none;
     border-radius: 50%;
     pointer-events: painted;
     background-color: transparent;
-    color: #f4f4f4;
+    color: #403d39;
+    font-size: 1rem;
 
 }
 
-.icon:focus~.searchInput,
+.searchIcon:focus~.searchInput,
 .searchInput:focus {
+    outline: none;
     box-shadow: none;
-    width: 200px;
+    width: 150px;
     border-radius: 0px;
-    background-color: white;
-    border-bottom: 3px solid #E86100;
+    border-bottom: 1px solid #403d39;
     transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
+
 }
 
 
-@media screen and (max-width: 600px) {
-    .title {
-        max-width: 100px;
-        /* Adjust this value for smaller screens */
-    }
-}
-
-@media screen and (min-width: 601px) and (max-width: 1024px) {
-    .title {
-        max-width: 150px;
-        /* Adjust this value for medium-sized screens */
-    }
-}
-
-@media screen and (min-width: 1025px) {
-    .title {
-        max-width: 300px;
-        /* Adjust this value for larger screens */
-    }
-}
 
 .roomDetails {
     position: absolute;

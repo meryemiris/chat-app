@@ -4,35 +4,54 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: inherit;
-
-
+    background-color: #fffcf2;
 }
 
 .button {
     font-size: 2rem;
     background-color: inherit;
     border: none;
-    color: white;
+    color: #ccc5b9;
     cursor: pointer;
     transition: 0.2s;
 }
 
-.button:hover {
-    transform: scale(1.2);
+.buttonActive {
+    color: #403d39;
+    font-size: 2rem;
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
     transition: 0.2s;
 }
 
-.badge {
+
+.friendBadge {
     position: absolute;
-    top: 1.2rem;
+    bottom: 3rem;
     left: 2rem;
-    font-size: 0.7rem;
+    font-size: .8rem;
     font-weight: bold;
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
-    background-color: #410146;
+    background-color: #403d39;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chatBadge {
+    position: absolute;
+    bottom: 3rem;
+    left: 12rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #403d39;
     color: white;
     display: flex;
     justify-content: center;

@@ -20,13 +20,14 @@
 .editProfile {
     border: none;
     cursor: pointer;
-    color: #f56d44;
+    color: #eb5e28;
     background-color: transparent;
+    font-size: 1rem;
 }
 
 .username {
     border: none;
-    color: #f56d44;
+    color: #403d39;
     font-size: 1.5rem;
     justify-self: flex-end;
     background-color: transparent;
@@ -47,14 +48,14 @@
 
 .shareId p {
     font-size: 1rem;
-    color: #9db4c0;
+    color: #403d39;
     padding: 1rem;
 
 }
 
 .copyId {
     display: flex;
-    border: #f56d44 2px solid;
+    border: #eb5e28 2px solid;
     border-radius: 0.5rem;
     width: 200px;
     justify-content: space-between;
@@ -69,7 +70,7 @@
     background-color: inherit;
     border: none;
     cursor: pointer;
-    background-color: #f56d44;
+    background-color: #eb5e28;
     color: white;
 }
 
@@ -77,7 +78,7 @@
 
 .userId {
     font-size: 1rem;
-    color: #9db4c0;
+    color: #eb5e28;
     max-width: 150px;
     overflow: hidden;
     white-space: nowrap;
@@ -98,7 +99,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    background-color: #f56d44;
+    background-color: #ccc5b9;
     font-size: 2rem;
     color: white;
 }
@@ -180,7 +181,7 @@
     border-radius: 1rem;
     cursor: pointer;
     border: none;
-    box-shadow: 0px 2px 2px 0px #e0e0e0;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
 
 }
 
@@ -207,13 +208,9 @@
     color: black;
 }
 
-.profileForm button:hover {
-    background-color: #f56d44;
-    color: white;
-}
 
 .profileForm input::-webkit-file-upload-button {
-    background-color: #f56d44;
+    background-color: #ccc5b9;
     color: white;
     border: none;
     padding: 1rem;

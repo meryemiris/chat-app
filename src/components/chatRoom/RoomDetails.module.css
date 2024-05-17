@@ -5,7 +5,7 @@
     padding: 0 1rem;
     height: 100dvh;
     width: 100%;
-    background-color: #f56d44;
+    background-color: #eb5e28;
 }
 
 .roomName {
@@ -64,7 +64,7 @@
 .member p {
     font-size: 1rem;
     font-weight: 600;
-    color: #f56d44;
+    color: #eb5e28;
 }
 
 

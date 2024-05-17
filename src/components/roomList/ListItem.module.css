@@ -3,8 +3,8 @@
     height: 80px;
     grid-template-columns: 8fr 1fr;
     border-bottom: #ebebeb 1px solid;
-    box-shadow: 0px 1px 0px 0px #ebebeb;
     align-items: center;
+    border-radius: 0.5rem;
 }
 
 .chatContent {
@@ -17,9 +17,9 @@
 .chatName {
     font-size: 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 600;
-    color: black;
-    margin-bottom: 1rem;
+    font-weight: 500;
+    color: #403d39;
+    margin: .5rem;
 }
 
 .members {
@@ -47,12 +47,12 @@
 }
 
 .muted {
-    color: #9db4c0;
+    color: #ccc5b9;
     font-size: 1.2rem;
 }
 
 .threeDots {
-    color: #f56d44;
+    color: #403d39;
     font-size: 2rem;
     background-color: inherit;
     border: none;
@@ -71,5 +71,5 @@
 
 .chatNameForm input:focus {
     outline: unset;
-    border-bottom: #f56d44 1px solid;
+    border-bottom: #eb5e28 1px solid;
 }

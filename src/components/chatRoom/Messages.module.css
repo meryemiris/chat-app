@@ -44,7 +44,7 @@
 
     border-radius: 20px;
     border-top-left-radius: 0%;
-    box-shadow: 0px 0px 5px 0px #9db4c0;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
 
 
 
@@ -57,14 +57,14 @@
     background-color: #fcf6bd;
     border-radius: 20px;
     border-top-right-radius: 0;
-    box-shadow: 0px 0px 5px 0px #9db4c0;
+    box-shadow: 0px 1px 5px 0px #e0e0e0;
 
 
 
 }
 
 .username {
-    color: #f56d44;
+    color: #403d39;
     font-weight: 600;
     font-size: .8rem;
     font-family: monospace;

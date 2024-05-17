@@ -12,6 +12,7 @@ import { useAuthContext } from "./AuthContext";
 
 import { Message, ChatRoom } from "@/types";
 import { toast } from "sonner";
+import Loading from "@/components/utils/Loading";
 
 export type ChatContextType = {
 	chatRoomList: ChatRoom[];
@@ -63,6 +64,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const [editChat, setEditChat] = useState<number | null>(null);
 
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
 	type RoomListType = {
 		isMuted: boolean;
 		channels: {
@@ -73,8 +76,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		async function getChatRoomList() {
-			if (!userId) return;
-
+			setIsLoading(true);
 			const { data: roomList, error: memberRoomsError } = await supabase
 				.from("members")
 				.select(
@@ -127,6 +129,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 			);
 
 			setChatRoomList(chatRoomsWithMembers);
+			setIsLoading(false);
 		}
 
 		getChatRoomList();
@@ -142,6 +145,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		async function getChatMsgs() {
+			setIsLoading(true);
 			if (activeChatId === null) return;
 
 			const { data, error } = await supabase
@@ -152,14 +156,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				.eq("chatroom_id", activeChatId);
 
 			if (error) {
-				throw error;
+				toast.error(error.message);
+				return;
 			}
-
-			if (data) {
-				setMessages(data as []);
-			} else {
-				console.log(error);
-			}
+			setMessages(data as []);
+			setIsLoading(false);
 		}
 
 		getChatMsgs();
@@ -193,6 +194,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 		setEditChat,
 	};
 
+	if (isLoading) return <Loading />;
 	return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 

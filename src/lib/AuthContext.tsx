@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import { useRouter } from "next/router";
+import Loading from "@/components/utils/Loading";
 
 export type AuthContextType = {
 	userId: string;
@@ -32,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [router]);
 
 	const value = { userId, setUserId };
-
+	if (userId === "") return <Loading />;
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

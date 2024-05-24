@@ -95,40 +95,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				toast.error(memberRoomsError.message);
 				return;
 			}
-			const roomListwithType = roomList as unknown as RoomListType[];
 
-			const chatRoomsWithMembers = await Promise.all(
-				roomListwithType.map(async (room) => {
-					const { data: members, error: memberError } = await supabase
-						.from("members")
-						.select(
-							`
-							users (
-								id,
-								username,
-								profile_img
-							)
-						`
-						)
-						.eq("room_id", room.channels.id);
-
-					if (memberError) {
-						console.log(memberError);
-						toast.error(memberError.message);
-						return {
-							...room,
-							users: [],
-						};
-					}
-
-					return {
-						...room,
-						users: members.map((member) => member.users),
-					};
-				}) as unknown as ChatRoom[]
-			);
-
-			setChatRoomList(chatRoomsWithMembers);
+			setChatRoomList(roomList as unknown as ChatRoom[]);
 			setIsLoading(false);
 		}
 

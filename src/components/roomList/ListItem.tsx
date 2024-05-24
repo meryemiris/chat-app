@@ -23,9 +23,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 	roomID,
 	roomName,
 	isMuted,
-	members,
 }) => {
-	const { userId } = useAuthContext();
 	const [newRoomName, setNewRoomName] = useState<string>("");
 	const {
 		setUnreadMsgsChatIds,
@@ -83,19 +81,6 @@ const ListItem: React.FC<RoomListItemProps> = ({
 				) : (
 					<p className={styles.chatName}>{roomName}</p>
 				)}
-				<div className={styles.members}>
-					{members.map((member, index) => (
-						<Image
-							src={member.profile_img ? member.profile_img : "/defaultPP.png"}
-							alt="member image"
-							width={25}
-							height={25}
-							key={index}
-							className={styles.memberImage}
-							style={member.id === userId ? { display: "none" } : {}}
-						/>
-					))}
-				</div>
 			</button>
 
 			<div className={styles.chatActions}>

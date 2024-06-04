@@ -15,8 +15,8 @@ import { toast } from "sonner";
 import Loading from "@/components/utils/Loading";
 
 export type ChatContextType = {
-	chatRoomList: ChatRoom[];
-	setChatRoomList: Dispatch<SetStateAction<ChatRoom[]>>;
+	chats: ChatRoom[];
+	setChats: Dispatch<SetStateAction<ChatRoom[]>>;
 
 	messages: Message[];
 	setMessages: Dispatch<SetStateAction<Message[]>>;
@@ -49,7 +49,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const { userId } = useAuthContext();
 
-	const [chatRoomList, setChatRoomList] = useState<ChatRoom[]>([]);
+	const [chats, setChats] = useState<ChatRoom[]>([]);
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	const [unreadMsgs, setUnreadMsgs] = useState<Message[]>([]);
@@ -96,7 +96,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				return;
 			}
 
-			setChatRoomList(roomList as unknown as ChatRoom[]);
+			setChats(roomList as unknown as ChatRoom[]);
 			setIsLoading(false);
 		}
 
@@ -104,12 +104,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [userId]);
 
 	useEffect(() => {
-		chatRoomList.forEach((chatRoom) => {
+		chats.forEach((chatRoom) => {
 			if (chatRoom.isMuted === true && chatRoom.channels?.id === selectedChat) {
 				setMutedChat(true);
 			}
 		});
-	}, [chatRoomList, selectedChat]);
+	}, [chats, selectedChat]);
 
 	useEffect(() => {
 		async function getChatMsgs() {
@@ -135,8 +135,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, [activeChatId, setMessages]);
 
 	const value = {
-		chatRoomList,
-		setChatRoomList,
+		chats,
+		setChats,
 
 		activeChatId,
 		setActiveChatId,

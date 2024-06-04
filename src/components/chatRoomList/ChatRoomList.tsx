@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-import styles from "./RoomList.module.css";
+import styles from "./ChatRoomList.module.css";
 import { toast } from "sonner";
 
 import { useAuthContext } from "@/lib/AuthContext";
@@ -13,14 +13,13 @@ import ChatSettings from "./ChatSettings";
 import { MdAddCircle, MdSearch } from "react-icons/md";
 import { RiFilter3Fill } from "react-icons/ri";
 
-const RoomList = () => {
+const ChatRoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
-
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const { userId } = useAuthContext();
 
-	const { chatRoomList, setChatRoomList, isChatControlOpen } = useChatContext();
+	const { chats, setChats, isChatControlOpen } = useChatContext();
 
 	const handleCreateChannel = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -29,7 +28,7 @@ const RoomList = () => {
 		if (chatRoomName === "") return;
 
 		// Check if the chat room already exists
-		const existingChatRoom = chatRoomList.find(
+		const existingChatRoom = chats.find(
 			(room) => room.channels?.name === chatRoomName
 		);
 
@@ -76,7 +75,7 @@ const RoomList = () => {
 		}
 
 		if (memberInsert) {
-			setChatRoomList([...chatRoomList, newChatRoom[0]]);
+			setChats([...chats, newChatRoom[0]]);
 		}
 		setSearchTerm("");
 	};
@@ -85,7 +84,7 @@ const RoomList = () => {
 		setSearchTerm(e.target.value);
 	};
 
-	const filteredChannels = chatRoomList?.filter((room) =>
+	const filteredChannels = chats?.filter((room) =>
 		room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
@@ -130,4 +129,4 @@ const RoomList = () => {
 	);
 };
 
-export default RoomList;
+export default ChatRoomList;

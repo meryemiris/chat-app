@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import Image from "next/image";
 
 import styles from "./ListItem.module.css";
 
-import UnreadMessages from "./UnreadMessage";
-
 import { GoMute } from "react-icons/go";
 import { useChatContext } from "@/lib/ChatContext";
-import { SlOptionsVertical } from "react-icons/sl";
-import { useAuthContext } from "@/lib/AuthContext";
+
 import { RiMore2Line } from "react-icons/ri";
 
 type RoomListItemProps = {

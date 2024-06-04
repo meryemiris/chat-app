@@ -50,6 +50,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 	const { userId } = useAuthContext();
 
 	const [chats, setChats] = useState<ChatRoom[]>([]);
+
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	const [unreadMsgs, setUnreadMsgs] = useState<Message[]>([]);
@@ -78,7 +79,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 		async function getChatRoomList() {
 			setIsLoading(true);
 			const { data: roomList, error: memberRoomsError } = await supabase
-				.from("members")
+				.from("membership")
 				.select(
 					`
 						isMuted,

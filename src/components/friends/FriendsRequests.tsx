@@ -99,7 +99,7 @@ const FriendRequests = () => {
 
 	const handleJoinRoom = async (roomID: number) => {
 		const { data, error } = await supabase
-			.from("members")
+			.from("membership")
 			.insert([{ room_id: roomID, user_id: userId }])
 			.select();
 

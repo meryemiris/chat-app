@@ -83,6 +83,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				.select(
 					`
 						isMuted,
+						id,
 						channels (
 							name,
 							id
@@ -94,10 +95,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (memberRoomsError) {
 				console.log(memberRoomsError);
 				toast.error(memberRoomsError.message);
-				return;
 			}
-
-			setChats(roomList as unknown as ChatRoom[]);
+			roomList && setChats(roomList as unknown as ChatRoom[]);
 			setIsLoading(false);
 		}
 

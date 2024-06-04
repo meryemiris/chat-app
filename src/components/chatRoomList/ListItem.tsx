@@ -12,7 +12,6 @@ type RoomListItemProps = {
 	roomID: number;
 	roomName: string;
 	isMuted: boolean;
-	members: { username: string; profile_img: string; id: string }[];
 };
 
 const ListItem: React.FC<RoomListItemProps> = ({

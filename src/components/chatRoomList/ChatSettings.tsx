@@ -71,7 +71,7 @@ const ChatSettings = () => {
 
 	const handleDeleteRoom = async (roomID: number | null) => {
 		const { error } = await supabase
-			.from("members")
+			.from("membership")
 			.delete()
 			.eq("room_id", roomID)
 			.eq("user_id", userId);

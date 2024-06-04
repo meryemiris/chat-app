@@ -1,14 +1,10 @@
 export type ChatRoom = {
+	id: number;
 	channels: {
 		name: string;
 		id: number;
 	};
 	isMuted: boolean;
-	users: {
-		id: string;
-		username: string;
-		profile_img: string;
-	}[];
 };
 
 export type Message = {

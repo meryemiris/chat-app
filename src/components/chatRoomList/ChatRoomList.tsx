@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChatRoomList.module.css";
@@ -12,6 +12,7 @@ import ChatSettings from "./ChatSettings";
 
 import { MdAddCircle, MdSearch } from "react-icons/md";
 import { RiFilter3Fill } from "react-icons/ri";
+import { ChatRoom } from "@/types";
 
 const ChatRoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
@@ -65,7 +66,7 @@ const ChatRoomList = () => {
 
 		// Insert the new chat room into the members table
 		const { data: memberInsert, error: memberInsertError } = await supabase
-			.from("members")
+			.from("membership")
 			.insert([{ user_id: userId, room_id: newChatRoomId[0].id }])
 			.select();
 
@@ -87,6 +88,22 @@ const ChatRoomList = () => {
 	const filteredChannels = chats?.filter((room) =>
 		room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
+
+	useEffect(() => {
+		const channels = supabase
+			.channel("custom-all-channel")
+			.on(
+				"postgres_changes",
+				{ event: "DELETE", schema: "public", table: "membership" },
+				(payload) => {
+					setChats(chats.filter((room) => room.id !== payload.old.id));
+				}
+			)
+			.subscribe();
+		return () => {
+			supabase.removeChannel(channels);
+		};
+	}, [chats, setChats]);
 
 	return (
 		<div className={styles.container}>
@@ -114,14 +131,8 @@ const ChatRoomList = () => {
 			</div>
 
 			<div className={styles.scrollable}>
-				{filteredChannels?.map(({ isMuted, channels: { id, name }, users }) => (
-					<ListItem
-						key={id}
-						roomID={id}
-						roomName={name}
-						isMuted={isMuted}
-						members={users}
-					/>
+				{filteredChannels?.map(({ isMuted, channels: { id, name } }) => (
+					<ListItem key={id} roomID={id} roomName={name} isMuted={isMuted} />
 				))}
 			</div>
 			{isChatControlOpen && <ChatSettings />}

@@ -59,7 +59,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 				onClick={() => {
 					handleReadMessages(roomID);
 					setActiveChatId(roomID);
-					router.push(`/${roomID}`);
+					router.push(`/chat/${roomID}`);
 				}}
 				className={styles.chatContent}
 			>

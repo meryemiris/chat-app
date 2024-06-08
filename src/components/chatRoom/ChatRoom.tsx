@@ -46,7 +46,7 @@ export default function ChatRoom() {
 						content: message,
 						created_at: time,
 						chatroom_id: activeChatId,
-						user_id: userId,
+						sender_id: userId,
 					},
 				])
 				.select();

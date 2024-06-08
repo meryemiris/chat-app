@@ -12,8 +12,8 @@ import { useAuthContext } from "./AuthContext";
 
 import { Message, ChatRoom } from "@/types";
 import { toast } from "sonner";
-import Loading from "@/components/utils/Loading";
 import { useRouter } from "next/router";
+import Loading from "@/components/utils/Loading";
 
 export type ChatContextType = {
 	chats: ChatRoom[];
@@ -122,7 +122,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 			const { data, error } = await supabase
 				.from("messages")
 				.select(
-					"users(username, profile_img), id, content, created_at, user_id"
+					`
+					id,
+					content,
+					created_at,
+					sender_id,
+					users (
+						username,
+						profile_img
+					)
+				`
 				)
 				.eq("chatroom_id", activeChatId);
 
@@ -130,7 +139,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 				toast.error(error.message);
 				return;
 			}
-			setMessages(data as []);
+			setMessages(data as unknown as Message[]);
 			setIsLoading(false);
 		}
 
@@ -171,7 +180,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 		setEditChat,
 	};
 
-	// if (isLoading) return <Loading />;
+	if (isLoading) return <Loading />;
 
 	return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };

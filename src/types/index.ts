@@ -15,7 +15,7 @@ export type Message = {
 	content: string;
 	created_at: string;
 	chatroom_id: number;
-	user_id: string;
+	sender_id: string;
 	users: {
 		username: string;
 		profile_img: string;

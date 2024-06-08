@@ -129,7 +129,7 @@ const ChatSettings = () => {
 
 		// Check if friend is already in the room
 		const { data: roomCheck, error: roomCheckError } = await supabase
-			.from("members")
+			.from("membership")
 			.select("id")
 			.eq("room_id", roomID)
 			.eq("user_id", friendId);

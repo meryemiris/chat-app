@@ -22,6 +22,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [friendId, setFriendId] = useState("");
 
 	useEffect(() => {
+		if (!userId) return;
 		async function getUser() {
 			const { data: user, error: userError } = await supabase
 				.from("users")

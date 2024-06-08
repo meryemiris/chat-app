@@ -16,9 +16,10 @@ import {
 	RiSearchLine,
 	RiSendPlaneLine,
 } from "react-icons/ri";
+import { useRouter } from "next/router";
 
 export default function ChatRoom() {
-	const { activeChatId, setActiveChatId } = useChatContext();
+	const { activeChatId } = useChatContext();
 	const { userId } = useAuthContext();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [showRoomDetails, setShowRoomDetails] = useState(false);
@@ -35,23 +36,25 @@ export default function ChatRoom() {
 		const formData = new FormData(e.currentTarget);
 		const message = formData.get("message");
 
-		if (!message) return;
+		if (!message || !activeChatId || !userId) return;
 
-		const { data, error } = await supabase
-			.from("messages")
-			.insert([
-				{
-					content: message,
-					created_at: time,
-					chatroom_id: activeChatId,
-					user_id: userId,
-				},
-			])
-			.select();
-		if (error) toast.error(error.message);
+		if (activeChatId) {
+			const { data, error } = await supabase
+				.from("messages")
+				.insert([
+					{
+						content: message,
+						created_at: time,
+						chatroom_id: activeChatId,
+						user_id: userId,
+					},
+				])
+				.select();
+			if (error) toast.error(error.message);
 
-		if (e.target instanceof HTMLFormElement) {
-			e.target.reset();
+			if (e.target instanceof HTMLFormElement) {
+				e.target.reset();
+			}
 		}
 	};
 
@@ -65,13 +68,15 @@ export default function ChatRoom() {
 		}
 	};
 
+	const router = useRouter();
+
 	return (
 		<>
 			<div className={styles.container}>
 				<header className={styles.header}>
 					<button
 						className={styles.backButton}
-						onClick={() => setActiveChatId(null)}
+						onClick={() => router.push("/")}
 					>
 						<RiArrowLeftSLine />
 					</button>

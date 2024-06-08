@@ -7,6 +7,7 @@ import { GoMute } from "react-icons/go";
 import { useChatContext } from "@/lib/ChatContext";
 
 import { RiMore2Line } from "react-icons/ri";
+import { useRouter } from "next/router";
 
 type RoomListItemProps = {
 	roomID: number;
@@ -29,6 +30,8 @@ const ListItem: React.FC<RoomListItemProps> = ({
 		setEditChat,
 		setIsChatControlOpen,
 	} = useChatContext();
+
+	const router = useRouter();
 
 	const handleSaveRoom = async (
 		id: number,
@@ -56,6 +59,7 @@ const ListItem: React.FC<RoomListItemProps> = ({
 				onClick={() => {
 					handleReadMessages(roomID);
 					setActiveChatId(roomID);
+					router.push(`/${roomID}`);
 				}}
 				className={styles.chatContent}
 			>

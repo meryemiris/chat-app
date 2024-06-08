@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./Messages.module.css";
@@ -8,8 +8,6 @@ import { useAuthContext } from "@/lib/AuthContext";
 import { useUserContext } from "@/lib/UserContext";
 
 import { Message } from "@/types";
-
-import Loading from "../utils/Loading";
 import { useChatContext } from "@/lib/ChatContext";
 
 type MessagesProps = {

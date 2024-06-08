@@ -12,6 +12,7 @@ import styles from "./Profile.module.css";
 
 import { IoLogOut } from "react-icons/io5";
 import { AiOutlineCopy } from "react-icons/ai";
+import { RiArrowLeftSLine } from "react-icons/ri";
 
 export default function Profile() {
 	const { userId } = useAuthContext();

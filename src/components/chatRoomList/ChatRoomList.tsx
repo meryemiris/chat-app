@@ -12,7 +12,6 @@ import ChatSettings from "./ChatSettings";
 
 import { MdAddCircle, MdSearch } from "react-icons/md";
 import { RiFilter3Fill } from "react-icons/ri";
-import { ChatRoom } from "@/types";
 
 const ChatRoomList = () => {
 	const [isFilter, setIsFilter] = useState(false);
@@ -89,21 +88,89 @@ const ChatRoomList = () => {
 		room.channels?.name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
-	useEffect(() => {
-		const channels = supabase
-			.channel("custom-all-channel")
-			.on(
-				"postgres_changes",
-				{ event: "DELETE", schema: "public", table: "membership" },
-				(payload) => {
-					setChats(chats.filter((room) => room.id !== payload.old.id));
-				}
-			)
-			.subscribe();
-		return () => {
-			supabase.removeChannel(channels);
-		};
-	}, [chats, setChats]);
+	// useEffect(() => {
+	// 	const channelsDelete = supabase
+	// 		.channel("custom-all-channel")
+	// 		.on(
+	// 			"postgres_changes",
+	// 			{ event: "DELETE", schema: "public", table: "membership" },
+	// 			(payload) => {
+	// 				setChats((prevChats) =>
+	// 					prevChats.filter((room) => room.id !== payload.old.room_id)
+	// 				);
+	// 			}
+	// 		)
+	// 		.subscribe();
+
+	// 	const channelsInsert = supabase
+	// 		.channel("custom-all-channel")
+	// 		.on(
+	// 			"postgres_changes",
+	// 			{ event: "INSERT", schema: "public", table: "membership" },
+	// 			async (payload) => {
+	// 				const { data: newChatData, error: chatRoomFetchError } =
+	// 					await supabase
+	// 						.from("channels")
+	// 						.select("*")
+	// 						.eq("id", payload.new.room_id);
+
+	// 				if (newChatData) {
+	// 					const payloadNew = [payload.new].map((p: any) => [p.id, p.muted]);
+	// 					const newChat = [payloadNew, ...newChatData];
+	// 					setChats((prevChats) => [...prevChats, newChat[0]]);
+	// 				}
+	// 				if (chatRoomFetchError) {
+	// 					console.error("Error fetching new chat room:", chatRoomFetchError);
+	// 					return;
+	// 				}
+	// 			}
+	// 		)
+	// 		.subscribe();
+
+	// 	return () => {
+	// 		supabase.removeChannel(channelsDelete);
+	// 		supabase.removeChannel(channelsInsert);
+	// 	};
+	// }, [setChats]);
+
+	// useEffect(() => {
+	// 	const channelsDelete = supabase
+	// 		.channel("custom-all-channel")
+	// 		.on(
+	// 			"postgres_changes",
+	// 			{ event: "DELETE", schema: "public", table: "membership" },
+	// 			(payload) => {
+	// 				setChats(chats.filter((room) => room.id !== payload.old.id));
+	// 			}
+	// 		)
+	// 		.subscribe();
+	// 	return () => {
+	// 		supabase.removeChannel(channelsDelete);
+	// 	};
+	// }, [chats, setChats]);
+
+	// useEffect(() => {
+	// 	const channelsInsert = supabase
+	// 		.channel("custom-all-channel")
+	// 		.on(
+	// 			"postgres_changes",
+	// 			{ event: "INSERT", schema: "public", table: "membership" },
+	// 			(payload) => {
+	// 				console.log("payload", payload);
+	// 				// const newChat = await supabase
+	// 				// 	.from("channels")
+	// 				// 	.select()
+	// 				// 	.eq("id", payload.new.room_id);
+	// 				// console.log("newChat", newChat);
+
+	// 				// setChats([...chats, newChat[0]]); // Add the new chat room to the)
+	// 			}
+	// 		)
+	// 		.subscribe();
+	// 	return () => {
+	// 		supabase.removeChannel(channelsInsert);
+	// 	};
+	// }, [chats, setChats]);
 
 	return (
 		<div className={styles.container}>

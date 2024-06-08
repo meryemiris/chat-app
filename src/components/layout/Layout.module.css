@@ -1,16 +1,8 @@
 .container {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     height: 100dvh;
     overflow: hidden;
     background-color: white;
 
-}
-
-.chatContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    border-radius: 20px;
-    background: white;
 }

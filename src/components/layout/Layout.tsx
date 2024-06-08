@@ -11,8 +11,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
 	return (
 		<div className={styles.container}>
-			<Navbar />
 			{children}
+			<Navbar />
 		</div>
 	);
 };

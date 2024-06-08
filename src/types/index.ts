@@ -1,3 +1,6 @@
+import { NextPage } from "next";
+import { ReactElement, ReactNode } from "react";
+
 export type ChatRoom = {
 	id: number;
 	channels: {
@@ -17,4 +20,8 @@ export type Message = {
 		username: string;
 		profile_img: string;
 	};
+};
+
+export type NextPageWithLayout = NextPage & {
+	getLayout?: (page: ReactElement) => ReactNode;
 };

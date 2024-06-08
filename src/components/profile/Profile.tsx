@@ -12,7 +12,6 @@ import styles from "./Profile.module.css";
 
 import { IoLogOut } from "react-icons/io5";
 import { AiOutlineCopy } from "react-icons/ai";
-import { RiArrowLeftSLine } from "react-icons/ri";
 
 export default function Profile() {
 	const { userId } = useAuthContext();
@@ -89,82 +88,85 @@ export default function Profile() {
 	}, [bottomSheetRef]);
 
 	return (
-		<div className={styles.profile}>
-			<div className={styles.infos}>
-				<Image
-					src={profileImg}
-					alt="profile image"
-					width={100}
-					height={100}
-					style={{ borderRadius: "50%" }}
-					priority
-				/>
-				<button
-					onClick={() => setIsEdit(!isEdit)}
-					className={styles.editProfile}
-				>
-					edit
-				</button>
-
-				<form onSubmit={updateUsername}>
-					<input
-						className={styles.username}
-						type="text"
-						onChange={handleUsernameChange}
-						name="username"
-						value={username}
+		<>
+			<h1 className={styles.title}>Profile</h1>
+			<main className={styles.profile}>
+				<div className={styles.infos}>
+					<Image
+						src={profileImg}
+						alt="profile image"
+						width={100}
+						height={100}
+						style={{ borderRadius: "50%" }}
+						priority
 					/>
-				</form>
-			</div>
-
-			<div className={styles.shareId}>
-				<p>Share your ID! 🚀</p>
-				<div className={styles.copyId}>
-					<span className={styles.userId}>{userId}</span>
 					<button
-						className={styles.copyIdButton}
-						onClick={handleCopyToClipboard}
+						onClick={() => setIsEdit(!isEdit)}
+						className={styles.editProfile}
 					>
-						<AiOutlineCopy />
+						edit
 					</button>
-				</div>
-			</div>
 
-			<button
-				className={styles.logout}
-				onClick={() => {
-					router.push("/login");
-					supabase.auth.signOut();
-				}}
-			>
-				<div className={styles.icon}>
-					<IoLogOut />
+					<form onSubmit={updateUsername}>
+						<input
+							className={styles.username}
+							type="text"
+							onChange={handleUsernameChange}
+							name="username"
+							value={username}
+						/>
+					</form>
 				</div>
-				<div className={styles.text}>Logout</div>
-			</button>
-			{isEdit && (
-				<div className={styles.overlay}>
-					<div className={styles.bottomSheet} ref={bottomSheetRef}>
-						<header>
-							<Image
-								src={profileImg}
-								alt="edit profile img"
-								width={40}
-								height={40}
-							/>
-							<h3>Edit Profile Picture</h3>
-						</header>
-						<form className={styles.profileForm} onSubmit={updateProfileImg}>
-							<input
-								type="file"
-								name="profilePic"
-								onChange={handleImageChange}
-							/>
-							<button type="submit">Update</button>
-						</form>
+
+				<div className={styles.shareId}>
+					<p>Share your ID! 🚀</p>
+					<div className={styles.copyId}>
+						<span className={styles.userId}>{userId}</span>
+						<button
+							className={styles.copyIdButton}
+							onClick={handleCopyToClipboard}
+						>
+							<AiOutlineCopy />
+						</button>
 					</div>
 				</div>
-			)}
-		</div>
+
+				<button
+					className={styles.logout}
+					onClick={() => {
+						router.push("/login");
+						supabase.auth.signOut();
+					}}
+				>
+					<div className={styles.icon}>
+						<IoLogOut />
+					</div>
+					<div className={styles.text}>Logout</div>
+				</button>
+				{isEdit && (
+					<div className={styles.overlay}>
+						<div className={styles.bottomSheet} ref={bottomSheetRef}>
+							<header>
+								<Image
+									src={profileImg}
+									alt="edit profile img"
+									width={40}
+									height={40}
+								/>
+								<h3>Edit Profile Picture</h3>
+							</header>
+							<form className={styles.profileForm} onSubmit={updateProfileImg}>
+								<input
+									type="file"
+									name="profilePic"
+									onChange={handleImageChange}
+								/>
+								<button type="submit">Update</button>
+							</form>
+						</div>
+					</div>
+				)}
+			</main>
+		</>
 	);
 }

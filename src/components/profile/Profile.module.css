@@ -1,10 +1,21 @@
+.title {
+    padding: 1rem 1rem 0 1rem;
+    color: #403d39;
+    font-size: 1.5rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
 .profile {
-    width: 100%;
-    height: 100%;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5rem;
     align-items: center;
     background-color: white;
+    margin: 2rem 0;
 }
 
 
@@ -97,15 +108,16 @@
     align-items: center;
     justify-self: center;
     width: 4rem;
-    height: 3rem;
+    height: 4rem;
     border: none;
     border-radius: 1rem;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    background-color: #ccc5b9;
+    background-color: transparent;
     font-size: 2rem;
-    color: white;
+    color: #eb5e28;
+    align-self: flex-end;
 }
 
 .icon {

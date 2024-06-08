@@ -1,30 +1,19 @@
+// pages/signup.tsx
+import { ReactElement } from "react";
 import Signup from "@/components/auth/Signup";
-import Image from "next/image";
-import styles from "@/styles/Login-SignupPages.module.css";
+import AuthLayout from "@/components/layout/AuthLayout";
+import type { NextPageWithLayout } from "@/types";
 
-const lampImg = "/lamp.png";
+const SignupPage: NextPageWithLayout = () => {
+	return <Signup />;
+};
 
-export default function SignupPage() {
+SignupPage.getLayout = function getLayout(page: ReactElement) {
 	return (
-		<>
-			<div className={styles.container}>
-				<header className={styles.header}>
-					<h1>Start Now!</h1>
-					<h2 className={styles.subheader}>Join for Free.</h2>
-				</header>
-				<Image
-					src={lampImg}
-					alt="lamp image"
-					width={90}
-					height={90}
-					loading="lazy"
-					className={styles.image}
-				/>
-				<div className={styles.triangle}></div>
-			</div>
-			<div className={styles.formContainer}>
-				<Signup />
-			</div>
-		</>
+		<AuthLayout header="Sign Up" subheader="Join for free!">
+			{page}
+		</AuthLayout>
 	);
-}
+};
+
+export default SignupPage;

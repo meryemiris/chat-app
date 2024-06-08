@@ -1,30 +1,19 @@
+// pages/login.tsx
+import { ReactElement } from "react";
 import Login from "@/components/auth/Login";
-import Image from "next/image";
-import styles from "@/styles/Login-SignupPages.module.css";
+import AuthLayout from "@/components/layout/AuthLayout";
+import type { NextPageWithLayout } from "@/types";
 
-const lampImg = "/lamp.png";
+const LoginPage: NextPageWithLayout = () => {
+	return <Login />;
+};
 
-export default function LoginPage() {
+LoginPage.getLayout = function getLayout(page: ReactElement) {
 	return (
-		<>
-			<div className={styles.container}>
-				<header className={styles.header}>
-					<h1>Welcome!</h1>
-					<h2 className={styles.subheader}>Ready to Sign In?</h2>
-				</header>
-				<Image
-					src={lampImg}
-					alt="lamp image"
-					width={90}
-					height={90}
-					className={styles.image}
-					loading="lazy"
-				/>
-				<div className={styles.triangle}></div>
-			</div>
-			<div className={styles.formContainer}>
-				<Login />
-			</div>
-		</>
+		<AuthLayout header="Welcome!" subheader="Ready to Sign In?">
+			{page}
+		</AuthLayout>
 	);
-}
+};
+
+export default LoginPage;

@@ -18,9 +18,6 @@ const Navbar = () => {
 					router.pathname === "/friends" ? styles.buttonActive : styles.button
 				}
 			>
-				{router.pathname !== "/friends" && (
-					<span className={styles.friendBadge}>{"1"}</span>
-				)}
 				<RiUserHeartLine />
 			</button>
 
@@ -30,9 +27,7 @@ const Navbar = () => {
 					router.pathname === "/" ? styles.buttonActive : styles.button
 				}
 			>
-				{router.pathname !== "/" && (
-					<span className={styles.chatBadge}>{"1"}</span>
-				)}
+				{router.pathname !== "/" && <span className={styles.badge}>{"1"}</span>}
 				<RiChat3Line />
 			</button>
 

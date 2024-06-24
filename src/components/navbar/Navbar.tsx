@@ -13,15 +13,6 @@ const Navbar = () => {
 	return (
 		<div className={styles.container}>
 			<button
-				onClick={() => router.push("/friends")}
-				className={
-					router.pathname === "/friends" ? styles.buttonActive : styles.button
-				}
-			>
-				<RiUserHeartLine />
-			</button>
-
-			<button
 				onClick={() => router.push("/")}
 				className={
 					router.pathname === "/" ? styles.buttonActive : styles.button
@@ -29,6 +20,14 @@ const Navbar = () => {
 			>
 				{router.pathname !== "/" && <span className={styles.badge}>{"1"}</span>}
 				<RiChat3Line />
+			</button>
+			<button
+				onClick={() => router.push("/friends")}
+				className={
+					router.pathname === "/friends" ? styles.buttonActive : styles.button
+				}
+			>
+				<RiUserHeartLine />
 			</button>
 
 			<button

@@ -4,8 +4,8 @@
     justify-content: space-around;
     align-items: center;
     padding-block: .5rem;
-    margin: 1rem;
-    /* background-color: #fffcf2; */
+    margin-inline: 1rem;
+    background-color: #fffcf2;
     border-radius: 1rem;
 
 }

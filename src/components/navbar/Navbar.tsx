@@ -14,27 +14,27 @@ const Navbar = () => {
 		<div className={styles.container}>
 			<button
 				onClick={() => router.push("/")}
-				className={
-					router.pathname === "/" ? styles.buttonActive : styles.button
-				}
+				className={`${styles.button} ${
+					router.pathname === "/" ? styles.buttonActive : ""
+				}`}
 			>
-				{router.pathname !== "/" && <span className={styles.badge}>{"1"}</span>}
+				{/* {router.pathname !== "/" && <span className={styles.badge}>{"1"}</span>} */}
 				<RiChat3Line />
 			</button>
 			<button
 				onClick={() => router.push("/friends")}
-				className={
-					router.pathname === "/friends" ? styles.buttonActive : styles.button
-				}
+				className={`${styles.button} ${
+					router.pathname === "/friends" ? styles.buttonActive : ""
+				}`}
 			>
 				<RiUserHeartLine />
 			</button>
 
 			<button
 				onClick={() => router.push("/profile")}
-				className={
-					router.pathname === "/profile" ? styles.buttonActive : styles.button
-				}
+				className={`${styles.button} ${
+					router.pathname === "/profile" ? styles.buttonActive : ""
+				}`}
 			>
 				<Image
 					src={profileImg}

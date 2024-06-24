@@ -89,7 +89,21 @@ export default function Profile() {
 
 	return (
 		<>
-			<h1 className={styles.title}>Profile</h1>
+			<header className={styles.header}>
+				<h1 className={styles.title}>Profile</h1>
+				<button
+					className={styles.logout}
+					onClick={() => {
+						router.push("/login");
+						supabase.auth.signOut();
+					}}
+				>
+					<div className={styles.icon}>
+						<IoLogOut />
+					</div>
+					<div className={styles.text}>Logout</div>
+				</button>
+			</header>
 			<main className={styles.profile}>
 				<div className={styles.infos}>
 					<Image
@@ -131,18 +145,6 @@ export default function Profile() {
 					</div>
 				</div>
 
-				<button
-					className={styles.logout}
-					onClick={() => {
-						router.push("/login");
-						supabase.auth.signOut();
-					}}
-				>
-					<div className={styles.icon}>
-						<IoLogOut />
-					</div>
-					<div className={styles.text}>Logout</div>
-				</button>
 				{isEdit && (
 					<div className={styles.overlay}>
 						<div className={styles.bottomSheet} ref={bottomSheetRef}>

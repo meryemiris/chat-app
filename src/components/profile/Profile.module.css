@@ -1,5 +1,12 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 1rem;
+}
+
 .title {
-    padding: 1rem 1rem 0 1rem;
     color: #403d39;
     font-size: 1.5rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -7,19 +14,12 @@
 
 
 .profile {
-    display: grid;
     height: 100%;
-    width: 100%;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 5rem;
-    align-items: center;
-    background-color: white;
-    margin: 2rem 0;
+    gap: 3rem;
+    margin-top: 2rem;
 }
-
-
-
 
 
 .infos {

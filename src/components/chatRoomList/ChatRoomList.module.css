@@ -66,7 +66,7 @@
 
 .scrollable {
     overflow-y: auto;
-    height: 720px;
+    height: 80dvh;
     width: 100%;
     background-color: transparent;
     padding: 1rem

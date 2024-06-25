@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 import styles from "./ChatRoomList.module.css";
@@ -11,12 +11,10 @@ import ListItem from "./ListItem";
 import ChatSettings from "./ChatSettings";
 
 import { MdAddCircle, MdSearch } from "react-icons/md";
-import { RiFilter3Fill } from "react-icons/ri";
+import { IoAddSharp } from "react-icons/io5";
 
 const ChatRoomList = () => {
-	const [isFilter, setIsFilter] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
-
 	const { userId } = useAuthContext();
 
 	const { chats, setChats, isChatControlOpen } = useChatContext();
@@ -172,9 +170,28 @@ const ChatRoomList = () => {
 	// 	};
 	// }, [chats, setChats]);
 
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	const handleButtonClick = () => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		} else {
+			console.error("Input element not found.");
+		}
+	};
+
 	return (
 		<div className={styles.container}>
-			<h1 className={styles.title}>Chats</h1>
+			<header className={styles.header}>
+				<h1 className={styles.title}>Chats</h1>
+
+				<button className={styles.newChat} onClick={handleButtonClick}>
+					<div className={styles.newChatIcon}>
+						<IoAddSharp />
+					</div>
+					<div className={styles.newChatText}>New Chat</div>
+				</button>
+			</header>
 			<div className={styles.searchAndFilter}>
 				<form className={styles.chatSearch} onSubmit={handleCreateChannel}>
 					<input
@@ -184,17 +201,17 @@ const ChatRoomList = () => {
 						onChange={handleSearch}
 						autoComplete="off"
 						maxLength={35}
+						ref={inputRef}
 					/>
 					<button type="submit" className={styles.chatSearchButton}>
 						{searchTerm ? <MdAddCircle /> : <MdSearch />}
 					</button>
 				</form>
-				<button
-					className={isFilter ? styles.filterButtonActive : styles.filterButton}
-					onClick={() => setIsFilter(!isFilter)}
-				>
-					<RiFilter3Fill />
-				</button>
+				<div className={styles.filterContainer}>
+					<button className={styles.filterButton}>All</button>
+					<button className={styles.filterButton}>Unread</button>
+					<button className={styles.filterButton}>Groups</button>
+				</div>
 			</div>
 
 			<div className={styles.scrollable}>

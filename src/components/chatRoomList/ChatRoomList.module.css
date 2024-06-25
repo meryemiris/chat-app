@@ -2,24 +2,96 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: white;
+    margin: 1rem 1rem 0 1rem;
+}
 
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .title {
-    padding: 1rem 1rem 0 1rem;
     color: #403d39;
     font-size: 1.5rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+.newChat {
+    display: grid;
+    align-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+    font-size: 1rem;
+    color: #fffcf2;
+    background-color: #eb5e28;
+    align-self: flex-end;
+}
+
+.newChatIcon {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.newChatText {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    transition-duration: .3s;
+    white-space: nowrap;
+}
+
+
+.newChat:hover {
+    width: 120px;
+    border-radius: 2rem;
+    transition-duration: .3s;
+}
+
+.newChat:hover .newChatIcon {
+    width: 30%;
+    transition-duration: .3s;
+    padding-left: 10px;
+}
+
+.newChat:hover .newChatText {
+    opacity: 1;
+    width: 75%;
+    transition-duration: .3s;
+    padding-right: 10px;
+}
+
+
+.newChat:active {
+    transform: translate(2px, 2px);
+}
+
+
+
+
+
+/* ///// SEARCH AND FILTER */
+
 
 .searchAndFilter {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 1rem;
     width: 100vw;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
 
 }
 
@@ -30,10 +102,9 @@
 }
 
 .chatSearch input {
-    width: 300px;
+    width: 90dvw;
     background-color: #fffcf2;
-    border: 1px solid #fffcf2;
-    box-shadow: 0px 1px 5px 0px #e0e0e0;
+    border: none;
     border-radius: 10px;
     padding: .5rem;
     font-size: 1rem;
@@ -69,7 +140,6 @@
     height: 80dvh;
     width: 100%;
     background-color: transparent;
-    padding: 1rem
 }
 
 .scrollable::-webkit-scrollbar {
@@ -77,25 +147,31 @@
 }
 
 
-
-.filterButton,
-.filterButtonActive {
+.filterContainer {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: inherit;
-    color: #403d39;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 50%;
-    border: none;
-    padding: .5rem;
+    gap: 1rem;
 }
 
-.filterButtonActive {
+.filterButton {
+    background-color: #fffcf2;
+    color: #403d39;
+    border: none;
+    border-radius: 1rem;
+    padding: .5rem .7rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
 
+.filterButton:hover {
     background-color: #eb5e28;
     color: white;
+    transform: scale(1.05);
+    transition: ease-out 0.1s;
+}
 
 
+
+.filterButtonActive {
+    background-color: #eb5e28;
+    color: white;
 }
